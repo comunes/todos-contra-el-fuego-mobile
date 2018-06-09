@@ -33,12 +33,12 @@ class HomePage extends StatelessWidget {
                     heightFactor: 0.9,
                     child: new CenteredColumn(
                       children: <Widget>[
-                        customBtn(
-                            Icons.whatshot,
-                            "Active fires",
-                            context,
-                            // const EdgeInsets.only(left: 60.0),
-                            ActiveFiresMap.routeName),
+                        new RoundedBtn.nav(
+                            icon: Icons.whatshot,
+                            text: 'Active fires',
+                            context: context,
+                            route: ActiveFiresPage.routeName,
+                            backColor: fires600),
                       ],
                     )))
           ])),

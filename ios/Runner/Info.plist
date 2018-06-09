@@ -41,5 +41,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your location will be used to center our map and display fires near you</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Your location will be used notify fires near you</string>
 </dict>
 </plist>

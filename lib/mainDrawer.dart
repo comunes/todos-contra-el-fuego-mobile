@@ -4,6 +4,7 @@ import 'colors.dart';
 import 'sandbox.dart';
 import 'introPage.dart';
 import 'activeFires.dart';
+import 'placesAutocompleteWidget.dart';
 
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
@@ -60,7 +61,7 @@ Widget mainDrawer(BuildContext context) {
         leading: const Icon(Icons.whatshot),
         title: new Text('Active fires'),
         onTap: () {
-          Navigator.pushNamed(context, ActiveFiresMap.routeName);
+          Navigator.pushNamed(context, ActiveFiresPage.routeName);
         },
       ),
       new ListTile(
@@ -69,6 +70,14 @@ Widget mainDrawer(BuildContext context) {
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, '/subscriptions');
+        },
+      ),
+      new ListTile(
+        leading: const Icon(Icons.location_on),
+        title: new Text('Places'),
+        onTap: () {
+          // Then close the drawer
+          Navigator.pushNamed(context, PlacesAutocompleteWidget.routeName);
         },
       ),
       new Divider(),
