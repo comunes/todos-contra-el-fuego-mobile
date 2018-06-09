@@ -9,18 +9,17 @@ import 'placesAutocompleteWidget.dart';
 import 'globals.dart' as globals;
 
 class FiresApp extends StatelessWidget {
-
+  static final WidgetBuilder introWidget = (context) => new IntroPage();
+  static final WidgetBuilder continueWidget = (context) => new HomePage();
 
   Map routes = <String, WidgetBuilder>{
-        PlacesAutocompleteWidget.routeName: (BuildContext context) =>
-            new PlacesAutocompleteWidget(),
-        Sandbox.routeName: (BuildContext context) => new Sandbox(),
-        ActiveFiresPage.routeName: (BuildContext context) =>
-            new ActiveFiresPage(),
-        IntroPage.routeName: (BuildContext context) => new IntroPage(),
-      };
-  final WidgetBuilder introWidget = (context) => new IntroPage();
-  final WidgetBuilder continueWidget = (context) => new HomePage();
+    PlacesAutocompleteWidget.routeName: (BuildContext context) =>
+        new PlacesAutocompleteWidget(),
+    Sandbox.routeName: (BuildContext context) => new Sandbox(),
+    ActiveFiresPage.routeName: (BuildContext context) => new ActiveFiresPage(),
+    HomePage.routeName: continueWidget,
+    IntroPage.routeName: introWidget,
+  };
 
   // globals.getIt.registerSingleton
   FiresApp();
@@ -28,7 +27,7 @@ class FiresApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        home: new MaterialAppWithIntroHome(introWidget, continueWidget),
+        home: new MaterialAppWithIntroHome(introWidget, continueWidget, 'showInitialWizard234'),
         title: 'All Against The Fire!',
         theme: firesTheme,
         routes: routes);

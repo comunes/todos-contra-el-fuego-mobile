@@ -12,6 +12,7 @@ import 'package:collection/collection.dart' show lowerBound;
 
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   // https://docs.flutter.io/flutter/dart-core/List-class.html
   final List<BasicLocation> _saved = [];
   int length;
@@ -19,16 +20,20 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   _ActiveFiresPageState();
 
   Widget _buildRow(BasicLocation loc) {
-    String desc = loc.description != null ? loc.description:
-    'Position: ${loc.lat}, ${loc.lon}';
+    String desc = loc.description != null
+        ? loc.description
+        : 'Position: ${loc.lat}, ${loc.lon}';
     return new ListTile(
         dense: false,
         leading: const Icon(Icons.location_on),
         // trailing: const Icon(Icons.delete),
         title: new Text(desc),
         onTap: () {
-           Navigator.push(context,
-          new MaterialPageRoute(builder: (context) => new GenericMap(title: desc, latitude: loc.lat, longitude: loc.lon)));
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new GenericMap(
+                      title: desc, latitude: loc.lat, longitude: loc.lon)));
         });
   }
 
@@ -100,8 +105,6 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   Future<BasicLocation> getUserLocation() async {
-    // FIXME do something with this
-
     String error;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -112,16 +115,22 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
       // It seems that the lib fails with lat/lon values
       return new BasicLocation(
-          lon: location['latitude'], lat: location['longitude']);
+          lat: location['latitude'], lon: location['longitude']);
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: new Text('We don\'t have permission to get your location'),
+        ));
         error = 'Permission denied';
       } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error =
             'Permission denied - please ask the user to enable it from the app settings';
       }
-      // FIXME
-      throw e;
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        content: new Text(
+            'I cannot get your current location. It\'s your ubication enabled?'),
+      ));
+      return BasicLocation.noLocation;
     }
   }
 
@@ -134,7 +143,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   @override
   Widget build(BuildContext context) {
     print('Building Active Fires, saved $length');
-    final title = 'Active fires locations';
+    final title = 'Your locations';
     return Scaffold(
       key: _scaffoldKey,
       drawer: new MainDrawer(context),
@@ -211,26 +220,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   void _saveLocation(Future<BasicLocation> location) {
     location.then((newLocation) {
-      this.setState(() {
-        _saved.add(newLocation);
-        length = _saved.length;
-      });
+      if (newLocation != BasicLocation.noLocation)
+        this.setState(() {
+          _saved.add(newLocation);
+          length = _saved.length;
+        });
     });
-  }
-}
-
-class MyDrawer extends StatelessWidget {
-  static final MyDrawer _drawer = new MyDrawer._internal();
-
-  factory MyDrawer() {
-    return _drawer;
-  }
-
-  MyDrawer._internal();
-
-  @override
-  Widget build(BuildContext context) {
-    return new Text("Drawer");
   }
 }
 

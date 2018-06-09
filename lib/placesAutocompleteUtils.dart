@@ -25,8 +25,7 @@ Future<BasicLocation> openPlacesDialog(BuildContext context) async {
     PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
     final lat = detail.result.geometry.location.lat;
     final lng = detail.result.geometry.location.lng;
-
     return new BasicLocation(lat: lat, lon: lng, description: p.description);
   }
-  return null;
+  return BasicLocation.noLocation;
 }

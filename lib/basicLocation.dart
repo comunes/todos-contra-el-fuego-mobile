@@ -5,5 +5,7 @@ class BasicLocation  {
   final double lon;
   final String description;
 
+  static BasicLocation noLocation = new BasicLocation(lat:0.0, lon:0.0);
+
   BasicLocation({@required this.lat, @required this.lon, this.description});
 }
