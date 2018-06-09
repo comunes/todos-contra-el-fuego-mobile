@@ -4,23 +4,36 @@ import 'colors.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'mainDrawer.dart';
 import 'activeFires.dart';
+import 'globals.dart' as globals;
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/home';
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final _btnFont = const TextStyle(
-    fontSize: 20.0,
-    // fontWeight: FontWeight.w500,
-    color: Colors.white,
+  final _homeFont = const TextStyle(
+    fontSize: 40.0,
+    fontWeight: FontWeight.w400,
+    // color: Colors.white,
   );
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldKey,
         drawer: new MainDrawer(context),
         body: new SafeArea(
           child: Center(
               child: new CenteredColumn(children: <Widget>[
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new IconButton(
+                      onPressed: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      },
+                      icon: new Icon(Icons.menu,
+                          size: 30.0, color: Colors.black38)),
+                ]),
             new Expanded(
                 child: new FractionallySizedBox(
                     alignment: FractionalOffset.bottomCenter,
@@ -33,6 +46,8 @@ class HomePage extends StatelessWidget {
                     heightFactor: 0.9,
                     child: new CenteredColumn(
                       children: <Widget>[
+                        new Text(globals.appName, style: _homeFont),
+                        new SizedBox(height: 20.0),
                         new RoundedBtn.nav(
                             icon: Icons.whatshot,
                             text: 'Active fires',
@@ -43,31 +58,5 @@ class HomePage extends StatelessWidget {
                     )))
           ])),
         ));
-  }
-
-  SizedBox customBtn(IconData icon, String text, BuildContext context, route) {
-    final btnRadius = new Radius.circular(90.0);
-    return new SizedBox(
-      // width: double.infinity,
-      child: new RaisedButton(
-          elevation: 1.0,
-          color: fires600,
-          child: new Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Icon(icon, size: 32.0, color: Colors.white),
-                new SizedBox(width: 10.0),
-                new Text(text, style: _btnFont),
-              ],
-            ),
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, route);
-          },
-          shape: new RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(btnRadius))),
-    );
   }
 }

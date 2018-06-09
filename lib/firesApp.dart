@@ -5,20 +5,16 @@ import 'theme.dart';
 import 'introPage.dart';
 import 'sandbox.dart';
 import 'activeFires.dart';
-import 'placesAutocompleteWidget.dart';
-import 'globals.dart' as globals;
 
 class FiresApp extends StatelessWidget {
   static final WidgetBuilder introWidget = (context) => new IntroPage();
   static final WidgetBuilder continueWidget = (context) => new HomePage();
 
-  Map routes = <String, WidgetBuilder>{
-    PlacesAutocompleteWidget.routeName: (BuildContext context) =>
-        new PlacesAutocompleteWidget(),
-    Sandbox.routeName: (BuildContext context) => new Sandbox(),
-    ActiveFiresPage.routeName: (BuildContext context) => new ActiveFiresPage(),
-    HomePage.routeName: continueWidget,
+  final Map routes = <String, WidgetBuilder>{
     IntroPage.routeName: introWidget,
+    HomePage.routeName: continueWidget,
+    ActiveFiresPage.routeName: (BuildContext context) => new ActiveFiresPage(),
+    Sandbox.routeName: (BuildContext context) => new Sandbox(),
   };
 
   // globals.getIt.registerSingleton

@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'mainDrawer.dart';
 import 'genericMap.dart';
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'colors.dart';
 import 'placesAutocompleteUtils.dart';
 import 'basicLocation.dart';
 import 'package:collection/collection.dart' show lowerBound;
+import 'locationUtils.dart';
+import 'globals.dart' as globals;
+import 'basicLocationPersist.dart';
+
+class ActiveFiresPage extends StatefulWidget {
+  static const String routeName = '/fires';
+
+  ActiveFiresPage();
+
+  @override
+  _ActiveFiresPageState createState() => _ActiveFiresPageState();
+}
 
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  // https://docs.flutter.io/flutter/dart-core/List-class.html
-  final List<BasicLocation> _saved = [];
-  int length;
 
   _ActiveFiresPageState();
 
@@ -28,6 +34,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         leading: const Icon(Icons.location_on),
         // trailing: const Icon(Icons.delete),
         title: new Text(desc),
+        onLongPress: () {
+          _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        content: new Text(
+            'Slide horizontally to delete this location'),
+      ));
+        },
         onTap: () {
           Navigator.push(
               context,
@@ -40,7 +52,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   Widget _buildSavedLocations() {
     return new ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: _saved.length,
+        itemCount: globals.yourLocations.length,
         itemBuilder: (BuildContext _context, int i) {
           // Add a one-pixel-high divider widget before each row
           // in the ListView.
@@ -56,15 +68,16 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           // final int index = i ~/ 2;
           // print('$i $index');
           // if (index >= _saved.length) return null;
-          return _buildItem(_saved.elementAt(i));
+          return _buildItem(globals.yourLocations.elementAt(i));
         });
   }
 
   void handleUndo(BasicLocation item) {
     print('Undo $item');
-    final int insertionIndex = lowerBound(_saved, item);
+    final int insertionIndex = lowerBound(globals.yourLocations, item);
     setState(() {
-      _saved.insert(insertionIndex, item);
+      globals.yourLocations.insert(insertionIndex, item);
+      persist();
     });
   }
 
@@ -75,11 +88,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         direction: DismissDirection.horizontal,
         onDismissed: (DismissDirection direction) {
           setState(() {
-            _saved.remove(item);
+            globals.yourLocations.remove(item);
+            persist();
           });
           final String action = 'deleted';
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text('You $action item'), // ${item.index}'),
+              content: new Text('You $action this position'),
               action: new SnackBarAction(
                   label: 'UNDO',
                   onPressed: () {
@@ -104,48 +118,24 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             child: _buildRow(item)));
   }
 
-  Future<BasicLocation> getUserLocation() async {
-    String error;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      Location _location = new Location();
-      Map<String, double> location = await _location.getLocation;
-      error = null;
-      print('location $location');
-
-      // It seems that the lib fails with lat/lon values
-      return new BasicLocation(
-          lat: location['latitude'], lon: location['longitude']);
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        _scaffoldKey.currentState.showSnackBar(new SnackBar(
-          content: new Text('We don\'t have permission to get your location'),
-        ));
-        error = 'Permission denied';
-      } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-        error =
-            'Permission denied - please ask the user to enable it from the app settings';
-      }
-      _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text(
-            'I cannot get your current location. It\'s your ubication enabled?'),
-      ));
-      return BasicLocation.noLocation;
-    }
+  void persist() {
+    globals.prefs.then((prefs) {
+      persistYourLocations(prefs);
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    length = _saved.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building Active Fires, saved $length');
+    // print('Building Active Fires, saved $length');
     final title = 'Your locations';
     return Scaffold(
       key: _scaffoldKey,
+      // FIXME new?
       drawer: new MainDrawer(context),
       appBar: new AppBar(
         title: Text(title),
@@ -166,7 +156,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           ),
         ], */
       ),
-      body: length > 0
+      body: globals.yourLocations.length > 0
           ? _buildSavedLocations()
           : new Center(
               child: new CenteredColumn(children: <Widget>[
@@ -184,7 +174,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                   },
                   backColor: fires600),
             ])),
-      floatingActionButton: length > 0
+      floatingActionButton: globals.yourLocations.length > 0
           ? Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
               FloatingActionButton.extended(
                 onPressed: onAddYourLocation,
@@ -209,7 +199,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   void onAddYourLocation() {
-    Future<BasicLocation> location = getUserLocation();
+    Future<BasicLocation> location = getUserLocation(_scaffoldKey);
     _saveLocation(location);
   }
 
@@ -222,18 +212,9 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     location.then((newLocation) {
       if (newLocation != BasicLocation.noLocation)
         this.setState(() {
-          _saved.add(newLocation);
-          length = _saved.length;
+          globals.yourLocations.add(newLocation);
+          persist();
         });
     });
   }
-}
-
-class ActiveFiresPage extends StatefulWidget {
-  static const String routeName = '/fires';
-
-  ActiveFiresPage();
-
-  @override
-  _ActiveFiresPageState createState() => _ActiveFiresPageState();
 }

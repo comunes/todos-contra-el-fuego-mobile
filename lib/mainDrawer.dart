@@ -4,7 +4,7 @@ import 'colors.dart';
 import 'sandbox.dart';
 import 'introPage.dart';
 import 'activeFires.dart';
-import 'placesAutocompleteWidget.dart';
+import 'globals.dart' as globals;
 
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
@@ -29,7 +29,7 @@ Widget mainDrawer(BuildContext context) {
                 height: 80.0,
               ),
               const SizedBox(height: 20.0),
-              new Text('seedees',
+              new Text(globals.appName,
                   style: new TextStyle(
                     fontSize: 24.0,
                     color: Colors.white,
@@ -70,14 +70,6 @@ Widget mainDrawer(BuildContext context) {
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, '/subscriptions');
-        },
-      ),
-      new ListTile(
-        leading: const Icon(Icons.location_on),
-        title: new Text('Places'),
-        onTap: () {
-          // Then close the drawer
-          Navigator.pushNamed(context, PlacesAutocompleteWidget.routeName);
         },
       ),
       new Divider(),
