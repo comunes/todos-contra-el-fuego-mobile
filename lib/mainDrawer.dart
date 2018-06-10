@@ -66,7 +66,7 @@ Widget mainDrawer(BuildContext context) {
       ),
       new ListTile(
         leading: const Icon(Icons.location_on),
-        title: new Text('My areas'),
+        title: new Text('My subscribed areas'),
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, '/subscriptions');

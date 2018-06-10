@@ -11,8 +11,7 @@ import 'globals.dart' as globals;
 import 'basicLocationPersist.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
-import 'customBottomAppBar.dart';
-import 'package:simple_moment/simple_moment.dart';
+import 'globalFiresBottomStats.dart';
 import 'dart:convert';
 
 class ActiveFiresPage extends StatefulWidget {
@@ -26,8 +25,6 @@ class ActiveFiresPage extends StatefulWidget {
 
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String lastCheck;
-  int activeFires = 0;
 
   _ActiveFiresPageState();
 
@@ -138,30 +135,6 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    http.read('${globals.firesApiUrl}status/last-fire-check').then((result) {
-      try {
-        var now = Moment.now();
-        var last = DateTime.parse(json.decode(result)['value']);
-        setState(() {
-          lastCheck = now.from(last);
-        });
-      } catch (e) {
-        print('Cannot get the last fire check');
-      }
-    });
-    http.read('${globals.firesApiUrl}status/active-fires-count').then((result) {
-      try {
-        int count = json.decode(result)['total'];
-        setState(() {activeFires = count;});
-      } catch (e) {
-        print('Cannot get the last fire stats');
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     print('Building Active Fires');
     final title = 'Your locations';
@@ -178,16 +151,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           },
         ),
       ),
-      bottomNavigationBar: new CustomBottomAppBar(
-          fabLocation: FloatingActionButtonLocation.centerDocked,
-          showNotch: true,
-          color: fires100,
-          actions: listWithoutNulls(<Widget>[
-                    activeFires > 0 && lastCheck != null ?
-              new Text('${activeFires} active fires worldwide. Updated ${lastCheck}'):
-              null,
-              SizedBox(width: 10.0)
-            ])),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: new GlobalFiresBottomStats(),
       body: globals.yourLocations.length > 0
           ? _buildSavedLocations()
           : new Center(
@@ -207,25 +172,28 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                   backColor: fires600),
             ])),
       floatingActionButton: globals.yourLocations.length > 0
-          ? Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-              FloatingActionButton.extended(
-                onPressed: onAddYourLocation,
-                heroTag: 'yourposition',
-                label: const Text('Add your position'),
-                icon: const Icon(Icons.location_searching),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    onAddOtherLocation(context);
-                  },
-                  heroTag: 'otherplace',
-                  label: new Text('Add some other place'),
-                  icon: const Icon(Icons.edit_location),
-                ),
-              )
-            ])
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                  FloatingActionButton.extended(
+                    onPressed: onAddYourLocation,
+                    heroTag: 'yourposition',
+                    label: const Text('Add your position'),
+                    icon: const Icon(Icons.location_searching),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        onAddOtherLocation(context);
+                      },
+                      heroTag: 'otherplace',
+                      label: new Text('Add some other place'),
+                      icon: const Icon(Icons.edit_location),
+                    ),
+                  )
+                ])
           : null,
     );
   }

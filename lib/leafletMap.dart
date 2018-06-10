@@ -44,18 +44,20 @@ class _LeafletMapState extends State<LeafletMap> {
         appBar: new AppBar(
           title: new Text(title),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
 
           },
-          child: const Icon(Icons.notifications_none),
-          backgroundColor: Colors.orange,
+          icon: const Icon(Icons.notifications_none, color: fires600),
+          label: new Text('Subscribe', style: const TextStyle(color: fires600),),
+          backgroundColor: Colors.white,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: new CustomBottomAppBar(
             fabLocation: FloatingActionButtonLocation.centerFloat,
             showNotch: false,
             color: fires100,
+            mainAxisAlignment: MainAxisAlignment.center,
             actions: listWithoutNulls(<Widget>[
               numFires > 0 ?
               new Text('${numFires.toString()} fires at $kmAround км around this area'):

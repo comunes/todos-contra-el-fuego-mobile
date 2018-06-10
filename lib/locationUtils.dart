@@ -9,7 +9,7 @@ Future<BasicLocation> getUserLocation(GlobalKey<ScaffoldState> scaffoldKey) asyn
     try {
       Location _location = new Location();
       Map<String, double> location = await _location.getLocation;
-      print('location $location');
+      // print('location $location');
 
       // It seems that the lib fails with lat/lon values
       return new BasicLocation(
