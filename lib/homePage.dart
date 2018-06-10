@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _homeFont = const TextStyle(
-    fontSize: 40.0,
+    fontSize: 35.0,
     fontWeight: FontWeight.w400,
     // color: Colors.white,
   );
@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             new Expanded(
                 child: new FractionallySizedBox(
                     alignment: FractionalOffset.bottomCenter,
-                    heightFactor: 0.8,
+                    heightFactor: 0.9,
                     child: new Image.asset('images/logo-200.png',
                         fit: BoxFit.fitHeight))),
             new Expanded(
@@ -46,7 +46,13 @@ class HomePage extends StatelessWidget {
                     heightFactor: 0.9,
                     child: new CenteredColumn(
                       children: <Widget>[
-                        new Text(globals.appName, style: _homeFont),
+                        new Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: new Text(
+                            globals.appName,
+                            textAlign: TextAlign.center,
+                            softWrap: true, style: _homeFont),
+                        ),
                         new SizedBox(height: 20.0),
                         new RoundedBtn.nav(
                             icon: Icons.whatshot,
@@ -54,6 +60,13 @@ class HomePage extends StatelessWidget {
                             context: context,
                             route: ActiveFiresPage.routeName,
                             backColor: fires600),
+                        new SizedBox(height: 20.0),
+                        new RoundedBtn.nav(
+                          icon: Icons.notifications_active,
+                          text: 'Notify a fire',
+                          context: context,
+                          route: ActiveFiresPage.routeName,
+                          backColor: fires600),
                       ],
                     )))
           ])),

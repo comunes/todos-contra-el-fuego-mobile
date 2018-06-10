@@ -5,6 +5,10 @@ final String locationKey = 'yourlocations';
 
 void loadYourLocations(prefs) {
   List<String> yourLocations = prefs.getStringList(locationKey);
+  if (yourLocations == null) {
+    yourLocations = [];
+    persistYourLocations(prefs);
+  }
   yourLocations.forEach((locationString) {
     Map locationMap = json.decode(locationString);
     globals.yourLocations.add(BasicLocation.fromJson(locationMap));

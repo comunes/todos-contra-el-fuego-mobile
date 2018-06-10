@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'mainDrawer.dart';
-import 'genericMap.dart';
+import 'leafletMap.dart';
 import 'dart:async';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'colors.dart';
@@ -10,6 +10,7 @@ import 'package:collection/collection.dart' show lowerBound;
 import 'locationUtils.dart';
 import 'globals.dart' as globals;
 import 'basicLocationPersist.dart';
+import 'package:http/http.dart' as http;
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -36,16 +37,25 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         title: new Text(desc),
         onLongPress: () {
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text(
-            'Slide horizontally to delete this location'),
-      ));
+            content: new Text('Slide horizontally to delete this location'),
+          ));
         },
         onTap: () {
+          const String km = '100';
+          var url = 'https://fires.comunes.org/api/v1/fires-in/${globals.firesApiKey}/${loc.lat}/${loc
+          .lon}/$km';
+          /* http.post(url, body: {"name": "doodle", "color": "blue"})
+            .then((response) {
+            print("Response status: ${response.statusCode}");
+            print("Response body: ${response.body}");
+          }); */
+          // print(url);
+          http.read(url).then(print);
           Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new GenericMap(
-                      title: desc, latitude: loc.lat, longitude: loc.lon)));
+                  builder: (context) =>
+                      new LeafletMap(title: desc, location: loc)));
         });
   }
 
