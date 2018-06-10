@@ -12,8 +12,9 @@ Future<Map<String, dynamic>> loadSecrets() async {
 
 void main() {
   loadSecrets().then((secrets) {
-    globals.firesApiKey = secrets['firesApiKey'];
     globals.gmapKey = secrets['gmapKey'];
+    globals.firesApiKey = secrets['firesApiKey'];
+    globals.firesApiUrl = secrets['firesApiUrl'];
     globals.prefs.then((prefs) {
       loadYourLocations(prefs);
 

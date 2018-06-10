@@ -3,17 +3,26 @@ import 'basicLocation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
+import 'package:comunes_flutter/comunes_flutter.dart';
 import 'colors.dart';
-import 'mainDrawer.dart'
-  '';
+import 'mainDrawer.dart';
+import 'customBottomAppBar.dart';
+import 'dart:core';
+
 class LeafletMap extends StatefulWidget {
   final BasicLocation location;
   final String title;
+  final int numFires;
+  final String kmAround;
 
-  LeafletMap({@required this.title, @required this.location});
+  LeafletMap({@required this.title, @required this.location,
+  @required this.numFires, @required this.kmAround
+  });
 
   @override
-  _LeafletMapState createState() => _LeafletMapState(title: title, location: location);
+  _LeafletMapState createState() => _LeafletMapState(title: title, location: location,
+    numFires: numFires, kmAround: kmAround
+  );
 }
 
 class _LeafletMapState extends State<LeafletMap> {
@@ -21,7 +30,12 @@ class _LeafletMapState extends State<LeafletMap> {
 
   final BasicLocation location;
   final String title;
-  _LeafletMapState({@required this.title, @required this.location});
+  final int numFires;
+  final String kmAround;
+
+  _LeafletMapState({@required this.title, @required this.location,
+    @required this.numFires, @required this.kmAround
+  });
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -37,17 +51,17 @@ class _LeafletMapState extends State<LeafletMap> {
           child: const Icon(Icons.notifications_none),
           backgroundColor: Colors.orange,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: new MapBottomAppBar(
-            menuCallback: () {
-              // _scaffoldKey.currentState.openDrawer();
-            },
-            fabLocation: FloatingActionButtonLocation.centerDocked,
-            showNotch: true,
-            bottomActions: <Widget>[
-              new Text('10 fires near you'),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: new CustomBottomAppBar(
+            fabLocation: FloatingActionButtonLocation.centerFloat,
+            showNotch: false,
+            color: fires100,
+            actions: listWithoutNulls(<Widget>[
+              numFires > 0 ?
+              new Text('${numFires.toString()} fires at $kmAround км around this area'):
+              new Text('There is no fires at $kmAround км around this area'),
               SizedBox(width: 10.0)
-            ]),
+            ])),
         body:  new FlutterMap(
       options: new MapOptions(
         center: new LatLng(this.location.lat, this.location.lon),
@@ -90,55 +104,5 @@ class _LeafletMapState extends State<LeafletMap> {
         ),
       ],
     ));
-  }
-}
-
-class MapBottomAppBar extends StatelessWidget {
-  const MapBottomAppBar(
-      {this.menuCallback,
-      this.fabLocation,
-      this.showNotch,
-      this.bottomActions});
-
-  final Color color = fires600;
-  final FloatingActionButtonLocation fabLocation;
-  final bool showNotch;
-  final VoidCallback menuCallback;
-  final List<Widget> bottomActions;
-
-  static final List<FloatingActionButtonLocation> kCenterLocations =
-      <FloatingActionButtonLocation>[
-    FloatingActionButtonLocation.centerDocked,
-    FloatingActionButtonLocation.centerFloat,
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> rowContents = <Widget>[
-      /*  new IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          menuCallback();
-          /* showModalBottomSheet<Null>(
-            context: context,
-            builder: (BuildContext context) => const _DemoDrawer(),
-          ); */
-        },
-      ), */
-    ];
-
-    if (kCenterLocations.contains(fabLocation)) {
-      rowContents.add(
-        const Expanded(child: const SizedBox()),
-      );
-    }
-
-    rowContents.addAll(this.bottomActions);
-
-    return new BottomAppBar(
-      color: color,
-      hasNotch: showNotch,
-      child: new Row(children: rowContents),
-    );
   }
 }

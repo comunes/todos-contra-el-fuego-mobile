@@ -6,11 +6,14 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'colors.dart';
 import 'placesAutocompleteUtils.dart';
 import 'basicLocation.dart';
-import 'package:collection/collection.dart' show lowerBound;
 import 'locationUtils.dart';
 import 'globals.dart' as globals;
 import 'basicLocationPersist.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert' show json;
+import 'customBottomAppBar.dart';
+import 'package:simple_moment/simple_moment.dart';
+import 'dart:convert';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -23,6 +26,8 @@ class ActiveFiresPage extends StatefulWidget {
 
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  String lastCheck;
+  int activeFires = 0;
 
   _ActiveFiresPageState();
 
@@ -42,20 +47,20 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         },
         onTap: () {
           const String km = '100';
-          var url = 'https://fires.comunes.org/api/v1/fires-in/${globals.firesApiKey}/${loc.lat}/${loc
+          var url = '${globals.firesApiUrl}fires-in/${globals
+          .firesApiKey}/${loc.lat}/${loc
           .lon}/$km';
-          /* http.post(url, body: {"name": "doodle", "color": "blue"})
-            .then((response) {
-            print("Response status: ${response.statusCode}");
-            print("Response body: ${response.body}");
-          }); */
-          // print(url);
-          http.read(url).then(print);
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) =>
-                      new LeafletMap(title: desc, location: loc)));
+          http.read(url).then((result) {
+            int numFires = json.decode(result)['real'];
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => new LeafletMap(
+                        title: desc,
+                        location: loc,
+                        numFires: numFires,
+                        kmAround: km)));
+          });
         });
   }
 
@@ -83,10 +88,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   void handleUndo(BasicLocation item) {
-    print('Undo $item');
-    final int insertionIndex = lowerBound(globals.yourLocations, item);
     setState(() {
-      globals.yourLocations.insert(insertionIndex, item);
+      globals.yourLocations.add(item);
       persist();
     });
   }
@@ -137,11 +140,30 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   @override
   void initState() {
     super.initState();
+    http.read('${globals.firesApiUrl}status/last-fire-check').then((result) {
+      try {
+        var now = Moment.now();
+        var last = DateTime.parse(json.decode(result)['value']);
+        setState(() {
+          lastCheck = now.from(last);
+        });
+      } catch (e) {
+        print('Cannot get the last fire check');
+      }
+    });
+    http.read('${globals.firesApiUrl}status/active-fires-count').then((result) {
+      try {
+        int count = json.decode(result)['total'];
+        setState(() {activeFires = count;});
+      } catch (e) {
+        print('Cannot get the last fire stats');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // print('Building Active Fires, saved $length');
+    print('Building Active Fires');
     final title = 'Your locations';
     return Scaffold(
       key: _scaffoldKey,
@@ -155,17 +177,17 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             _scaffoldKey.currentState.openDrawer();
           },
         ),
-        /* actions: <Widget>[
-          new IconButton(
-              icon: Icon(Icons.location_searching), onPressed: () {}),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {
-              print('More button');
-            },
-          ),
-        ], */
       ),
+      bottomNavigationBar: new CustomBottomAppBar(
+          fabLocation: FloatingActionButtonLocation.centerDocked,
+          showNotch: true,
+          color: fires100,
+          actions: listWithoutNulls(<Widget>[
+                    activeFires > 0 && lastCheck != null ?
+              new Text('${activeFires} active fires worldwide. Updated ${lastCheck}'):
+              null,
+              SizedBox(width: 10.0)
+            ])),
       body: globals.yourLocations.length > 0
           ? _buildSavedLocations()
           : new Center(

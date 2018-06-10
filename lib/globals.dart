@@ -6,6 +6,7 @@ import 'basicLocation.dart';
 
 String gmapKey;
 String firesApiKey;
+String firesApiUrl;
 String appName = 'All Against The Fire!';
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 final List<BasicLocation> yourLocations = [];
