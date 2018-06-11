@@ -55,8 +55,8 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            new Text('${activeFires} active fires worldwide'),
-            new Text('Updated ${lastCheck}')
+            new Text('$activeFires active fires worldwide'),
+            new Text('Updated $lastCheck')
           ])
           : null,
         SizedBox(width: 10.0)
