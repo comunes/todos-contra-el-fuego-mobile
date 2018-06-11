@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
+import 'slider.dart';
 
 /*
 Useful for debug
@@ -12,11 +13,12 @@ class Sandbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     //showDialog(context: context, child: builder(context));
     return Scaffold(
       body: new CenteredColumn(
         children: <Widget>[
-          new IconButton(
-              icon: new Icon(Icons.favorite), onPressed: () => {}), // l
+          new FireDistanceSlider()
+
         ],
       ),
     );
