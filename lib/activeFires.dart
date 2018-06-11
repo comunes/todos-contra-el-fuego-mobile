@@ -33,14 +33,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         ? loc.description
         : 'Position: ${loc.lat}, ${loc.lon}';
     return new ListTile(
-        dense: false,
+        dense: true,
         leading: const Icon(Icons.location_on),
-        // trailing: const Icon(Icons.delete),
+        trailing: const Icon(Icons.notifications_off),
         title: new Text(desc),
         onLongPress: () {
-          _scaffoldKey.currentState.showSnackBar(new SnackBar(
-            content: new Text('Slide horizontally to delete this location'),
-          ));
+          showSnackMsg('Slide horizontally to delete this location');
         },
         onTap: () {
           const String km = '100';
@@ -59,6 +57,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                         kmAround: km)));
           });
         });
+  }
+
+  void showSnackMsg(String msg) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(msg),
+    ));
   }
 
   Widget _buildSavedLocations() {
@@ -172,8 +176,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                   backColor: fires600),
             ])),
       floatingActionButton: globals.yourLocations.length > 0
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+          ? Column(mainAxisAlignment: MainAxisAlignment.end,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                   FloatingActionButton.extended(
@@ -210,11 +213,15 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   void _saveLocation(Future<BasicLocation> location) {
     location.then((newLocation) {
-      if (newLocation != BasicLocation.noLocation)
-        this.setState(() {
-          globals.yourLocations.add(newLocation);
-          persist();
-        });
+      if (newLocation != BasicLocation.noLocation) {
+        if (globals.yourLocations.contains(newLocation)) {
+          showSnackMsg('You have already added this location');
+        } else
+          this.setState(() {
+            globals.yourLocations.add(newLocation);
+            persist();
+          });
+      }
     });
   }
 }
