@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
-
 class HomePage extends StatelessWidget {
   static const String routeName = '/home';
 
