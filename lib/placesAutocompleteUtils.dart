@@ -19,7 +19,10 @@ Future<BasicLocation> openPlacesDialog(BuildContext context) async {
       mode: _mode,
       // FIXME
       language: "es",
-      components: [new Component(Component.country, "es")]);
+      components: [
+        // This limit the search too much
+        // new Component(Component.country, "es")
+      ]);
   if (p != null) {
     // get detail (lat/lng)
     PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
