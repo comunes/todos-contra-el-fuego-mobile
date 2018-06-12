@@ -59,12 +59,12 @@ class _GenericMapState extends State<GenericMap> {
         falsePos = resultDecoded['falsePos'];
         industries = resultDecoded['industries'];
 
-        var firesCount = fires.length;
-        var industriesCount = industries.length;
-        var falsePosCount = falsePos.length;
-
-        /* print(
-            'fire: $firesCount falsePos: $falsePosCount industries: $industriesCount'); */
+        if (globals.isDevelopment) {
+          var firesCount = fires.length;
+          var industriesCount = industries.length;
+          var falsePosCount = falsePos.length;
+          print('real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
+        }
       });
     });
   }

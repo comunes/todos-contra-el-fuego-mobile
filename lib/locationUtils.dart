@@ -47,8 +47,8 @@ Future<BasicLocation> getUserLocation(
 Future<String> getReverseLocation(BasicLocation loc,
     [bool external = false]) async {
   final coordinates = new Coordinates(loc.lat, loc.lon);
-  var geocoder = external ? Geocoder.google(globals.gmapKey) : Geocoder.local;
-  var addresses = await geocoder.findAddressesFromCoordinates(coordinates);
+  var geoCoder = external ? Geocoder.google(globals.gmapKey) : Geocoder.local;
+  var addresses = await geoCoder.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;
   print("${first.featureName} : ${first.addressLine}");
   return first.addressLine;
