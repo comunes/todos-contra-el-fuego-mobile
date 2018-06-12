@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 import 'sandbox.dart';
-import 'introPage.dart';
 import 'activeFires.dart';
 import 'globals.dart' as globals;
 

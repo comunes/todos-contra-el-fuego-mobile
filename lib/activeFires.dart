@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'mainDrawer.dart';
-import 'leafletMap.dart';
+import 'genericMap.dart';
 import 'dart:async';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'colors.dart';
@@ -80,7 +80,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => new LeafletMap(
+            builder: (context) => new GenericMap(
                   title: loc.description,
                   location: loc,
                 )));

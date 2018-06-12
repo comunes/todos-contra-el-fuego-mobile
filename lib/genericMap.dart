@@ -11,23 +11,26 @@ import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 import 'slider.dart';
-import 'customMapPlugin.dart';
+import 'fireMarker.dart';
+import 'zoomMapPlugin.dart';
+import 'dummyMapPlugin.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
+import 'fireMarkType.dart';
 
-enum MarkType { position, fire, industry, falsePos }
+enum MapOperation { view }
 
-class LeafletMap extends StatefulWidget {
+class GenericMap extends StatefulWidget {
   final BasicLocation location;
   final String title;
 
-  LeafletMap({@required this.title, @required this.location});
+  GenericMap({@required this.title, @required this.location});
 
   @override
-  _LeafletMapState createState() =>
-      _LeafletMapState(title: title, location: location);
+  _GenericMapState createState() =>
+      _GenericMapState(title: title, location: location);
 }
 
-class _LeafletMapState extends State<LeafletMap> {
+class _GenericMapState extends State<GenericMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final BasicLocation location;
@@ -50,7 +53,7 @@ class _LeafletMapState extends State<LeafletMap> {
     http.read(url).then((result) {
       setState(() {
         var resultDecoded = json.decode(result);
-        print(resultDecoded);
+        // print(resultDecoded);
         numFires = resultDecoded['real'];
         fires = resultDecoded['fires'];
         falsePos = resultDecoded['falsePos'];
@@ -60,19 +63,21 @@ class _LeafletMapState extends State<LeafletMap> {
         var industriesCount = industries.length;
         var falsePosCount = falsePos.length;
 
-        print(
-            'fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
+        /* print(
+            'fire: $firesCount falsePos: $falsePosCount industries: $industriesCount'); */
       });
     });
   }
 
-  _LeafletMapState({@required this.title, @required this.location});
+  _GenericMapState({@required this.title, @required this.location});
 
   @override
   Widget build(BuildContext context) {
     MapOptions mapOptions = new MapOptions(
         center: new LatLng(this.location.lat, this.location.lon),
-        plugins: [new ZoomMapPlugin()],
+        plugins: globals.isDevelopment
+            ? [new ZoomMapPlugin()]
+            : [new DummyMapPlugin()],
         // this works ?
         // interactive: false,
         zoom: 13.0,
@@ -99,7 +104,9 @@ class _LeafletMapState extends State<LeafletMap> {
                 '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
           },
         ),
-        new ZoomMapPluginOptions(),
+        globals.isDevelopment
+            ? new ZoomMapPluginOptions()
+            : new DummyMapPluginOptions(),
         new MarkerLayerOptions(
           markers: buildMarkers(
               this.location, this.fires, this.industries, this.falsePos),
@@ -170,47 +177,27 @@ class _LeafletMapState extends State<LeafletMap> {
   List<Marker> buildMarkers(BasicLocation yourLocation, List<dynamic> fires,
       List<dynamic> falsePos, List<dynamic> industries) {
     List<Marker> markers = [];
-    markers.add(buildMarker(yourLocation, MarkType.position));
+    const calibrate = false; // useful when we change the fire icons size
+    markers.add(FireMarker(yourLocation, FireMarkType.position));
+    if (calibrate) markers.add(FireMarker(yourLocation, FireMarkType.pixel));
     falsePos.forEach((fire) {
       var coords = fire['geo']['coordinates'];
       var loc = BasicLocation(lon: coords[0], lat: coords[1]);
-      markers.add(buildMarker(loc, MarkType.falsePos));
+      markers.add(FireMarker(loc, FireMarkType.falsePos));
+      if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     industries.forEach((fire) {
       // print(fire['geo']['coordinates']);
       var coords = fire['geo']['coordinates'];
       var loc = BasicLocation(lon: coords[0], lat: coords[1]);
-      markers.add(buildMarker(loc, MarkType.industry));
+      markers.add(FireMarker(loc, FireMarkType.industry));
+      if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     fires.forEach((fire) {
       var loc = new BasicLocation(lat: fire['lat'], lon: fire['lon']);
-      markers.add(buildMarker(loc, MarkType.fire));
+      markers.add(FireMarker(loc, FireMarkType.fire));
+      markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     return markers;
-  }
-
-  Marker buildMarker(location, MarkType type) {
-    return new Marker(
-      width: 80.0,
-      height: 80.0,
-      point: new LatLng(location.lat, location.lon),
-      builder: (ctx) => new Container(
-            child: buildImageMark(type),
-          ),
-    );
-  }
-
-  Widget buildImageMark(MarkType type) {
-    switch (type) {
-      case MarkType.position:
-        return new Icon(Icons.location_on, color: fires600, size: 50.0);
-      case MarkType.fire:
-        return new Image.asset('images/fire-marker-l.png');
-      case MarkType.industry:
-        return new Image.asset('images/industry-marker-reg.png');
-      case MarkType.falsePos:
-      default:
-        return new Image.asset('images/industry-marker.png');
-    }
   }
 }
