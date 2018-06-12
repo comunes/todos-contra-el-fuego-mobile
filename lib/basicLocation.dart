@@ -4,16 +4,31 @@ class BasicLocation extends Comparable<BasicLocation> {
   final double lat;
   final double lon;
   String description;
+  bool subscribed;
 
   static BasicLocation noLocation = new BasicLocation(lat: 0.0, lon: 0.0);
 
-  BasicLocation({@required this.lat, @required this.lon, this.description});
+  BasicLocation({@required this.lat, @required this.lon, this.description, this.subscribed: false}) {
+    if (this.description == null)
+      this.description = 'Position: ${this.lat}, ${this.lon}';
+  }
 
   int compareTo(BasicLocation other) {
     return lat == other.lat && lon == other.lon ? 1 : 0;
   }
 
   bool operator ==(o) => o is BasicLocation && o.lat == lat && o.lon == lon;
+
+  int get hashCode {
+    int hash = 1;
+    hash = hash * 17 + lat.hashCode;
+    hash = hash * 31 + lon.hashCode;
+    return hash;
+  }
+
+  bool get isSubscribed {
+    return subscribed == null ? false : subscribed;
+  }
 
   BasicLocation.fromJson(Map<String, dynamic> json)
       : lat = json['lat'],

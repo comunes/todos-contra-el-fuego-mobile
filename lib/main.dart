@@ -16,7 +16,7 @@ void main() {
     globals.firesApiKey = secrets['firesApiKey'];
     globals.firesApiUrl = secrets['firesApiUrl'];
     globals.prefs.then((prefs) {
-      loadYourLocations(prefs);
+      loadYourLocationsWithPrefs(prefs);
 
       // Run baby run!
       runApp(new FiresApp());

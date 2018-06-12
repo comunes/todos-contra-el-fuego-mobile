@@ -23,6 +23,8 @@ dependencies:
   http: "^0.11.3+16"
   simple_moment: "^0.0.3"
   geocoder: "^0.0.1"
+  just_debounce_it: "^1.0.4"
+  flutter_fab_dialer: "^0.0.5"
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +54,8 @@ flutter:
     - images/fire-marker-m.png
     - images/fire-marker-s.png
     - images/fire-marker.png
+    - images/industry-marker-reg.png
+    - images/industry-marker.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

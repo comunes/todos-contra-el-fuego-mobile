@@ -4,11 +4,13 @@ class CustomBottomAppBar extends StatelessWidget {
   const CustomBottomAppBar(
       {this.fabLocation,
       this.showNotch,
+      this.height = 56.0,
       this.color = Colors.black45,
       this.mainAxisAlignment = MainAxisAlignment.center,
       this.actions});
 
   final Color color;
+  final double height;
   final MainAxisAlignment mainAxisAlignment;
   final FloatingActionButtonLocation fabLocation;
   final bool showNotch;
@@ -22,7 +24,7 @@ class CustomBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rowContents = <Widget>[new SizedBox(height: 56.0)];
+    final List<Widget> rowContents = <Widget>[new SizedBox(height: height)];
 
     if (kCenterLocations.contains(fabLocation)) {
       /* rowContents.add(

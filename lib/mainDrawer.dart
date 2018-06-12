@@ -41,7 +41,7 @@ Widget mainDrawer(BuildContext context) {
           ),
         ),
       ),
-      new ListTile(
+      /* new ListTile(
         // https://docs.flutter.io/flutter/material/CircleAvatar-class.html
         leading: new CircleAvatar(
           backgroundColor: Colors.brown.shade800,
@@ -49,14 +49,10 @@ Widget mainDrawer(BuildContext context) {
         ),
         title: new Text('Your profile'),
         onTap: () {
-          // Update the state of the app
-          // ...
-          // Then close the drawer
-          // Navigator.pop(context);
           Navigator.pushNamed(context, IntroPage.routeName);
         },
       ),
-      new Divider(),
+      new Divider(), */
       new ListTile(
         leading: const Icon(Icons.whatshot),
         title: new Text('Active fires'),
@@ -65,14 +61,22 @@ Widget mainDrawer(BuildContext context) {
         },
       ),
       new ListTile(
-        leading: const Icon(Icons.location_on),
-        title: new Text('My subscribed areas'),
+        leading: const Icon(Icons.notifications_active),
+        title: new Text('Notify a fire'),
+        onTap: () {
+          // Then close the drawer
+          Navigator.pushNamed(context, Sandbox.routeName);
+        },
+      ),
+      new Divider(),
+      new ListTile(
+        leading: const Icon(Icons.favorite),
+        title: new Text('Support this initiative'),
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, '/subscriptions');
         },
       ),
-      new Divider(),
       new ListTile(
         leading: const Icon(Icons.bug_report),
         title: new Text('Sandbox'),
@@ -92,8 +96,16 @@ Widget mainDrawer(BuildContext context) {
         },
       ),
       new AboutListTile(
-          // FIXME
-          )
+        icon: globals.appIcon,
+        applicationName: globals.appName,
+        applicationVersion: globals.appVersion,
+        applicationIcon: globals.appMediumIcon,
+        applicationLegalese: globals.appLicense,
+        aboutBoxChildren: <Widget> [
+          // new Text('What?')
+        ]
+        // FIXME
+      )
     ],
   );
 }

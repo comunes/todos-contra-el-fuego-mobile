@@ -9,10 +9,8 @@ import 'basicLocation.dart';
 import 'locationUtils.dart';
 import 'globals.dart' as globals;
 import 'basicLocationPersist.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show json;
 import 'globalFiresBottomStats.dart';
-import 'dart:convert';
+import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -26,37 +24,66 @@ class ActiveFiresPage extends StatefulWidget {
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  List<FabMiniMenuItem> _fabMiniMenuItemList(BuildContext context) {
+  return [
+    new FabMiniMenuItem.withText(
+      new Icon(Icons.location_searching),
+      fires600,
+      8.0,
+      "Add your current position",
+      () {
+        onAddYourLocation();
+      },
+      "Add your current position",
+      fires300,
+      Colors.white,
+    ),
+    new FabMiniMenuItem.withText(
+        new Icon(Icons.edit_location),
+        fires600,
+        8.0,
+        "Add some other place",
+        () {
+          onAddOtherLocation(context);
+        },
+        "Add some other place",
+        fires300,
+        Colors.white)
+  ];}
+
   _ActiveFiresPageState();
 
   Widget _buildRow(BasicLocation loc) {
-    String desc = loc.description != null
-        ? loc.description
-        : 'Position: ${loc.lat}, ${loc.lon}';
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.location_on),
-        trailing: const Icon(Icons.notifications_off),
-        title: new Text(desc),
+        trailing: new IconButton(
+            icon: new Icon(loc.isSubscribed
+                ? Icons.notifications_active
+                : Icons.notifications_off),
+            onPressed: () {
+              loc.subscribed = !loc.isSubscribed;
+              persistYourLocations();
+              setState(() {});
+            }),
+        title: new Text(loc.description),
         onLongPress: () {
           showSnackMsg('Slide horizontally to delete this location');
         },
         onTap: () {
-          const String km = '100';
-          var url = '${globals.firesApiUrl}fires-in/${globals
-          .firesApiKey}/${loc.lat}/${loc
-          .lon}/$km';
-          http.read(url).then((result) {
-            int numFires = json.decode(result)['real'];
-            Navigator.push(
-                context,
-                new MaterialPageRoute(
-                    builder: (context) => new LeafletMap(
-                        title: desc,
-                        location: loc,
-                        numFires: numFires,
-                        kmAround: km)));
-          });
+          showLocationMap(loc);
         });
+  }
+
+  void showLocationMap(BasicLocation loc) {
+    // , VoidCallback onSubs
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new LeafletMap(
+                  title: loc.description,
+                  location: loc,
+                )));
   }
 
   void showSnackMsg(String msg) {
@@ -91,7 +118,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   void handleUndo(BasicLocation item) {
     setState(() {
       globals.yourLocations.add(item);
-      persist();
+      persistYourLocations();
     });
   }
 
@@ -103,7 +130,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         onDismissed: (DismissDirection direction) {
           setState(() {
             globals.yourLocations.remove(item);
-            persist();
+            persistYourLocations();
           });
           final String action = 'deleted';
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -132,16 +159,11 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             child: _buildRow(item)));
   }
 
-  void persist() {
-    globals.prefs.then((prefs) {
-      persistYourLocations(prefs);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var hasLocations = globals.yourLocations.length > 0;
+    final title = hasLocations ? 'Active fires in your places': 'Active fires in the world';
     print('Building Active Fires');
-    final title = 'Your locations';
     return Scaffold(
       key: _scaffoldKey,
       // FIXME new?
@@ -157,29 +179,32 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: new GlobalFiresBottomStats(),
-      body: globals.yourLocations.length > 0
-          ? _buildSavedLocations()
+      body: hasLocations
+          ? new Stack(children: <Widget>[
+              _buildSavedLocations(),
+              new FabDialer(_fabMiniMenuItemList(context), fires600, new Icon(Icons.add))
+            ])
           : new Center(
               child: new CenteredColumn(children: <Widget>[
               new RoundedBtn(
                   icon: Icons.location_searching,
-                  text: 'Add your position',
+                  text: 'Fires near your',
                   onPressed: onAddYourLocation,
                   backColor: fires600),
               const SizedBox(height: 26.0),
               new RoundedBtn(
                   icon: Icons.edit_location,
-                  text: 'Add some other place',
+                  text: 'Fires near other place',
                   onPressed: () {
                     onAddOtherLocation(context);
                   },
                   backColor: fires600),
             ])),
-      floatingActionButton: globals.yourLocations.length > 0
+      floatingActionButton: hasLocations
           ? Column(mainAxisAlignment: MainAxisAlignment.end,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                  FloatingActionButton.extended(
+                  /* FloatingActionButton.extended(
                     onPressed: onAddYourLocation,
                     heroTag: 'yourposition',
                     label: const Text('Add your position'),
@@ -195,7 +220,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                       label: new Text('Add some other place'),
                       icon: const Icon(Icons.edit_location),
                     ),
-                  )
+                  ), */
                 ])
           : null,
     );
@@ -219,7 +244,10 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         } else
           this.setState(() {
             globals.yourLocations.add(newLocation);
-            persist();
+            persistYourLocations();
+            new Timer(new Duration(milliseconds: 1000), () {
+              showLocationMap(newLocation);
+            });
           });
       }
     });
