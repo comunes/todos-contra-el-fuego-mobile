@@ -12,7 +12,6 @@ Future<BasicLocation> getUserLocation(
   try {
     Location _location = new Location();
     Map<String, double> location = await _location.getLocation;
-    // print('location $location');
 
     // It seems that the lib fails with lat/lon values
     var basicLocation = new BasicLocation(
