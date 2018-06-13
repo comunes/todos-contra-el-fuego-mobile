@@ -25,31 +25,26 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<FabMiniMenuItem> _fabMiniMenuItemList(BuildContext context) {
-  return [
-    new FabMiniMenuItem.withText(
-      new Icon(Icons.location_searching),
-      fires600,
-      8.0,
-      "Add your current position",
-      () {
-        onAddYourLocation();
-      },
-      "Add your current position",
-      fires300,
-      Colors.white,
-    ),
-    new FabMiniMenuItem.withText(
-        new Icon(Icons.edit_location),
+    return [
+      new FabMiniMenuItem.withText(
+        new Icon(Icons.location_searching),
         fires600,
         8.0,
-        "Add some other place",
+        "Add your current position",
         () {
-          onAddOtherLocation(context);
+          onAddYourLocation();
         },
-        "Add some other place",
-        fires300,
-        Colors.white)
-  ];}
+        "Add your current position",
+        Colors.black38,
+        Colors.white,
+      ),
+      new FabMiniMenuItem.withText(
+          new Icon(Icons.edit_location), fires600, 8.0, "Add some other place",
+          () {
+        onAddOtherLocation(context);
+      }, "Add some other place", Colors.black38, Colors.white)
+    ];
+  }
 
   _ActiveFiresPageState();
 
@@ -81,9 +76,9 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         context,
         new MaterialPageRoute(
             builder: (context) => new GenericMap(
-                  title: loc.description,
-                  location: loc,
-                )));
+                title: loc.description,
+                location: loc,
+                operation: MapOperation.view)));
   }
 
   void showSnackMsg(String msg) {
@@ -162,7 +157,9 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   @override
   Widget build(BuildContext context) {
     var hasLocations = globals.yourLocations.length > 0;
-    final title = hasLocations ? 'Active fires in your places': 'Active fires in the world';
+    final title = hasLocations
+        ? 'Active fires in your places'
+        : 'Active fires in the world';
     print('Building Active Fires');
     return Scaffold(
       key: _scaffoldKey,
@@ -182,7 +179,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
       body: hasLocations
           ? new Stack(children: <Widget>[
               _buildSavedLocations(),
-              new FabDialer(_fabMiniMenuItemList(context), fires600, new Icon(Icons.add))
+              new FabDialer(
+                  _fabMiniMenuItemList(context), fires600, new Icon(Icons.add))
             ])
           : new Center(
               child: new CenteredColumn(children: <Widget>[

@@ -3,7 +3,6 @@ import 'fireMarkType.dart';
 import 'colors.dart';
 
 class FireMarkerIcon extends StatelessWidget {
-
   final FireMarkType type;
 
   FireMarkerIcon(this.type);

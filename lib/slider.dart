@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:padder/padding.dart';
+import 'package:fluttery/framing.dart';
 
 typedef void SlideCallback(int distance);
 
@@ -25,7 +26,8 @@ class _FireDistanceSliderState extends State<FireDistanceSlider> {
   }
 
   sizeText(_sliderValue) =>
-      new Text('Subscribe to $_sliderValue км around this area');
+      new Text('Subscribe to $_sliderValue км around this area',
+          style: new TextStyle(color: Colors.black87));
 
   warningText(_sliderValue) => _sliderValue >= 50
       ? new Text('Warning: this is a very large area',
@@ -38,7 +40,6 @@ class _FireDistanceSliderState extends State<FireDistanceSlider> {
       value: _sliderValue + 0.0,
       activeColor: fires900,
       inactiveColor: Colors.black45,
-
       min: 1.0,
       max: 100.0,
       divisions: 99,
@@ -54,14 +55,14 @@ class _FireDistanceSliderState extends State<FireDistanceSlider> {
     return new Column(
       mainAxisSize: MainAxisSize.min,
       children: listWithoutNulls(<Widget>[
-        slider,
-        new Card(
-            color: const Color(0x60FFFFFF),
-            child: PaddingAll(10.0,
-                child: new Column(children: <Widget>[
-                  sizeText(_sliderValue),
-                  warningText(_sliderValue)
-                ])))
+        new SizedBox(height: 50.0),
+        new Row(mainAxisSize: MainAxisSize.max, children: <Widget>[slider]),
+        // new SizedBox(height: 5.0),
+        new Column(children: <Widget>[
+          sizeText(_sliderValue),
+          new SizedBox(height: 5.0),
+          warningText(_sliderValue)
+        ])
       ]),
     );
   }

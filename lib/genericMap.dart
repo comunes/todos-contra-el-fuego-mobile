@@ -10,24 +10,29 @@ import 'dart:core';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
-import 'slider.dart';
 import 'fireMarker.dart';
 import 'zoomMapPlugin.dart';
 import 'dummyMapPlugin.dart';
-import 'package:just_debounce_it/just_debounce_it.dart';
 import 'fireMarkType.dart';
+import 'slider.dart';
+import 'package:just_debounce_it/just_debounce_it.dart';
+import 'package:padder/padding.dart';
 
-enum MapOperation { view }
+enum MapOperation { view, subscriptionConfirm, unsubscribe }
 
 class GenericMap extends StatefulWidget {
   final BasicLocation location;
   final String title;
+  final MapOperation operation;
 
-  GenericMap({@required this.title, @required this.location});
+  GenericMap(
+      {@required this.title,
+      @required this.location,
+      @required this.operation});
 
   @override
   _GenericMapState createState() =>
-      _GenericMapState(title: title, location: location);
+      _GenericMapState(title: title, location: location, operation: operation);
 }
 
 class _GenericMapState extends State<GenericMap> {
@@ -40,6 +45,7 @@ class _GenericMapState extends State<GenericMap> {
   List<dynamic> fires = [];
   List<dynamic> falsePos = [];
   List<dynamic> industries = [];
+  MapOperation operation;
 
   @override
   void initState() {
@@ -63,16 +69,21 @@ class _GenericMapState extends State<GenericMap> {
           var firesCount = fires.length;
           var industriesCount = industries.length;
           var falsePosCount = falsePos.length;
-          print('real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
+          print(
+              'real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
         }
       });
     });
   }
 
-  _GenericMapState({@required this.title, @required this.location});
+  _GenericMapState(
+      {@required this.title,
+      @required this.location,
+      @required this.operation});
 
   @override
   Widget build(BuildContext context) {
+    print('Build map with operation: $operation');
     MapOptions mapOptions = new MapOptions(
         center: new LatLng(this.location.lat, this.location.lon),
         plugins: globals.isDevelopment
@@ -90,29 +101,32 @@ class _GenericMapState extends State<GenericMap> {
     var mapController = new MapController();
     // mapController.fitBounds(bounds);
     // mapController.center
-    var fmap = new FlutterMap(
-      options: mapOptions,
-      mapController: mapController,
-      layers: [
-        new TileLayerOptions(
-          maxZoom: 6.0,
-          subdomains: ['a', 'b', 'c'],
-          urlTemplate: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-          additionalOptions: {
-            // 'opacity': '0.1',
-            'attribution':
-                '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
-          },
-        ),
-        globals.isDevelopment
-            ? new ZoomMapPluginOptions()
-            : new DummyMapPluginOptions(),
-        new MarkerLayerOptions(
-          markers: buildMarkers(
-              this.location, this.fires, this.industries, this.falsePos),
-        ),
-      ],
-    );
+    var fmap = new Opacity(
+        opacity: operation == MapOperation.subscriptionConfirm ? 0.5 : 1.0,
+        child: new FlutterMap(
+          options: mapOptions,
+          mapController: mapController,
+          layers: [
+            new TileLayerOptions(
+              maxZoom: 6.0,
+              subdomains: ['a', 'b', 'c'],
+              urlTemplate:
+                  'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+              additionalOptions: {
+                // 'opacity': '0.1',
+                'attribution':
+                    '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
+              },
+            ),
+            globals.isDevelopment
+                ? new ZoomMapPluginOptions()
+                : new DummyMapPluginOptions(),
+            new MarkerLayerOptions(
+              markers: buildMarkers(
+                  this.location, this.fires, this.industries, this.falsePos),
+            ),
+          ],
+        ));
 
     return new Scaffold(
         key: _scaffoldKey,
@@ -120,15 +134,43 @@ class _GenericMapState extends State<GenericMap> {
         appBar: new AppBar(
           title: new Text(title),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_none, color: fires600),
-          label: new Text(
-            'Subscribe',
-            style: const TextStyle(color: fires600),
-          ),
-          backgroundColor: Colors.white,
-        ),
+        floatingActionButton: Column(mainAxisAlignment: MainAxisAlignment.end,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              FloatingActionButton.extended(
+                onPressed: () {
+                  setState(() {
+                    switch (operation) {
+                      case MapOperation.view:
+                        operation = MapOperation.subscriptionConfirm;
+                        break;
+                      case MapOperation.subscriptionConfirm:
+                        operation = MapOperation.unsubscribe;
+                        break;
+                      case MapOperation.unsubscribe:
+                        operation = MapOperation.view;
+                        break;
+                    }
+                  });
+                },
+                icon: new Icon(
+                    operation == MapOperation.view
+                        ? Icons.notifications_active
+                        : operation == MapOperation.subscriptionConfirm
+                            ? Icons.check
+                            : Icons.notifications_off,
+                    color: fires600),
+                label: new Text(
+                  operation == MapOperation.view
+                      ? 'Subscribe to fires notifications'
+                      : operation == MapOperation.subscriptionConfirm
+                          ? 'Confirm'
+                          : 'Unsubscribe',
+                  style: const TextStyle(color: fires600),
+                ),
+                backgroundColor: Colors.white,
+              )
+            ]),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: new CustomBottomAppBar(
             fabLocation: FloatingActionButtonLocation.centerFloat,
@@ -137,7 +179,7 @@ class _GenericMapState extends State<GenericMap> {
             // height: 170.0,
             mainAxisAlignment: MainAxisAlignment.center,
             actions: listWithoutNulls(<Widget>[
-              numFires == null
+              operation == MapOperation.subscriptionConfirm|| numFires == null
                   ? null
                   : numFires > 0
                       ? new Text('${numFires.toString()} fires at ${kmAround
@@ -152,22 +194,24 @@ class _GenericMapState extends State<GenericMap> {
                 // Material(color: Colors.yellowAccent),
                 fmap,
                 Positioned(
-                  top: constraints.maxHeight - 160,
+                  top: constraints.maxHeight - 200,
                   right: 10.0,
                   left: 10.0,
                   child: new CenteredRow(
                     // Fit sample:
                     // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
-                    children: <Widget>[
-                      new FireDistanceSlider(
-                          initialValue: kmAround,
-                          onSlide: (distance) {
-                            setState(() {
-                              kmAround = distance;
-                              Debounce.seconds(1, updateFireStats);
-                            });
-                          })
-                    ],
+                    children: operation == MapOperation.subscriptionConfirm
+                        ? <Widget>[
+                            new FireDistanceSlider(
+                                initialValue: kmAround,
+                                onSlide: (distance) {
+                                  setState(() {
+                                    kmAround = distance;
+                                    Debounce.seconds(1, updateFireStats);
+                                  });
+                                })
+                          ]
+                        : [],
                   ),
                 )
               ]),

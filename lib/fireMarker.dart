@@ -13,7 +13,10 @@ class FireMarker extends Marker {
           height: 80.0,
           point: new LatLng(location.lat, location.lon),
           builder: (ctx) => new Container(
-                child: new FireMarkerIcon(type),
+                child: new GestureDetector(
+                  child: new FireMarkerIcon(type), onTap: () {
+                    print('marker pressed');
+                })
               ),
           anchor: anchor,
           anchorOverride: anchorOverride ?? type == FireMarkType.position
