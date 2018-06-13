@@ -1,4 +1,4 @@
-package org.comunes.firesflutter;
+package org.comunes.fires;
 
 import android.os.Bundle;
 
