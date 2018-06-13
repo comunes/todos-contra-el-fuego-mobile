@@ -16,7 +16,8 @@ import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
 import 'slider.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
-import 'package:padder/padding.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 enum MapOperation { view, subscriptionConfirm, unsubscribe }
 
@@ -37,6 +38,8 @@ class GenericMap extends StatefulWidget {
 
 class _GenericMapState extends State<GenericMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
 
   final BasicLocation location;
   final String title;
@@ -145,6 +148,8 @@ class _GenericMapState extends State<GenericMap> {
                         operation = MapOperation.subscriptionConfirm;
                         break;
                       case MapOperation.subscriptionConfirm:
+                        // IOS specific
+                        _firebaseMessaging.requestNotificationPermissions();
                         operation = MapOperation.unsubscribe;
                         break;
                       case MapOperation.unsubscribe:

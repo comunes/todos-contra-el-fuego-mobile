@@ -22,3 +22,4 @@ doc/api/
 
 assets/private-settings.json
 android/app/src/main/AndroidManifest.xml
+android/app/google-services.json
