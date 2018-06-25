@@ -1,23 +1,24 @@
+import 'dart:convert' show json;
+import 'dart:core';
+
+import 'package:comunes_flutter/comunes_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'basicLocation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:http/http.dart' as http;
+import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
+
+import 'basicLocation.dart';
 import 'colors.dart';
 import 'customBottomAppBar.dart';
-import 'dart:core';
-import 'globals.dart' as globals;
-import 'package:http/http.dart' as http;
-import 'dart:convert' show json;
-import 'fireMarker.dart';
-import 'zoomMapPlugin.dart';
 import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
+import 'fireMarker.dart';
+import 'globals.dart' as globals;
 import 'slider.dart';
-import 'package:just_debounce_it/just_debounce_it.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'zoomMapPlugin.dart';
 
 enum MapOperation { view, subscriptionConfirm, unsubscribe }
 
@@ -39,7 +40,6 @@ class GenericMap extends StatefulWidget {
 class _GenericMapState extends State<GenericMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-
 
   final BasicLocation location;
   final String title;
@@ -137,45 +137,41 @@ class _GenericMapState extends State<GenericMap> {
         appBar: new AppBar(
           title: new Text(title),
         ),
-        floatingActionButton: Column(mainAxisAlignment: MainAxisAlignment.end,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              FloatingActionButton.extended(
-                onPressed: () {
-                  setState(() {
-                    switch (operation) {
-                      case MapOperation.view:
-                        operation = MapOperation.subscriptionConfirm;
-                        break;
-                      case MapOperation.subscriptionConfirm:
-                        // IOS specific
-                        _firebaseMessaging.requestNotificationPermissions();
-                        operation = MapOperation.unsubscribe;
-                        break;
-                      case MapOperation.unsubscribe:
-                        operation = MapOperation.view;
-                        break;
-                    }
-                  });
-                },
-                icon: new Icon(
-                    operation == MapOperation.view
-                        ? Icons.notifications_active
-                        : operation == MapOperation.subscriptionConfirm
-                            ? Icons.check
-                            : Icons.notifications_off,
-                    color: fires600),
-                label: new Text(
-                  operation == MapOperation.view
-                      ? 'Subscribe to fires notifications'
-                      : operation == MapOperation.subscriptionConfirm
-                          ? 'Confirm'
-                          : 'Unsubscribe',
-                  style: const TextStyle(color: fires600),
-                ),
-                backgroundColor: Colors.white,
-              )
-            ]),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              switch (operation) {
+                case MapOperation.view:
+                  operation = MapOperation.subscriptionConfirm;
+                  break;
+                case MapOperation.subscriptionConfirm:
+                  // IOS specific
+                  _firebaseMessaging.requestNotificationPermissions();
+                  operation = MapOperation.unsubscribe;
+                  break;
+                case MapOperation.unsubscribe:
+                  operation = MapOperation.view;
+                  break;
+              }
+            });
+          },
+          icon: new Icon(
+              operation == MapOperation.view
+                  ? Icons.notifications_active
+                  : operation == MapOperation.subscriptionConfirm
+                      ? Icons.check
+                      : Icons.notifications_off,
+              color: fires600),
+          label: new Text(
+            operation == MapOperation.view
+                ? 'Subscribe to fires notifications'
+                : operation == MapOperation.subscriptionConfirm
+                    ? 'Confirm'
+                    : 'Unsubscribe',
+            style: const TextStyle(color: fires600),
+          ),
+          backgroundColor: Colors.white,
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: new CustomBottomAppBar(
             fabLocation: FloatingActionButtonLocation.centerFloat,
@@ -184,7 +180,7 @@ class _GenericMapState extends State<GenericMap> {
             // height: 170.0,
             mainAxisAlignment: MainAxisAlignment.center,
             actions: listWithoutNulls(<Widget>[
-              operation == MapOperation.subscriptionConfirm|| numFires == null
+              operation == MapOperation.subscriptionConfirm || numFires == null
                   ? null
                   : numFires > 0
                       ? new Text('${numFires.toString()} fires at ${kmAround
