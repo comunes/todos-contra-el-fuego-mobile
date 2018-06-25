@@ -22,4 +22,10 @@ doc/api/
 
 assets/private-settings.json
 android/app/src/main/AndroidManifest.xml
+
+.flutter-plugins
+android/app/src/main/gen/
+
 android/app/google-services.json
+
+assets/private-settings.json

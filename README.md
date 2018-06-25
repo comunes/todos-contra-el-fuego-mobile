@@ -6,3 +6,8 @@ All Against Fire
 
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+
+- google-services.json
+- Manifest sample
+- private keys in assets
