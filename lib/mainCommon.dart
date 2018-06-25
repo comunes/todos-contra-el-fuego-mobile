@@ -11,7 +11,7 @@ Future<Map<String, dynamic>> loadSecrets() async {
   return await SecretLoader(secretPath: 'assets/private-settings.json').load();
 }
 
-void main() {
+void mainCommon() {
   loadSecrets().then((secrets) {
     globals.gmapKey = secrets['gmapKey'];
     globals.firesApiKey = secrets['firesApiKey'];

@@ -16,4 +16,4 @@ final Widget appIcon = Image.asset('images/logo-200.png', width: 24.0, height: 2
 final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 final List<BasicLocation> yourLocations = [];
 final GetIt getIt = new GetIt();
-final bool isDevelopment = true;
+bool isDevelopment = false;
