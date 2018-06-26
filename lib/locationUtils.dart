@@ -5,6 +5,7 @@ import 'basicLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'globals.dart' as globals;
+import 'generated/i18n.dart';
 
 Future<BasicLocation> getUserLocation(
     GlobalKey<ScaffoldState> scaffoldKey) async {
@@ -32,12 +33,12 @@ Future<BasicLocation> getUserLocation(
   } on PlatformException catch (e) {
     if (e.code == 'PERMISSION_DENIED') {
       scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text('We don\'t have permission to get your location'),
+        content: new Text(S.of(scaffoldKey.currentContext).notPermsUbication),
       ));
     } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {}
     scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(
-          'I cannot get your current location. It\'s your ubication enabled?'),
+      content: new Text(S.of(scaffoldKey.currentContext).isYourUbicationEnabled
+          ),
     ));
     return BasicLocation.noLocation;
   }

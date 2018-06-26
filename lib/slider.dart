@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'colors.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:padder/padding.dart';
-import 'package:fluttery/framing.dart';
+import 'package:flutter/material.dart';
+
+import 'colors.dart';
+import 'generated/i18n.dart';
 
 typedef void SlideCallback(int distance);
 
@@ -25,12 +25,12 @@ class _FireDistanceSliderState extends State<FireDistanceSlider> {
     this._sliderValue = initialValue;
   }
 
-  sizeText(_sliderValue) =>
-      new Text('Subscribe to $_sliderValue км around this area',
+  sizeText(sliderValue) =>
+      new Text(S.of(context).subscribeToValueAroundThisArea(sliderValue.toString()),
           style: new TextStyle(color: Colors.black87));
 
-  warningText(_sliderValue) => _sliderValue >= 50
-      ? new Text('Warning: this is a very large area',
+  warningText(sliderValue) => _sliderValue >= 50
+      ? new Text(S.of(context).warningThisIsAVeryLargeArea,
           style: new TextStyle(color: fires900))
       : new Text('');
 

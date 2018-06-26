@@ -16,6 +16,7 @@ import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
 import 'fireMarker.dart';
+import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
@@ -130,7 +131,6 @@ class _GenericMapState extends State<GenericMap> {
             ),
           ],
         ));
-
     return new Scaffold(
         key: _scaffoldKey,
         // drawer: new MainDrawer(context),
@@ -164,10 +164,10 @@ class _GenericMapState extends State<GenericMap> {
               color: fires600),
           label: new Text(
             operation == MapOperation.view
-                ? 'Subscribe to fires notifications'
+                ? S.of(context).toFiresNotifications
                 : operation == MapOperation.subscriptionConfirm
-                    ? 'Confirm'
-                    : 'Unsubscribe',
+                    ? S.of(context).confirm
+                    : S.of(context).unsubscribe,
             style: const TextStyle(color: fires600),
           ),
           backgroundColor: Colors.white,
@@ -182,11 +182,12 @@ class _GenericMapState extends State<GenericMap> {
             actions: listWithoutNulls(<Widget>[
               operation == MapOperation.subscriptionConfirm || numFires == null
                   ? null
-                  : numFires > 0
-                      ? new Text('${numFires.toString()} fires at ${kmAround
-            .toString()} км around this area')
-                      : new Text(
-                          'There is no fires at ${kmAround.toString()} км around this area'),
+                  : new Text(numFires > 0
+                      ? S.of(context).firesAroundThisArea(
+                          numFires.toString(), kmAround.toString())
+                      : S
+                          .of(context)
+                          .noFiresAroundThisArea(kmAround.toString())),
               SizedBox(width: 10.0)
             ])),
         body: LayoutBuilder(

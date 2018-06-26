@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'customBottomAppBar.dart';
 import 'colors.dart';
+import 'generated/i18n.dart';
 
 class GlobalFiresBottomStats extends StatefulWidget {
   @override
@@ -55,8 +56,8 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            new Text('$activeFires active fires worldwide'),
-            new Text('Updated $lastCheck')
+            new Text(S.of(context).activeFiresWorldWide(activeFires.toString())),
+            new Text(S.of(context).updatedLastCheck(lastCheck))
           ])
           : null,
         SizedBox(width: 10.0)

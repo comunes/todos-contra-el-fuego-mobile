@@ -1,16 +1,19 @@
-import 'package:flutter/material.dart';
-import 'mainDrawer.dart';
-import 'genericMap.dart';
 import 'dart:async';
+
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'colors.dart';
-import 'placesAutocompleteUtils.dart';
-import 'basicLocation.dart';
-import 'locationUtils.dart';
-import 'globals.dart' as globals;
-import 'basicLocationPersist.dart';
-import 'globalFiresBottomStats.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
+
+import 'basicLocation.dart';
+import 'basicLocationPersist.dart';
+import 'colors.dart';
+import 'generated/i18n.dart';
+import 'genericMap.dart';
+import 'globalFiresBottomStats.dart';
+import 'globals.dart' as globals;
+import 'locationUtils.dart';
+import 'mainDrawer.dart';
+import 'placesAutocompleteUtils.dart';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -24,25 +27,24 @@ class ActiveFiresPage extends StatefulWidget {
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<FabMiniMenuItem> _fabMiniMenuItemList(BuildContext context) {
+  List<FabMiniMenuItem> _fabMiniMenuItemList() {
     return [
       new FabMiniMenuItem.withText(
         new Icon(Icons.location_searching),
         fires600,
         8.0,
-        "Add your current position",
+        S.of(context).addYourCurrentPosition,
         () {
           onAddYourLocation();
         },
-        "Add your current position",
+        S.of(context).addYourCurrentPosition,
         Colors.black38,
         Colors.white,
       ),
-      new FabMiniMenuItem.withText(
-          new Icon(Icons.edit_location), fires600, 8.0, "Add some other place",
-          () {
-        onAddOtherLocation(context);
-      }, "Add some other place", Colors.black38, Colors.white)
+      new FabMiniMenuItem.withText(new Icon(Icons.edit_location), fires600, 8.0,
+          S.of(context).addSomePlace, () {
+        onAddOtherLocation();
+      }, S.of(context).addSomePlace, Colors.black38, Colors.white)
     ];
   }
 
@@ -63,7 +65,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             }),
         title: new Text(loc.description),
         onLongPress: () {
-          showSnackMsg('Slide horizontally to delete this location');
+          showSnackMsg(S.of(context).toDeleteThisPlace);
         },
         onTap: () {
           showLocationMap(loc);
@@ -127,11 +129,11 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             globals.yourLocations.remove(item);
             persistYourLocations();
           });
-          final String action = 'deleted';
+
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text('You $action this position'),
+              content: new Text(S.of(context).youDeletedThisPlace),
               action: new SnackBarAction(
-                  label: 'UNDO',
+                  label: S.of(context).UNDO,
                   onPressed: () {
                     handleUndo(item);
                   })));
@@ -158,8 +160,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   Widget build(BuildContext context) {
     var hasLocations = globals.yourLocations.length > 0;
     final title = hasLocations
-        ? 'Active fires in your places'
-        : 'Active fires in the world';
+        ? S.of(context).firesInYourPlaces
+        : S.of(context).firesInTheWorld;
     print('Building Active Fires');
     return Scaffold(
       key: _scaffoldKey,
@@ -180,7 +182,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           ? new Stack(children: <Widget>[
               _buildSavedLocations(),
               new FabDialer(
-                  _fabMiniMenuItemList(context), fires600, new Icon(Icons.add))
+                  _fabMiniMenuItemList(), fires600, new Icon(Icons.add))
             ])
           : new Center(
               child: new CenteredColumn(children: <Widget>[
@@ -192,35 +194,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               const SizedBox(height: 26.0),
               new RoundedBtn(
                   icon: Icons.edit_location,
-                  text: 'Fires near other place',
+                  text: S.of(context).firesNearPlace,
                   onPressed: () {
-                    onAddOtherLocation(context);
+                    onAddOtherLocation();
                   },
                   backColor: fires600),
             ])),
-      floatingActionButton: hasLocations
-          ? Column(mainAxisAlignment: MainAxisAlignment.end,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                  /* FloatingActionButton.extended(
-                    onPressed: onAddYourLocation,
-                    heroTag: 'yourposition',
-                    label: const Text('Add your position'),
-                    icon: const Icon(Icons.location_searching),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: FloatingActionButton.extended(
-                      onPressed: () {
-                        onAddOtherLocation(context);
-                      },
-                      heroTag: 'otherplace',
-                      label: new Text('Add some other place'),
-                      icon: const Icon(Icons.edit_location),
-                    ),
-                  ), */
-                ])
-          : null,
     );
   }
 
@@ -229,8 +208,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     _saveLocation(location);
   }
 
-  void onAddOtherLocation(BuildContext context) {
-    Future<BasicLocation> location = openPlacesDialog(context);
+  void onAddOtherLocation() {
+    Future<BasicLocation> location = openPlacesDialog(_scaffoldKey);
     _saveLocation(location);
   }
 
@@ -238,7 +217,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     location.then((newLocation) {
       if (newLocation != BasicLocation.noLocation) {
         if (globals.yourLocations.contains(newLocation)) {
-          showSnackMsg('You have already added this location');
+          showSnackMsg(S.of(context).addedThisLocation);
         } else
           this.setState(() {
             globals.yourLocations.add(newLocation);

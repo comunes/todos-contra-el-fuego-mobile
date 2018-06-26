@@ -15,7 +15,7 @@ void mainCommon() {
   loadSecrets().then((secrets) {
     globals.gmapKey = secrets['gmapKey'];
     globals.firesApiKey = secrets['firesApiKey'];
-    globals.firesApiUrl = secrets['firesApiUrl'];
+    globals.firesApiUrl = secrets['firesApiUrl'] + "api/v1/";
     globals.prefs.then((prefs) {
       loadYourLocationsWithPrefs(prefs);
       firebaseConfig();

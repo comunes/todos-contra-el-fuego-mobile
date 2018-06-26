@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'basicLocation.dart';
 import 'globals.dart' as globals;
+import 'generated/i18n.dart';
 
-Future<BasicLocation> openPlacesDialog(BuildContext context) async {
+Future<BasicLocation> openPlacesDialog(GlobalKey<ScaffoldState> sc) async {
   Mode _mode = Mode.overlay;
   GoogleMapsPlaces _places = new GoogleMapsPlaces(globals.gmapKey);
   Prediction p = await showGooglePlacesAutocomplete(
-      context: context,
-      hint: 'Type the name of a place, region, etc',
+      context: sc.currentContext,
+      hint: S.of(sc.currentContext).typeTheNameOfAPlace,
       apiKey: globals.gmapKey,
       onError: (res) {
-        /* homeScaffoldKey.currentState.showSnackBar(
+       /* sc.currentState.showSnackBar(
                         new SnackBar(content: new Text(res.errorMessage))); */
         print('Error $res');
       },
       mode: _mode,
-      // FIXME
-      language: "es",
+      language: Localizations.localeOf(sc.currentContext).languageCode,
       components: [
         // This limit the search too much
         // new Component(Component.country, "es")

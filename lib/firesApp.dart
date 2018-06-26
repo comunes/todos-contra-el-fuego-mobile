@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'activeFires.dart';
+import 'generated/i18n.dart';
 import 'homePage.dart';
-import 'theme.dart';
 import 'introPage.dart';
 import 'sandbox.dart';
-import 'activeFires.dart';
+import 'theme.dart';
 
 class FiresApp extends StatelessWidget {
   static final WidgetBuilder introWidget = (context) => new IntroPage();
@@ -23,8 +26,17 @@ class FiresApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        home: new MaterialAppWithIntroHome(introWidget, continueWidget, 'showInitialWizard234'),
-        title: 'All Against The Fire!',
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        localeResolutionCallback:
+            S.delegate.resolution(fallback: new Locale("en", "")),
+        home: new MaterialAppWithIntroHome(
+            introWidget, continueWidget, 'showInitialWizard234'),
+        onGenerateTitle: (context) => S.of(context).appName,
         theme: firesTheme,
         routes: routes);
   }

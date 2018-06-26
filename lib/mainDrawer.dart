@@ -4,6 +4,8 @@ import 'colors.dart';
 import 'sandbox.dart';
 import 'activeFires.dart';
 import 'globals.dart' as globals;
+import 'generated/i18n.dart';
+import 'package:comunes_flutter/comunes_flutter.dart';
 
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
@@ -14,7 +16,7 @@ Widget mainDrawer(BuildContext context) {
   return new ListView(
     // Important: Remove any padding from the ListView.
     padding: EdgeInsets.zero,
-    children: <Widget>[
+    children: listWithoutNulls(<Widget>[
       new GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, '/');
@@ -28,7 +30,7 @@ Widget mainDrawer(BuildContext context) {
                 height: 80.0,
               ),
               const SizedBox(height: 20.0),
-              new Text(globals.appName,
+              new Text(S.of(context).appName,
                   style: new TextStyle(
                     fontSize: 24.0,
                     color: Colors.white,
@@ -40,28 +42,16 @@ Widget mainDrawer(BuildContext context) {
           ),
         ),
       ),
-      /* new ListTile(
-        // https://docs.flutter.io/flutter/material/CircleAvatar-class.html
-        leading: new CircleAvatar(
-          backgroundColor: Colors.brown.shade800,
-          child: new Text('VR'),
-        ),
-        title: new Text('Your profile'),
-        onTap: () {
-          Navigator.pushNamed(context, IntroPage.routeName);
-        },
-      ),
-      new Divider(), */
       new ListTile(
         leading: const Icon(Icons.whatshot),
-        title: new Text('Active fires'),
+        title: new Text(S.of(context).activeFires),
         onTap: () {
           Navigator.pushNamed(context, ActiveFiresPage.routeName);
         },
       ),
       new ListTile(
         leading: const Icon(Icons.notifications_active),
-        title: new Text('Notify a fire'),
+        title: new Text(S.of(context).notifyAFire),
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, Sandbox.routeName);
@@ -70,41 +60,31 @@ Widget mainDrawer(BuildContext context) {
       new Divider(),
       new ListTile(
         leading: const Icon(Icons.favorite),
-        title: new Text('Support this initiative'),
+        title: new Text(S.of(context).supportThisInitiative),
         onTap: () {
           // Then close the drawer
           Navigator.pushNamed(context, '/subscriptions');
         },
       ),
+      globals.isDevelopment ?
       new ListTile(
         leading: const Icon(Icons.bug_report),
         title: new Text('Sandbox'),
         onTap: () {
           Navigator.pushNamed(context, Sandbox.routeName);
         },
-      ),
-      new ListTile(
-        // https://material.io/tools/icons/?style=baseline
-        leading: const Icon(Icons.settings),
-        title: new Text('Settings'),
-        onTap: () {
-          // Update the state of the app
-          // ...
-          // Then close the drawer
-          Navigator.pop(context);
-        },
-      ),
+      ): null,
       new AboutListTile(
         icon: globals.appIcon,
-        applicationName: globals.appName,
+        applicationName: S.of(context).appName,
         applicationVersion: globals.appVersion,
         applicationIcon: globals.appMediumIcon,
-        applicationLegalese: globals.appLicense,
+        applicationLegalese: S.of(context).appLicense(DateTime.now().year.toString()),
         aboutBoxChildren: <Widget> [
           // new Text('What?')
         ]
         // FIXME
       )
-    ],
+    ])
   );
 }

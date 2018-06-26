@@ -4,16 +4,21 @@ description: All Against Fire
 dependencies:
   flutter:
     sdk: flutter
-  # https://pub.dartlang.org/packages/flutter
-  # utils
+  # i18n
+  flutter_localizations:
+    sdk: flutter
   intl: "^0.15.6"
+
+  # https://pub.dartlang.org/packages/flutter
+
+  # utils
   shared_preferences: "^0.4.2"
   http: "^0.11.3+16"
   simple_moment: "^0.0.3"
   just_debounce_it: "^1.0.4"
   comunes_flutter:
     path: /home/vjrj/dev/comunes_flutter
-    version: "^0.0.9"
+    version: "^0.0.10"
   # maps, geo, etc
   flutter_map: "^0.0.1"
   flutter_google_places_autocomplete: "^0.0.4"

@@ -4,7 +4,7 @@ import 'colors.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'mainDrawer.dart';
 import 'activeFires.dart';
-import 'globals.dart' as globals;
+import 'generated/i18n.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/home';
@@ -49,21 +49,21 @@ class HomePage extends StatelessWidget {
                         new Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: new Text(
-                            globals.appName,
+                            S.of(context).appName,
                             textAlign: TextAlign.center,
                             softWrap: true, style: _homeFont),
                         ),
                         new SizedBox(height: 20.0),
                         new RoundedBtn.nav(
                             icon: Icons.whatshot,
-                            text: 'Active fires',
+                            text: S.of(context).activeFires,
                             context: context,
                             route: ActiveFiresPage.routeName,
                             backColor: fires600),
                         new SizedBox(height: 20.0),
                         new RoundedBtn.nav(
                           icon: Icons.notifications_active,
-                          text: 'Notify a fire',
+                          text: S.of(context).notifyAFire,
                           context: context,
                           route: ActiveFiresPage.routeName,
                           backColor: fires600),

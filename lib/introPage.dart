@@ -1,18 +1,24 @@
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
+
 import 'homePage.dart';
+import 'generated/i18n.dart';
 
 class IntroPage extends AppIntroPage {
   static const String routeName = '/intro';
 
-  static final List<AppIntroItem> fireItems = <AppIntroItem>[
-    AppIntroItem(icon: Icons.location_on, title: 'Choose a place'),
-    AppIntroItem(icon: Icons.panorama_fish_eye, title: 'Choose a watch radio'),
-    AppIntroItem(
-        icon: Icons.whatshot, title: 'Get alerts of fires in that area'),
-    AppIntroItem(
-        icon: Icons.notifications_active, title: 'Alert when there is a fire'),
-  ];
+  static final fireItems = (context) =>
+    <AppIntroItem>[
+      AppIntroItem(icon: Icons.location_on, title: S.of(context).chooseAPlace),
+      AppIntroItem(
+        icon: Icons.panorama_fish_eye, title: S.of(context).chooseAWatchRadio),
+      AppIntroItem(
+        icon: Icons.whatshot, title: S.of(context).getAlertsOfFiresinThatArea),
+      AppIntroItem(
+        icon: Icons.notifications_active,
+        title: S.of(context).alertWhenThereIsAFire)
+    ];
+
 
   /*
   static final OnIntroFinish onFinish =
