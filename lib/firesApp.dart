@@ -35,7 +35,7 @@ class FiresApp extends StatelessWidget {
         localeResolutionCallback:
             S.delegate.resolution(fallback: new Locale("en", "")),
         home: new MaterialAppWithIntroHome(
-            introWidget, continueWidget, 'showInitialWizard234'),
+            introWidget, continueWidget, 'showInitialWizard-2018-06-27-01'),
         onGenerateTitle: (context) => S.of(context).appName,
         theme: firesTheme,
         routes: routes);

@@ -19,11 +19,6 @@ class IntroPage extends AppIntroPage {
         title: S.of(context).alertWhenThereIsAFire)
     ];
 
-
-  /*
-  static final OnIntroFinish onFinish =
-      (context) => Navigator.pushNamed(context, '/?'); */
-
   IntroPage({Key key})
       : super(
             items: fireItems,
