@@ -25,7 +25,7 @@ dependencies:
   bson_objectid: "^0.1.0"
   comunes_flutter:
     path: /home/vjrj/dev/comunes_flutter
-    version: "^0.0.10"
+    version: "^0.0.12"
 
   # redux
   redux: "^3.0.0"

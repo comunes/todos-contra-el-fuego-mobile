@@ -27,3 +27,9 @@ class OnUserCreatedAction extends AppActions {
 
   OnUserCreatedAction(this.userId);
 }
+
+class OnUserLangAction extends AppActions {
+  final String lang;
+
+  OnUserLangAction(this.lang);
+}

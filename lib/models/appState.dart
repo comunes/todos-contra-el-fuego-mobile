@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
+import 'package:comunes_flutter/comunes_flutter.dart';
 import 'fireMapState.dart';
 import 'yourLocation.dart';
-
+import 'user.dart';
 part 'appState.g.dart';
 
 @immutable
@@ -15,8 +15,14 @@ class AppState extends Object with _$AppStateSerializerMixin {
   final bool isLoaded;
   @JsonKey(ignore: true)
   final String error;
-  final String userId;
-  final String token;
+  @JsonKey(ignore: true)
+  final User user;
+  @JsonKey(ignore: true)
+  final String gmapKey;
+  @JsonKey(ignore: true)
+  final String firesApiKey;
+  @JsonKey(ignore: true)
+  final String firesApiUrl;
   final List<YourLocation> yourLocations;
   @JsonKey(ignore: true)
   final FireMapState fireMapState;
@@ -26,34 +32,40 @@ class AppState extends Object with _$AppStateSerializerMixin {
       _$AppStateFromJson(json);
 
   AppState(
-      {this.yourLocations = const [],
-      this.userId,
-      this.token,
+      {this.yourLocations : const <YourLocation>[],
+        this.user: const User.initial(),
       this.isLoading: false,
       this.isLoaded: false,
       this.error: null,
+      this.gmapKey,
+      this.firesApiKey,
+      this.firesApiUrl,
       this.fireMapState: const FireMapState.initial()});
 
   AppState copyWith(
       {bool isLoading,
       bool isLoaded,
-      String userId,
-      String token,
+      String user,
       String error,
+      String gmapKey,
+      String firesApiKey,
+      String firesApiUrl,
       List<YourLocation> yourLocations,
       FireMapState fireMapState}) {
     return new AppState(
         isLoading: isLoading ?? this.isLoading,
         isLoaded: isLoaded ?? this.isLoaded,
-        userId: userId ?? this.userId,
-        token: token ?? this.token,
+        user: user ?? this.user,
         error: error ?? this.error,
+        gmapKey: gmapKey ?? this.gmapKey,
+        firesApiKey: firesApiKey ?? this.firesApiKey,
+        firesApiUrl: firesApiUrl ?? this.firesApiUrl,
         yourLocations: yourLocations ?? this.yourLocations,
         fireMapState: fireMapState ?? this.fireMapState);
   }
 
   @override
   String toString() {
-    return 'AppState{\nuserId: $userId\ntoken: $token\nisLoading: $isLoading\nisLoaded: $isLoaded\nYourLocations: $yourLocations}';
+    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(firesApiKey, 8)}\napiUrl: ${ellipse(firesApiUrl, 8)}';
   }
 }

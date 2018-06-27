@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:fires_flutter/models/yourLocation.dart';
 
+// FIXME remove this later
 String gmapKey;
 String firesApiKey;
 String firesApiUrl;

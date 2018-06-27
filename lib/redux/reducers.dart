@@ -1,22 +1,22 @@
 import '../models/appState.dart';
-import 'yourLocationsReducer.dart';
+import 'errorReducer.dart';
+import 'fireMapReducer.dart';
 import 'loadedReducer.dart';
 import 'loadingReducer.dart';
-import 'errorReducer.dart';
-import 'userIdReducer.dart';
-import 'userTokenReducer.dart';
-import 'fireMapReducer.dart';
+import 'userReducer.dart';
+import 'yourLocationsReducer.dart';
 
 // We create the State reducer by combining many smaller reducers into one!
 AppState appStateReducer(AppState state, action) {
-
- return   AppState(
+  return AppState(
       yourLocations: yourLocationsReducer(state.yourLocations, action),
-      userId: userReducer(state.userId, action),
-      token: userTokenReducer(state.token, action),
+      user: userReducer(state.user, action),
       isLoading: loadingReducer(state.isLoading, action),
       isLoaded: loadedReducer(state.isLoaded, action),
       error: errorReducer(state.error, action),
-      fireMapState: fireMapReducer(state.fireMapState, action)
- );
+      fireMapState: fireMapReducer(state.fireMapState, action),
+    firesApiKey: state.firesApiKey,
+    firesApiUrl: state.firesApiUrl,
+    gmapKey: state.gmapKey
+  );
 }
