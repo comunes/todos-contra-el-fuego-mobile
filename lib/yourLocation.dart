@@ -58,21 +58,3 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
       description.hashCode ^
       subscribed.hashCode;
 }
-
-class YourLocationRepository extends PreferencesRepository<YourLocation> {
-
-  static final repo = new YourLocationRepository();
-
-  YourLocationRepository() : super();
-
-  @override
-  YourLocation deserialize(String s) {
-
-    return YourLocation.fromJson(json.decode(s));
-  }
-
-  @override
-  String serialize(YourLocation y) {
-    return json.encode(y.toJson());
-  }
-}

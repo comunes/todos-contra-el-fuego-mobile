@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'basicLocation.dart';
+import 'yourLocation.dart';
 import 'globals.dart' as globals;
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +30,7 @@ void loadYourLocationsWithPrefs(SharedPreferences prefs) {
     }
     yourLocations.forEach((locationString) {
       Map locationMap = json.decode(locationString);
-      globals.yourLocations.add(BasicLocation.fromJson(locationMap));
+      globals.yourLocations.add(YourLocation.fromJson(locationMap));
     });
   });
 }

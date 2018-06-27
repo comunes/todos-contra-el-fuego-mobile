@@ -13,6 +13,7 @@ import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'placesAutocompleteUtils.dart';
 import 'yourLocation.dart';
+import 'yourLocationPersist.dart';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -60,9 +61,9 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             onPressed: () {
               loc.subscribed = !loc.subscribed;
               int i = globals.yourLocations.indexOf(loc);
-              YourLocationRepository.repo.update(i, loc);
               globals.yourLocations.removeAt(i);
               globals.yourLocations.insert(i, loc);
+              persistYourLocations();
               setState(() {});
             }),
         title: new Text(loc.description),
@@ -102,7 +103,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   void handleUndo(YourLocation item) {
     setState(() {
-      YourLocationRepository.repo.save(item);
+      globals.yourLocations.add(item);
+      persistYourLocations();
     });
   }
 
@@ -114,8 +116,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         onDismissed: (DismissDirection direction) {
           setState(() {
             globals.yourLocations.remove(item);
-            int i = globals.yourLocations.indexOf(item);
-            YourLocationRepository.repo.remove(i);
+            persistYourLocations();
           });
 
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -207,7 +208,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         } else
           this.setState(() {
             globals.yourLocations.add(newLocation);
-            YourLocationRepository.repo.save(newLocation);
+            persistYourLocations();
             new Timer(new Duration(milliseconds: 1000), () {
               showLocationMap(newLocation);
             });

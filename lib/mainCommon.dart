@@ -7,6 +7,8 @@ import 'firebaseMessagingConf.dart';
 import 'firesApp.dart';
 import 'globals.dart' as globals;
 import 'yourLocation.dart';
+import 'yourLocationPersist.dart';
+
 Future<Map<String, dynamic>> loadSecrets() async {
   return await SecretLoader(secretPath: 'assets/private-settings.json').load();
 }
@@ -16,13 +18,12 @@ void mainCommon() {
     globals.gmapKey = secrets['gmapKey'];
     globals.firesApiKey = secrets['firesApiKey'];
     globals.firesApiUrl = secrets['firesApiUrl'] + "api/v1/";
-    YourLocationRepository.repo.remove(0);
-    YourLocationRepository.repo.getAll().then((yourLocations) {
-      globals.yourLocations = yourLocations;
-      firebaseConfig();
+    globals.prefs.then((prefs) {
+      loadYourLocationsWithPrefs(prefs);
+        firebaseConfig();
 
-      // Run baby run!
-      runApp(new FiresApp());
+        // Run baby run!
+        runApp(new FiresApp());
+      });
     });
-  });
 }
