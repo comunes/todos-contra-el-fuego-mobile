@@ -1,6 +1,6 @@
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:redux/redux.dart';
 
-import '../models/yourLocation.dart';
 import 'actions.dart';
 
 final yourLocationsReducer = combineReducers<List<YourLocation>>([

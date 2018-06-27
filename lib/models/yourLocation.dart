@@ -37,6 +37,8 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
     if (this.id == null) this.id = new ObjectId();
   }
 
+
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -55,4 +57,10 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
       lon.hashCode ^
       description.hashCode ^
       subscribed.hashCode;
+
+  @override
+  String toString() {
+    return 'YourLocation {id: $id, lat: $lat, lon: $lon, description: $description, subscribed: $subscribed}';
+  }
+
 }

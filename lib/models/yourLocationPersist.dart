@@ -1,11 +1,12 @@
-import 'dart:convert';
-import '../globals.dart' as globals;
 import 'dart:async';
-import 'yourLocation.dart';
+import 'dart:convert';
+
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final String locationKey = 'yourlocations';
+import '../globals.dart' as globals;
 
+final String locationKey = 'yourlocations';
 
 Future<List<YourLocation>> loadYourLocations() async {
   return await globals.prefs.then((prefs) {
@@ -23,7 +24,8 @@ persistYourLocations(List<YourLocation> yl) {
   });
 }
 
-Future<List<YourLocation>> loadYourLocationsWithPrefs(SharedPreferences prefs) async {
+Future<List<YourLocation>> loadYourLocationsWithPrefs(
+    SharedPreferences prefs) async {
   return await globals.prefs.then((prefs) {
     List<String> yourLocations = prefs.getStringList(locationKey);
     if (yourLocations == null) {
@@ -33,9 +35,8 @@ Future<List<YourLocation>> loadYourLocationsWithPrefs(SharedPreferences prefs) a
     List<YourLocation> persistedList = List<YourLocation>();
     yourLocations.forEach((locationString) {
       Map locationMap = json.decode(locationString);
-     persistedList.add(YourLocation.fromJson(locationMap));
+      persistedList.add(YourLocation.fromJson(locationMap));
     });
     return persistedList;
   });
-
 }

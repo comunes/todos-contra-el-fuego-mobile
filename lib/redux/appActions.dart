@@ -1,4 +1,4 @@
-import '../models/yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 
 abstract class AppActions {}
 

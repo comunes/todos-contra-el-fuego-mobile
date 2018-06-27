@@ -1,6 +1,7 @@
 import 'package:bson_objectid/bson_objectid.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 
-import '../models/yourLocation.dart';
+
 
 abstract class YourLocationActions {}
 
@@ -12,6 +13,7 @@ class AddYourLocationAction extends YourLocationActions {
 
 class DeleteYourLocationAction extends YourLocationActions {
   ObjectId id;
+
   DeleteYourLocationAction(this.id);
 }
 

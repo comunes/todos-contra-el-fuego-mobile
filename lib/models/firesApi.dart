@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as ht;
 import 'package:jaguar_resty/jaguar_resty.dart' as resty;
 
+import 'package:fires_flutter/models/yourLocation.dart';
+
+
 import 'appState.dart';
-import 'yourLocation.dart';
 
 class FiresApi {
   FiresApi() {

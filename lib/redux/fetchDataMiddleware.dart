@@ -3,7 +3,9 @@ import 'package:redux/redux.dart';
 import '../globals.dart' as globals;
 import '../models/appState.dart';
 import '../models/firesApi.dart';
-import '../models/yourLocation.dart';
+
+import 'package:fires_flutter/models/yourLocation.dart';
+
 import '../models/yourLocationPersist.dart';
 import 'actions.dart';
 

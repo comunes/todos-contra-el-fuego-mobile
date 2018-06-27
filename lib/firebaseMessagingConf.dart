@@ -3,8 +3,6 @@ import 'package:redux/src/store.dart';
 
 import 'models/appState.dart';
 import 'redux/actions.dart';
-import 'globals.dart' as globals;
-import 'models/firesApi.dart';
 
 final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 

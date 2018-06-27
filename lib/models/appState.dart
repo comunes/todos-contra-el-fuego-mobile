@@ -1,9 +1,12 @@
+import 'package:bson_objectid/bson_objectid.dart';
+import 'package:comunes_flutter/comunes_flutter.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
+
 import 'fireMapState.dart';
-import 'yourLocation.dart';
 import 'user.dart';
+
 part 'appState.g.dart';
 
 @immutable
@@ -32,8 +35,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
       _$AppStateFromJson(json);
 
   AppState(
-      {this.yourLocations : const <YourLocation>[],
-        this.user: const User.initial(),
+      {this.yourLocations: const <YourLocation>[],
+      this.user: const User.initial(),
       this.isLoading: false,
       this.isLoaded: false,
       this.error: null,
@@ -66,6 +69,16 @@ class AppState extends Object with _$AppStateSerializerMixin {
 
   @override
   String toString() {
-    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(firesApiKey, 8)}\napiUrl: ${ellipse(firesApiUrl, 8)}\nyourLocations: ${yourLocations}';
+    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
+      firesApiKey, 8)}\napiUrl: ${ellipse(
+      firesApiUrl, 8)}\nyourLocations count: ${yourLocations
+      .length}\nyourLocations: ${yourLocations}';
   }
 }
+
+typedef void AddYourLocationFunction(YourLocation loc);
+typedef void DeleteYourLocationFunction(ObjectId id);
+typedef void UpdateYourLocationFunction(ObjectId id, YourLocation loc);
+typedef void ToggleSubscriptionFunction(ObjectId id);
+typedef void SubscribeFunction(ObjectId id);
+typedef void UnSubscribeFunction(ObjectId id);
