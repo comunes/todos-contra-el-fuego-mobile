@@ -4,8 +4,6 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
 
-import 'basicLocation.dart';
-import 'basicLocationPersist.dart';
 import 'colors.dart';
 import 'generated/i18n.dart';
 import 'genericMap.dart';
@@ -14,6 +12,7 @@ import 'globals.dart' as globals;
 import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'placesAutocompleteUtils.dart';
+import 'yourLocation.dart';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
@@ -50,17 +49,20 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   _ActiveFiresPageState();
 
-  Widget _buildRow(BasicLocation loc) {
+  Widget _buildRow(YourLocation loc) {
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.location_on),
         trailing: new IconButton(
-            icon: new Icon(loc.isSubscribed
+            icon: new Icon(loc.subscribed
                 ? Icons.notifications_active
                 : Icons.notifications_off),
             onPressed: () {
-              loc.subscribed = !loc.isSubscribed;
-              persistYourLocations();
+              loc.subscribed = !loc.subscribed;
+              int i = globals.yourLocations.indexOf(loc);
+              YourLocationRepository.repo.update(i, loc);
+              globals.yourLocations.removeAt(i);
+              globals.yourLocations.insert(i, loc);
               setState(() {});
             }),
         title: new Text(loc.description),
@@ -72,7 +74,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         });
   }
 
-  void showLocationMap(BasicLocation loc) {
+  void showLocationMap(YourLocation loc) {
     // , VoidCallback onSubs
     Navigator.push(
         context,
@@ -94,32 +96,17 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         padding: const EdgeInsets.all(16.0),
         itemCount: globals.yourLocations.length,
         itemBuilder: (BuildContext _context, int i) {
-          // Add a one-pixel-high divider widget before each row
-          // in the ListView.
-          /* if (i.isOdd) {
-          return new Divider();
-        } */
-
-          // The syntax "i ~/ 2" divides i by 2 and returns an
-          // integer result.
-          // For example: 1, 2, 3, 4, 5 becomes 0, 1, 1, 2, 2.
-          // This calculates the actual number of saved items
-          // in the ListView, minus the divider widgets.
-          // final int index = i ~/ 2;
-          // print('$i $index');
-          // if (index >= _saved.length) return null;
           return _buildItem(globals.yourLocations.elementAt(i));
         });
   }
 
-  void handleUndo(BasicLocation item) {
+  void handleUndo(YourLocation item) {
     setState(() {
-      globals.yourLocations.add(item);
-      persistYourLocations();
+      YourLocationRepository.repo.save(item);
     });
   }
 
-  Widget _buildItem(BasicLocation item) {
+  Widget _buildItem(YourLocation item) {
     final ThemeData theme = Theme.of(context);
     return new Dismissible(
         key: new ObjectKey(item),
@@ -127,7 +114,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         onDismissed: (DismissDirection direction) {
           setState(() {
             globals.yourLocations.remove(item);
-            persistYourLocations();
+            int i = globals.yourLocations.indexOf(item);
+            YourLocationRepository.repo.remove(i);
           });
 
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -195,33 +183,31 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               new RoundedBtn(
                   icon: Icons.edit_location,
                   text: S.of(context).firesNearPlace,
-                  onPressed: () {
-                    onAddOtherLocation();
-                  },
+                  onPressed: onAddOtherLocation,
                   backColor: fires600),
             ])),
     );
   }
 
   void onAddYourLocation() {
-    Future<BasicLocation> location = getUserLocation(_scaffoldKey);
+    Future<YourLocation> location = getUserLocation(_scaffoldKey);
     _saveLocation(location);
   }
 
   void onAddOtherLocation() {
-    Future<BasicLocation> location = openPlacesDialog(_scaffoldKey);
+    Future<YourLocation> location = openPlacesDialog(_scaffoldKey);
     _saveLocation(location);
   }
 
-  void _saveLocation(Future<BasicLocation> location) {
+  void _saveLocation(Future<YourLocation> location) {
     location.then((newLocation) {
-      if (newLocation != BasicLocation.noLocation) {
+      if (newLocation != YourLocation.noLocation) {
         if (globals.yourLocations.contains(newLocation)) {
           showSnackMsg(S.of(context).addedThisLocation);
         } else
           this.setState(() {
             globals.yourLocations.add(newLocation);
-            persistYourLocations();
+            YourLocationRepository.repo.save(newLocation);
             new Timer(new Duration(milliseconds: 1000), () {
               showLocationMap(newLocation);
             });

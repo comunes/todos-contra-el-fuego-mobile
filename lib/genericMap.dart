@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
 
-import 'basicLocation.dart';
+import 'yourLocation.dart';
 import 'colors.dart';
 import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
@@ -20,11 +20,12 @@ import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
+import 'basicLocation.dart';
 
 enum MapOperation { view, subscriptionConfirm, unsubscribe }
 
 class GenericMap extends StatefulWidget {
-  final BasicLocation location;
+  final YourLocation location;
   final String title;
   final MapOperation operation;
 
@@ -42,7 +43,7 @@ class _GenericMapState extends State<GenericMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-  final BasicLocation location;
+  final YourLocation location;
   final String title;
   int numFires;
   int kmAround = 100;
@@ -220,7 +221,7 @@ class _GenericMapState extends State<GenericMap> {
         ));
   }
 
-  List<Marker> buildMarkers(BasicLocation yourLocation, List<dynamic> fires,
+  List<Marker> buildMarkers(YourLocation yourLocation, List<dynamic> fires,
       List<dynamic> falsePos, List<dynamic> industries) {
     List<Marker> markers = [];
     const calibrate = false; // useful when we change the fire icons size

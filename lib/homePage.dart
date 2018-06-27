@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             new Expanded(
                 child: new FractionallySizedBox(
                     alignment: FractionalOffset.center,
-                    heightFactor: 0.8,
+                    heightFactor: 0.7,
                     child: new Image.asset('images/logo-200.png',
                         fit: BoxFit.fitHeight))),
             new Expanded(

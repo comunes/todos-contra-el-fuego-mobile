@@ -1,13 +1,13 @@
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'basicLocation.dart';
+import 'yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'globals.dart' as globals;
 import 'generated/i18n.dart';
 
-Future<BasicLocation> getUserLocation(
+Future<YourLocation> getUserLocation(
     GlobalKey<ScaffoldState> scaffoldKey) async {
   // Platform messages may fail, so we use a try/catch PlatformException.
   try {
@@ -15,21 +15,21 @@ Future<BasicLocation> getUserLocation(
     Map<String, double> location = await _location.getLocation;
 
     // It seems that the lib fails with lat/lon values
-    var basicLocation = new BasicLocation(
+    var yourLocation = new YourLocation(
         lat: location['latitude'], lon: location['longitude']);
     var address;
     try {
-      address = await getReverseLocation(basicLocation);
-      basicLocation.description = address;
+      address = await getReverseLocation(yourLocation);
+      yourLocation.description = address;
     } catch (e) {
       try {
-        address = await getReverseLocation(basicLocation, true);
-        basicLocation.description = address;
+        address = await getReverseLocation(yourLocation, true);
+        yourLocation.description = address;
       } catch (e) {
         print('We cannot reverse geolocate');
       }
     }
-    return basicLocation;
+    return yourLocation;
   } on PlatformException catch (e) {
     if (e.code == 'PERMISSION_DENIED') {
       scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -40,11 +40,11 @@ Future<BasicLocation> getUserLocation(
       content: new Text(S.of(scaffoldKey.currentContext).isYourUbicationEnabled
           ),
     ));
-    return BasicLocation.noLocation;
+    return YourLocation.noLocation;
   }
 }
 
-Future<String> getReverseLocation(BasicLocation loc,
+Future<String> getReverseLocation(YourLocation loc,
     [bool external = false]) async {
   final coordinates = new Coordinates(loc.lat, loc.lon);
   var geoCoder = external ? Geocoder.google(globals.gmapKey) : Geocoder.local;

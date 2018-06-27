@@ -12,10 +12,16 @@ dependencies:
   # https://pub.dartlang.org/packages/flutter
 
   # utils
-  shared_preferences: "^0.4.2"
-  http: "^0.11.3+16"
   simple_moment: "^0.0.3"
   just_debounce_it: "^1.0.4"
+  # net
+  http: "^0.11.3+16"
+  jaguar_resty: "^2.5.5"
+  # data
+  json_annotation: ^0.2.3
+  shared_preferences: "^0.4.2"
+  pref_dessert: "^0.0.2"
+  bson_objectid: "^0.1.0"
   comunes_flutter:
     path: /home/vjrj/dev/comunes_flutter
     version: "^0.0.10"
@@ -46,7 +52,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  build_runner: ^0.8.0
+  json_serializable: ^0.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
