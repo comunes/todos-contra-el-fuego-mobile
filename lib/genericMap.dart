@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
 
-import 'yourLocation.dart';
+import 'basicLocation.dart';
 import 'colors.dart';
 import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
@@ -19,8 +19,8 @@ import 'fireMarker.dart';
 import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 import 'slider.dart';
+import 'yourLocation.dart';
 import 'zoomMapPlugin.dart';
-import 'basicLocation.dart';
 
 enum MapOperation { view, subscriptionConfirm, unsubscribe }
 
@@ -132,9 +132,18 @@ class _GenericMapState extends State<GenericMap> {
             ),
           ],
         ));
+    final btnText = operation == MapOperation.view
+        ? S.of(context).toFiresNotifications
+        : operation == MapOperation.subscriptionConfirm
+            ? S.of(context).confirm
+            : S.of(context).unsubscribe;
+    final btnIcon = operation == MapOperation.view
+        ? Icons.notifications_active
+        : operation == MapOperation.subscriptionConfirm
+            ? Icons.check
+            : Icons.notifications_off;
     return new Scaffold(
         key: _scaffoldKey,
-        // drawer: new MainDrawer(context),
         appBar: new AppBar(
           title: new Text(title),
         ),
@@ -156,19 +165,11 @@ class _GenericMapState extends State<GenericMap> {
               }
             });
           },
-          icon: new Icon(
-              operation == MapOperation.view
-                  ? Icons.notifications_active
-                  : operation == MapOperation.subscriptionConfirm
-                      ? Icons.check
-                      : Icons.notifications_off,
-              color: fires600),
+          // https://github.com/flutter/flutter/issues/17583
+          heroTag: "firesmap" +  location.id.toHexString(),
+          icon: new Icon(btnIcon, color: fires600),
           label: new Text(
-            operation == MapOperation.view
-                ? S.of(context).toFiresNotifications
-                : operation == MapOperation.subscriptionConfirm
-                    ? S.of(context).confirm
-                    : S.of(context).unsubscribe,
+            btnText,
             style: const TextStyle(color: fires600),
           ),
           backgroundColor: Colors.white,
