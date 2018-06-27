@@ -21,6 +21,6 @@ void firebaseConfig() {
 
 getToken() async {
   String token = await _firebaseMessaging.onTokenRefresh.first;
-  print(token);
+  // print(token);
   // await _firebaseMessaging.getToken();
 }
