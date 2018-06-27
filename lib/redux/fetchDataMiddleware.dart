@@ -1,0 +1,36 @@
+import 'package:redux/redux.dart';
+import 'actions.dart';
+import '../models/yourLocation.dart';
+import '../models/appState.dart';
+import '../globals.dart' as globals;
+import '../models/firesApi.dart';
+
+// A middleware takes in 3 parameters: your Store, which you can use to
+// read state or dispatch new actions, the action that was dispatched, 
+// and a `next` function. The first two you know about, and the `next` 
+// function is responsible for sending the action to your Reducer, or 
+// the next Middleware if you provide more than one.
+//
+// Middleware do not return any values themselves. They simply forward
+// actions on to the Reducer or swallow actions in some special cases.
+void fetchYourLocationsMiddleware(Store<AppState> store, action, NextDispatcher next) {
+  // If our Middleware encounters a `FetchYourLocationAction`
+  if (action is FetchYourLocationsAction) {
+
+    final api = globals.getIt.get<FiresApi>();
+
+    // Use the api to fetch the YourLocations
+    api.fetchYourLocations().then((List<YourLocation> YourLocations) {
+      // If it succeeds, dispatch a success action with the YourLocations.
+      // Our reducer will then update the State using these YourLocations.
+      store.dispatch(new FetchYourLocationsSucceededAction(YourLocations));
+    }).catchError((Exception error) {
+      // If it fails, dispatch a failure action. The reducer will
+      // update the state with the error.
+      store.dispatch(new FetchYourLocationsFailedAction(error));
+    });  
+  }
+  
+  // Make sure our actions continue on to the reducer.
+  next(action);
+}
