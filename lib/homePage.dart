@@ -1,10 +1,10 @@
+import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
-import 'mainDrawer.dart';
 import 'activeFires.dart';
+import 'colors.dart';
 import 'generated/i18n.dart';
+import 'mainDrawer.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/home';
@@ -12,15 +12,48 @@ class HomePage extends StatelessWidget {
 
   final _homeFont = const TextStyle(
     fontSize: 50.0,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     // color: Colors.white,
   );
+    final _btnFont = const TextStyle(
+    fontSize: 20.0,
+    fontWeight: FontWeight.w600,
+    // color: Colors.white,
+  );
+
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: new MainDrawer(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton:
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          FloatingActionButton.extended(
+            elevation: 0.0,
+            onPressed: () {
+               Navigator.pushNamed(context, ActiveFiresPage.routeName);
+            },
+            label: Text(S.of(context).activeFires, style: _btnFont),
+            backgroundColor: fires600,
+            heroTag: 'activeFires',
+            icon: const Icon(Icons.whatshot, size: 32.0),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 26.0),
+            child: FloatingActionButton.extended(
+              elevation: 0.0,
+              onPressed: () {
+                Navigator.pushNamed(context, ActiveFiresPage.routeName);
+              },
+              heroTag: 'notifyFire',
+              backgroundColor: fires600,
+              label: new Text(S.of(context).notifyAFire, style: _btnFont),
+              icon: const Icon(Icons.notifications_active, size: 32.0),
+            ),
+          ),
+        ]),
         body: new SafeArea(
           child: Center(
               child: new CenteredColumn(children: <Widget>[
@@ -43,34 +76,20 @@ class HomePage extends StatelessWidget {
             new Expanded(
                 child: new FractionallySizedBox(
                     alignment: FractionalOffset.topCenter,
-                    heightFactor: 0.9,
-                    child: new CenteredColumn(
+                    heightFactor: 1.0,
+                    child: new Column(
                       children: <Widget>[
                         new Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 20.0),
-                          child: FittedBox(
-                            child: new Text(S.of(context).appName,
-                                maxLines: 1,
-                                textAlign: TextAlign.center,
-                                softWrap: true,
-                                style: _homeFont),
-                            fit: BoxFit.scaleDown,
-                          )),
-                        new SizedBox(height: 20.0),
-                        new RoundedBtn.nav(
-                            icon: Icons.whatshot,
-                            text: S.of(context).activeFires,
-                            context: context,
-                            route: ActiveFiresPage.routeName,
-                            backColor: fires600),
-                        new SizedBox(height: 20.0),
-                        new RoundedBtn.nav(
-                          icon: Icons.notifications_active,
-                          text: S.of(context).notifyAFire,
-                          context: context,
-                          route: ActiveFiresPage.routeName,
-                          backColor: fires600),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            child: FittedBox(
+                              child: new Text(S.of(context).appName,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+
+                                  style: _homeFont),
+                              fit: BoxFit.scaleDown,
+                            )),
                       ],
                     )))
           ])),
