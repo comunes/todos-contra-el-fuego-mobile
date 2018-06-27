@@ -14,9 +14,11 @@ dependencies:
   # utils
   simple_moment: "^0.0.3"
   just_debounce_it: "^1.0.4"
+
   # net
   http: "^0.11.3+16"
   jaguar_resty: "^2.5.5"
+
   # data
   json_annotation: ^0.2.3
   shared_preferences: "^0.4.2"
@@ -24,18 +26,27 @@ dependencies:
   comunes_flutter:
     path: /home/vjrj/dev/comunes_flutter
     version: "^0.0.10"
+
+  # redux
+  redux: "^3.0.0"
+  flutter_redux: "^0.5.2"
+  redux_logging: "^0.3.0"
+
   # maps, geo, etc
   flutter_map: "^0.0.1"
   flutter_google_places_autocomplete: "^0.0.4"
   location: "^1.3.4"
   geocoder: "^0.0.1"
+
   # layout
   fluttery: "^0.0.7"
   # https://pub.dartlang.org/packages/padder
   padder: "^1.0.1"
   flutter_fab_dialer: "^0.0.5"
+
   # firebase
   firebase_messaging: "^1.0.2"
+
   # icons
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

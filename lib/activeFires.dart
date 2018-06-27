@@ -12,7 +12,7 @@ import 'globals.dart' as globals;
 import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'placesAutocompleteUtils.dart';
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'yourLocationPersist.dart';
 
 class ActiveFiresPage extends StatefulWidget {

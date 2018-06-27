@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'globals.dart' as globals;
 
 import 'package:shared_preferences/shared_preferences.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places_autocomplete/flutter_google_places_autocomplete.dart';
 
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 

@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
 
-import 'basicLocation.dart';
+import 'package:fires_flutter/models/basicLocation.dart';
 import 'colors.dart';
 import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
@@ -19,7 +19,7 @@ import 'fireMarker.dart';
 import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 import 'slider.dart';
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'zoomMapPlugin.dart';
 
 enum MapOperation { view, subscriptionConfirm, unsubscribe }

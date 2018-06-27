@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 
 String gmapKey;
 String firesApiKey;

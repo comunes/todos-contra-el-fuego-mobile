@@ -1,7 +1,7 @@
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'yourLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'globals.dart' as globals;
