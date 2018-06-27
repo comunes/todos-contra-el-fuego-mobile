@@ -4,6 +4,7 @@ import '../globals.dart' as globals;
 import '../models/appState.dart';
 import '../models/firesApi.dart';
 import '../models/yourLocation.dart';
+import '../models/yourLocationPersist.dart';
 import 'actions.dart';
 
 // A middleware takes in 3 parameters: your Store, which you can use to
@@ -37,10 +38,25 @@ void fetchYourLocationsMiddleware(
     final api = globals.getIt.get<FiresApi>();
 
     // Use the api to fetch the YourLocations
-    api.fetchYourLocations().then((List<YourLocation> YourLocations) {
+    api.fetchYourLocations(store.state).then((List<YourLocation> yourSubs) {
       // If it succeeds, dispatch a success action with the YourLocations.
       // Our reducer will then update the State using these YourLocations.
-      store.dispatch(new FetchYourLocationsSucceededAction(YourLocations));
+
+      loadYourLocations().then((localLocations) {
+        // unsubscribe all locally to sync the subs state
+        localLocations.forEach((location) => location.subscribed = false);
+
+        yourSubs.forEach((loc) {
+          localLocations.firstWhere(
+              (localLocation) => localLocation.id == loc.id, orElse: () {
+            localLocations.add(loc);
+          }).subscribed = true;
+        });
+
+        persistYourLocations(localLocations);
+
+        store.dispatch(new FetchYourLocationsSucceededAction(localLocations));
+      });
     }).catchError((Exception error) {
       // If it fails, dispatch a failure action. The reducer will
       // update the state with the error.
@@ -55,7 +71,8 @@ void fetchYourLocationsMiddleware(
 void createUser(store, lang, token) {
   assert(token != null, "User lang is null");
   assert(token != null, "User mobile token is null");
-  api
-      .createUser(store.state, token, lang)
-      .then((userId) => store.dispatch(new OnUserCreatedAction(userId)));
+  api.createUser(store.state, token, lang).then((userId) {
+    store.dispatch(new OnUserCreatedAction(userId));
+    store.dispatch(new FetchYourLocationsAction());
+  });
 }

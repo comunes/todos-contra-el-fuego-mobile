@@ -66,6 +66,6 @@ class AppState extends Object with _$AppStateSerializerMixin {
 
   @override
   String toString() {
-    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(firesApiKey, 8)}\napiUrl: ${ellipse(firesApiUrl, 8)}';
+    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(firesApiKey, 8)}\napiUrl: ${ellipse(firesApiUrl, 8)}\nyourLocations: ${yourLocations}';
   }
 }

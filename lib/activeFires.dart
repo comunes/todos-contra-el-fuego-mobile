@@ -13,7 +13,7 @@ import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'placesAutocompleteUtils.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
-import 'yourLocationPersist.dart';
+import 'package:fires_flutter/models/yourLocationPersist.dart';
 
 class ActiveFiresPage extends StatefulWidget {
   static const String routeName = '/fires';
