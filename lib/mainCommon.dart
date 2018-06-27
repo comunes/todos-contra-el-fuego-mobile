@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'firebaseMessagingConf.dart';
 import 'firesApp.dart';
 import 'globals.dart' as globals;
-import 'yourLocation.dart';
 import 'yourLocationPersist.dart';
 
 Future<Map<String, dynamic>> loadSecrets() async {

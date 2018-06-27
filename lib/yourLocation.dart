@@ -1,8 +1,6 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pref_dessert/pref_dessert.dart';
-import 'dart:convert';
 
 part 'yourLocation.g.dart';
 
