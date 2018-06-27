@@ -23,11 +23,17 @@ class S implements WidgetsLocalizations {
 
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   String get UNDO => "UNDO";
+  String get aDay => "a day";
+  String get aF3wSeconds => "a few seconds";
+  String get aMinute => "a minute";
+  String get aMonth => "a month";
+  String get aYear => "a year";
   String get activeFires => "Active fires";
   String get addSomePlace => "Add some other place";
   String get addYourCurrentPosition => "Add your current position";
   String get addedThisLocation => "You have already added this location";
   String get alertWhenThereIsAFire => "Alert when there is a fire";
+  String get anHour => "an hour";
   String get appName => "All Against The Fire!";
   String get chooseAPlace => "Choose a place";
   String get chooseAWatchRadio => "Choose a watch radio";
@@ -49,7 +55,14 @@ class S implements WidgetsLocalizations {
   String activeFiresWorldWide(String activeFires) => "$activeFires active fires worldwide";
   String appLicense(String thisYear) => "(c) 2017-$thisYear Comunes Association under the GNU Affero GPL v3";
   String firesAroundThisArea(String numFires, String kmAround) => "$numFires fires at $kmAround км around this area";
+  String inDays(String value) => "$value days";
+  String inHours(String value) => "$value hours";
+  String inMinutes(String value) => "$value minutes";
+  String inMonths(String value) => "$value months";
+  String inSomething(String something) => "in $something";
+  String inYears(String value) => "$value years";
   String noFiresAroundThisArea(String kmAround) => "There is no fires at $kmAround км around this area";
+  String somethingAgo(String something) => "$something ago";
   String subscribeToValueAroundThisArea(String sliderValue) => "Subscribe to $sliderValue км around this area";
   String updatedLastCheck(String lastCheck) => "Updated $lastCheck";
 }
@@ -71,6 +84,10 @@ class es extends S {
   @override
   String get alertWhenThereIsAFire => "Alerta cuando hay un fuego";
   @override
+  String get anHour => "una hora";
+  @override
+  String get aMinute => "un minuto";
+  @override
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override
   String get notifyAFire => "Notificar un fuego";
@@ -82,6 +99,8 @@ class es extends S {
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   @override
   String get unsubscribe => "Desuscríbete";
+  @override
+  String get aDay => "un día";
   @override
   String get supportThisInitiative => "Apoya esta iniciativa";
   @override
@@ -95,7 +114,11 @@ class es extends S {
   @override
   String get appName => "¡Tod@s contra el Fuego!";
   @override
+  String get aF3wSeconds => "unos segundos";
+  @override
   String get activeFires => "Fuegos activos";
+  @override
+  String get aMonth => "un mes";
   @override
   String get firesInTheWorld => "Fuegos en el mundo";
   @override
@@ -115,6 +138,14 @@ class es extends S {
   @override
   String get firesNearPlace => "Fuegos cercanos a ti";
   @override
+  String get aYear => "un año";
+  @override
+  String inMonths(String value) => "$value meses";
+  @override
+  String inDays(String value) => "$value días";
+  @override
+  String inYears(String value) => "$value años";
+  @override
   String noFiresAroundThisArea(String kmAround) => "No hay fuegos a $kmAround км a la redonda";
   @override
   String activeFiresWorldWide(String activeFires) => "$activeFires fuegos activos en el mundo";
@@ -123,9 +154,17 @@ class es extends S {
   @override
   String appLicense(String thisYear) => "(c) 2017-$thisYear Asociación Comunes bajo licencia GNU Affero GPL v3";
   @override
+  String somethingAgo(String something) => "hace $something";
+  @override
   String subscribeToValueAroundThisArea(String sliderValue) => "Suscríbete a $sliderValue км a la redonda";
   @override
+  String inHours(String value) => "$value horas";
+  @override
   String updatedLastCheck(String lastCheck) => "Actualizado $lastCheck";
+  @override
+  String inSomething(String something) => "en $something";
+  @override
+  String inMinutes(String value) => "$value minutos";
 }
 
 

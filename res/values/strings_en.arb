@@ -29,5 +29,18 @@
   "isYourUbicationEnabled": "I cannot get your current location. It's your ubication enabled?",
   "typeTheNameOfAPlace": "Type the name of a place, region, etc",
   "subscribeToValueAroundThisArea": "Subscribe to $sliderValue км around this area",
-  "warningThisIsAVeryLargeArea": "Warning: this is a very large area"
+  "warningThisIsAVeryLargeArea": "Warning: this is a very large area",
+  "aF3wSeconds": "a few seconds",
+  "aMinute": "a minute",
+  "inMinutes": "$value minutes",
+  "anHour": "an hour",
+  "inHours": "$value hours",
+  "aDay": "a day",
+  "inDays": "$value days",
+  "aMonth": "a month",
+  "inMonths": "$value months",
+  "aYear": "a year",
+  "inYears": "$value years",
+  "somethingAgo": "$something ago",
+  "inSomething": "in $something"
 }

@@ -29,5 +29,18 @@
   "isYourUbicationEnabled": "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?",
   "typeTheNameOfAPlace": "Escribe el nombre de un lugar, zona, etc",
   "subscribeToValueAroundThisArea": "Suscríbete a $sliderValue км a la redonda",
-  "warningThisIsAVeryLargeArea": "Cuidado: esta zona es muy grande"
+  "warningThisIsAVeryLargeArea": "Cuidado: esta zona es muy grande",
+  "aF3wSeconds": "unos segundos",
+  "aMinute": "un minuto",
+  "inMinutes": "$value minutos",
+  "anHour": "una hora",
+  "inHours": "$value horas",
+  "aDay": "un día",
+  "inDays": "$value días",
+  "aMonth": "un mes",
+  "inMonths": "$value meses",
+  "aYear": "un año",
+  "inYears": "$value años",
+  "somethingAgo": "hace $something",
+  "inSomething": "en $something"
 }

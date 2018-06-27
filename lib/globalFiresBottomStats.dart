@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_moment/simple_moment.dart';
 import 'dart:convert';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -7,6 +6,7 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'customBottomAppBar.dart';
 import 'colors.dart';
 import 'generated/i18n.dart';
+import 'customMoment.dart';
 
 class GlobalFiresBottomStats extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
         var now = Moment.now();
         var last = DateTime.parse(json.decode(result)['value']);
         setState(() {
-          lastCheck = now.from(last);
+          lastCheck = now.from(context, last);
         });
       } catch (e) {
         print('Cannot get the last fire check');
