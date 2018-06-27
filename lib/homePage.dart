@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _homeFont = const TextStyle(
-    fontSize: 35.0,
+    fontSize: 50.0,
     fontWeight: FontWeight.w400,
     // color: Colors.white,
   );
@@ -47,12 +47,16 @@ class HomePage extends StatelessWidget {
                     child: new CenteredColumn(
                       children: <Widget>[
                         new Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: new Text(
-                            S.of(context).appName,
-                            textAlign: TextAlign.center,
-                            softWrap: true, style: _homeFont),
-                        ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: FittedBox(
+                            child: new Text(S.of(context).appName,
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                softWrap: true,
+                                style: _homeFont),
+                            fit: BoxFit.scaleDown,
+                          )),
                         new SizedBox(height: 20.0),
                         new RoundedBtn.nav(
                             icon: Icons.whatshot,
