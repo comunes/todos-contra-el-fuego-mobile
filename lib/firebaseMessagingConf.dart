@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
 
 final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
@@ -15,5 +16,11 @@ void firebaseConfig() {
       print('On firebase resume');
     }
   );
+  getToken();
+}
 
+getToken() async {
+  String token = await _firebaseMessaging.onTokenRefresh.first;
+  print(token);
+  // await _firebaseMessaging.getToken();
 }
