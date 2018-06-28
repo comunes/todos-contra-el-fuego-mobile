@@ -51,7 +51,6 @@ class FiresApi {
           var el = dataSubscriptions[i];
           var lat = el['location']['lat'];
           var lon = el['location']['lon'];
-          var id = el['_id']['_str'];
           subscribed.add(new YourLocation(
               id: ObjectId.fromHexString(el['_id']['_str']),
               lat: lat,

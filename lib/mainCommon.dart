@@ -12,7 +12,6 @@ import 'models/firesApi.dart';
 import 'redux/fetchDataMiddleware.dart';
 import 'redux/reducers.dart';
 import 'package:fires_flutter/models/yourLocationPersist.dart';
-import 'package:fires_flutter/models/yourLocation.dart';
 
 Future<Map<String, dynamic>> loadSecrets() async {
   return await SecretLoader(secretPath: 'assets/private-settings.json').load();

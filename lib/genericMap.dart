@@ -3,14 +3,16 @@ import 'dart:core';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fires_flutter/models/basicLocation.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
 
-import 'package:fires_flutter/models/basicLocation.dart';
 import 'colors.dart';
 import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
@@ -18,47 +20,61 @@ import 'fireMarkType.dart';
 import 'fireMarker.dart';
 import 'generated/i18n.dart';
 import 'globals.dart' as globals;
+import 'models/appState.dart';
+import 'models/fireMapState.dart';
+import 'redux/actions.dart';
 import 'slider.dart';
-import 'package:fires_flutter/models/yourLocation.dart';
 import 'zoomMapPlugin.dart';
 
-enum MapOperation { view, subscriptionConfirm, unsubscribe }
+@immutable
+class _ViewModel {
+  final FireMapState mapState;
+  final OnSubscribeFunction onSubs;
+  final OnSubscribeConfirmedFunction onSubsConfirmed;
+  final OnUnSubscribeFunction onUnSubs;
 
-class GenericMap extends StatefulWidget {
-  final YourLocation location;
-  final String title;
-  final MapOperation operation;
-
-  GenericMap(
-      {@required this.title,
-      @required this.location,
-      @required this.operation});
+  _ViewModel(
+      {@required this.mapState,
+      @required this.onSubs,
+      @required this.onSubsConfirmed,
+      @required this.onUnSubs});
 
   @override
-  _GenericMapState createState() =>
-      _GenericMapState(title: title, location: location, operation: operation);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ViewModel &&
+          runtimeType == other.runtimeType &&
+          mapState == other.mapState &&
+          onSubs == other.onSubs &&
+          onSubsConfirmed == other.onSubsConfirmed &&
+          onUnSubs == other.onUnSubs;
+
+  @override
+  int get hashCode =>
+      mapState.hashCode ^
+      onSubs.hashCode ^
+      onSubsConfirmed.hashCode ^
+      onUnSubs.hashCode;
+}
+
+class GenericMap extends StatefulWidget {
+  GenericMap();
+
+  @override
+  _GenericMapState createState() => _GenericMapState();
 }
 
 class _GenericMapState extends State<GenericMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-  final YourLocation location;
-  final String title;
   int numFires;
   int kmAround = 100;
   List<dynamic> fires = [];
   List<dynamic> falsePos = [];
   List<dynamic> industries = [];
-  MapOperation operation;
 
-  @override
-  void initState() {
-    super.initState();
-    updateFireStats();
-  }
-
-  void updateFireStats() {
+  void updateFireStats(YourLocation location) {
     var url = '${globals.firesApiUrl}fires-in-full/${globals
       .firesApiKey}/${location.lat}/${location.lon}/$kmAround';
     http.read(url).then((result) {
@@ -81,145 +97,170 @@ class _GenericMapState extends State<GenericMap> {
     });
   }
 
-  _GenericMapState(
-      {@required this.title,
-      @required this.location,
-      @required this.operation});
+  _GenericMapState();
 
   @override
   Widget build(BuildContext context) {
-    print('Build map with operation: $operation');
-    MapOptions mapOptions = new MapOptions(
-        center: new LatLng(this.location.lat, this.location.lon),
-        plugins: globals.isDevelopment
-            ? [new ZoomMapPlugin()]
-            : [new DummyMapPlugin()],
-        // this works ?
-        // interactive: false,
-        zoom: 13.0,
-        // THIS does not works as expected
-        // maxZoom: 6.0,
-        onPositionChanged: (positionCallback) {
-          // decouple
-          // print('${positionCallback.center}, ${positionCallback.zoom}');
-        });
-    var mapController = new MapController();
-    // mapController.fitBounds(bounds);
-    // mapController.center
-    var fmap = new Opacity(
-        opacity: operation == MapOperation.subscriptionConfirm ? 0.5 : 1.0,
-        child: new FlutterMap(
-          options: mapOptions,
-          mapController: mapController,
-          layers: [
-            new TileLayerOptions(
-              maxZoom: 6.0,
-              subdomains: ['a', 'b', 'c'],
-              urlTemplate:
-                  'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-              additionalOptions: {
-                // 'opacity': '0.1',
-                'attribution':
-                    '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
+    // print('Build map with operation: $operation');
+    return new StoreConnector<AppState, _ViewModel>(
+        distinct: false, // FIXME
+        converter: (store) {
+          return new _ViewModel(
+              onSubs: (loc) {
+                store.dispatch(new SubscribeAction(loc.id));
               },
-            ),
-            globals.isDevelopment
-                ? new ZoomMapPluginOptions()
-                : new DummyMapPluginOptions(),
-            new MarkerLayerOptions(
-              markers: buildMarkers(
-                  this.location, this.fires, this.industries, this.falsePos),
-            ),
-          ],
-        ));
-    final btnText = operation == MapOperation.view
-        ? S.of(context).toFiresNotifications
-        : operation == MapOperation.subscriptionConfirm
-            ? S.of(context).confirm
-            : S.of(context).unsubscribe;
-    final btnIcon = operation == MapOperation.view
-        ? Icons.notifications_active
-        : operation == MapOperation.subscriptionConfirm
-            ? Icons.check
-            : Icons.notifications_off;
-    return new Scaffold(
-        key: _scaffoldKey,
-        appBar: new AppBar(
-          title: new Text(title),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            setState(() {
-              switch (operation) {
-                case MapOperation.view:
-                  operation = MapOperation.subscriptionConfirm;
-                  break;
-                case MapOperation.subscriptionConfirm:
-                  // IOS specific
-                  _firebaseMessaging.requestNotificationPermissions();
-                  operation = MapOperation.unsubscribe;
-                  break;
-                case MapOperation.unsubscribe:
-                  operation = MapOperation.view;
-                  break;
-              }
-            });
-          },
-          // https://github.com/flutter/flutter/issues/17583
-          heroTag: "firesmap" +  location.id.toHexString(),
-          icon: new Icon(btnIcon, color: fires600),
-          label: new Text(
-            btnText,
-            style: const TextStyle(color: fires600),
-          ),
-          backgroundColor: Colors.white,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        bottomNavigationBar: new CustomBottomAppBar(
-            fabLocation: FloatingActionButtonLocation.centerFloat,
-            showNotch: false,
-            color: fires100,
-            // height: 170.0,
-            mainAxisAlignment: MainAxisAlignment.center,
-            actions: listWithoutNulls(<Widget>[
-              operation == MapOperation.subscriptionConfirm || numFires == null
-                  ? null
-                  : new Text(numFires > 0
-                      ? S.of(context).firesAroundThisArea(
-                          numFires.toString(), kmAround.toString())
-                      : S
-                          .of(context)
-                          .noFiresAroundThisArea(kmAround.toString())),
-              SizedBox(width: 10.0)
-            ])),
-        body: LayoutBuilder(
-          builder: (context, constraints) =>
-              Stack(fit: StackFit.expand, children: <Widget>[
-                // Material(color: Colors.yellowAccent),
-                fmap,
-                Positioned(
-                  top: constraints.maxHeight - 200,
-                  right: 10.0,
-                  left: 10.0,
-                  child: new CenteredRow(
-                    // Fit sample:
-                    // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
-                    children: operation == MapOperation.subscriptionConfirm
-                        ? <Widget>[
-                            new FireDistanceSlider(
-                                initialValue: kmAround,
-                                onSlide: (distance) {
-                                  setState(() {
-                                    kmAround = distance;
-                                    Debounce.seconds(1, updateFireStats);
-                                  });
-                                })
-                          ]
-                        : [],
-                  ),
-                )
-              ]),
-        ));
+              onSubsConfirmed: (loc) {
+                store.dispatch(new SubscribeAction(loc.id));
+              },
+              onUnSubs: (loc) {
+                store.dispatch(new UnSubscribeAction(loc.id));
+              },
+              mapState: store.state.fireMapState);
+        },
+        builder: (context, view) {
+          YourLocation location = view.mapState.yourLocation;
+          MapOptions mapOptions = new MapOptions(
+              center: new LatLng(location.lat, location.lon),
+              plugins: globals.isDevelopment
+                  ? [new ZoomMapPlugin()]
+                  : [new DummyMapPlugin()],
+              // this works ?
+              // interactive: false,
+              zoom: 13.0,
+              // THIS does not works as expected
+              // maxZoom: 6.0,
+              onPositionChanged: (positionCallback) {
+                // decouple
+                // print('${positionCallback.center}, ${positionCallback.zoom}');
+              });
+          var mapController = new MapController();
+          // mapController.fitBounds(bounds);
+          // mapController.center
+
+          FireMapStatus operation = view.mapState.status;
+          final btnText = operation == FireMapStatus.view
+              ? S.of(context).toFiresNotifications
+              : operation == FireMapStatus.subscriptionConfirm
+                  ? S.of(context).confirm
+                  : S.of(context).unsubscribe;
+          final btnIcon = operation == FireMapStatus.view
+              ? Icons.notifications_active
+              : operation == FireMapStatus.subscriptionConfirm
+                  ? Icons.check
+                  : Icons.notifications_off;
+          updateFireStats(location);
+          return new Scaffold(
+              key: _scaffoldKey,
+              appBar: new AppBar(
+                title: new Text(location.description),
+              ),
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+
+                    switch (operation) {
+                      case FireMapStatus.view:
+                        view.onSubs(location);
+                        break;
+                      case FireMapStatus.subscriptionConfirm:
+                        view.onSubsConfirmed(location);
+                        // IOS specific
+                        _firebaseMessaging.requestNotificationPermissions();
+                        operation = FireMapStatus.unsubscribe;
+                        break;
+                      case FireMapStatus.unsubscribe:
+                        view.onUnSubs(location);
+                        operation = FireMapStatus.view;
+                        break;
+                    }
+
+                },
+                // https://github.com/flutter/flutter/issues/17583
+                heroTag: "firesmap" + location.id.toHexString(),
+                icon: new Icon(btnIcon, color: fires600),
+                label: new Text(
+                  btnText,
+                  style: const TextStyle(color: fires600),
+                ),
+                backgroundColor: Colors.white,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              bottomNavigationBar: new CustomBottomAppBar(
+                  fabLocation: FloatingActionButtonLocation.centerFloat,
+                  showNotch: false,
+                  color: fires100,
+                  // height: 170.0,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  actions: listWithoutNulls(<Widget>[
+                    operation == FireMapStatus.subscriptionConfirm ||
+                            numFires == null
+                        ? null
+                        : new Text(numFires > 0
+                            ? S.of(context).firesAroundThisArea(
+                                numFires.toString(), kmAround.toString())
+                            : S
+                                .of(context)
+                                .noFiresAroundThisArea(kmAround.toString())),
+                    SizedBox(width: 10.0)
+                  ])),
+              body: LayoutBuilder(
+                builder: (context, constraints) =>
+                    Stack(fit: StackFit.expand, children: <Widget>[
+                      // Material(color: Colors.yellowAccent),
+                      new Opacity(
+                          opacity:
+                              operation == FireMapStatus.subscriptionConfirm
+                                  ? 0.5
+                                  : 1.0,
+                          child: new FlutterMap(
+                            options: mapOptions,
+                            mapController: mapController,
+                            layers: [
+                              new TileLayerOptions(
+                                maxZoom: 6.0,
+                                subdomains: ['a', 'b', 'c'],
+                                urlTemplate:
+                                    'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                                additionalOptions: {
+                                  // 'opacity': '0.1',
+                                  'attribution':
+                                      '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
+                                },
+                              ),
+                              globals.isDevelopment
+                                  ? new ZoomMapPluginOptions()
+                                  : new DummyMapPluginOptions(),
+                              new MarkerLayerOptions(
+                                markers: buildMarkers(location, this.fires,
+                                    this.industries, this.falsePos),
+                              ),
+                            ],
+                          )),
+                      Positioned(
+                        top: constraints.maxHeight - 200,
+                        right: 10.0,
+                        left: 10.0,
+                        child: new CenteredRow(
+                          // Fit sample:
+                          // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
+                          children: operation ==
+                                  FireMapStatus.subscriptionConfirm
+                              ? <Widget>[
+                                  new FireDistanceSlider(
+                                      initialValue: kmAround,
+                                      onSlide: (distance) {
+                                        setState(() {
+                                          kmAround = distance;
+                                          Debounce.seconds(1, updateFireStats);
+                                        });
+                                      })
+                                ]
+                              : [],
+                        ),
+                      )
+                    ]),
+              ));
+        });
   }
 
   List<Marker> buildMarkers(YourLocation yourLocation, List<dynamic> fires,

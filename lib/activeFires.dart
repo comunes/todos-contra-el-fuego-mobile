@@ -13,19 +13,23 @@ import 'globalFiresBottomStats.dart';
 import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
+import 'package:redux/src/store.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
 
+@immutable
 class _ViewModel {
   final List<YourLocation> yourLocations;
   final AddYourLocationFunction onAdd;
   final DeleteYourLocationFunction onDelete;
   final ToggleSubscriptionFunction onToggleSubs;
+  final OnLocationTapFunction onTap;
 
   _ViewModel(
       {@required this.onAdd,
       @required this.onDelete,
       @required this.onToggleSubs,
+      @required this.onTap,
       @required this.yourLocations});
 
   @override
@@ -36,14 +40,16 @@ class _ViewModel {
           yourLocations == other.yourLocations &&
           onAdd == other.onAdd &&
           onDelete == other.onDelete &&
-          onToggleSubs == other.onToggleSubs;
+          onToggleSubs == other.onToggleSubs &&
+          onTap == other.onTap;
 
   @override
   int get hashCode =>
       yourLocations.hashCode ^
       onAdd.hashCode ^
       onDelete.hashCode ^
-      onToggleSubs.hashCode;
+      onToggleSubs.hashCode ^
+      onTap.hashCode;
 }
 
 class ActiveFiresPage extends StatefulWidget {
@@ -81,7 +87,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   _ActiveFiresPageState();
 
-  Widget _buildRow(YourLocation loc, onToggle) {
+  Widget _buildRow(YourLocation loc, onToggle, onTap) {
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.location_on),
@@ -92,30 +98,14 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             onPressed: () {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
-              /* FIXME int i = globals.yourLocations.indexOf(loc);
-              globals.yourLocations.removeAt(i);
-              globals.yourLocations.insert(i, loc);
-              persistYourLocations(); */
-              setState(() {});
             }),
         title: new Text(loc.description),
         onLongPress: () {
           showSnackMsg(S.of(context).toDeleteThisPlace);
         },
         onTap: () {
-          showLocationMap(loc);
+          onTap(loc);
         });
-  }
-
-  void showLocationMap(YourLocation loc) {
-    // , VoidCallback onSubs
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => new GenericMap(
-                title: loc.description,
-                location: loc,
-                operation: MapOperation.view)));
   }
 
   void showSnackMsg(String msg) {
@@ -124,12 +114,13 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     ));
   }
 
-  Widget _buildSavedLocations(List<YourLocation> yl, onDeleted, onToggle) {
+  Widget _buildSavedLocations(
+      List<YourLocation> yl, onDeleted, onToggle, onTap) {
     return new ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: yl.length,
         itemBuilder: (BuildContext _context, int i) {
-          return _buildItem(yl.elementAt(i), onDeleted, onToggle);
+          return _buildItem(yl.elementAt(i), onDeleted, onToggle, onTap);
         });
   }
 
@@ -141,7 +132,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     });
   }
 
-  Widget _buildItem(YourLocation item, onDelete, onToggle) {
+  Widget _buildItem(YourLocation item, onDelete, onToggle, onTap) {
     final ThemeData theme = Theme.of(context);
     return new Dismissible(
         key: new ObjectKey(item),
@@ -174,7 +165,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                 color: theme.canvasColor,
                 border: new Border(
                     bottom: new BorderSide(color: theme.dividerColor))),
-            child: _buildRow(item, onToggle)));
+            child: _buildRow(item, onToggle, onTap)));
   }
 
   @override
@@ -185,12 +176,16 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           return new _ViewModel(
               onAdd: (loc) {
                 store.dispatch(new AddYourLocationAction(loc));
+                gotoLocationMap(store, loc, context);
               },
               onDelete: (id) {
                 store.dispatch(new DeleteYourLocationAction(id));
               },
               onToggleSubs: (loc) {
                 store.dispatch(new ToggleSubscriptionAction(loc));
+              },
+              onTap: (loc) {
+                gotoLocationMap(store, loc, context);
               },
               yourLocations: store.state.yourLocations);
         },
@@ -219,8 +214,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             bottomNavigationBar: new GlobalFiresBottomStats(),
             body: hasLocations
                 ? new Stack(children: <Widget>[
-                    _buildSavedLocations(
-                        view.yourLocations, view.onDelete, view.onToggleSubs),
+                    _buildSavedLocations(view.yourLocations, view.onDelete,
+                        view.onToggleSubs, view.onTap),
                     new FabDialer(_fabMiniMenuItemList(view.onAdd), fires600,
                         new Icon(Icons.add))
                   ])
@@ -242,6 +237,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         });
   }
 
+  void gotoLocationMap(Store<AppState> store, YourLocation loc, BuildContext context) {
+    store.dispatch(new ShowYourLocationMapAction(loc));
+    Navigator.push(
+            context, new MaterialPageRoute(builder: (context) => new GenericMap()));
+  }
+
   void onAddYourLocation(AddYourLocationFunction onAdd) {
     Future<YourLocation> location = getUserLocation(_scaffoldKey);
     _saveLocation(location, onAdd);
@@ -256,17 +257,6 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     location.then((newLocation) {
       if (newLocation != YourLocation.noLocation) {
         onAdd(newLocation);
-        /* FIXME
-        if (globals.yourLocations.contains(newLocation)) {
-          showSnackMsg(S.of(context).addedThisLocation);
-        } else
-          this.setState(() {
-            globals.yourLocations.add(newLocation);
-            persistYourLocations();
-            new Timer(new Duration(milliseconds: 1000), () {
-              showLocationMap(newLocation);
-            });
-          }); */
       }
     });
   }

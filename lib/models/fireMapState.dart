@@ -1,27 +1,33 @@
 import 'package:meta/meta.dart';
-
-enum FireMapOperation { view, subscriptionConfirm, unsubscribe }
+import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:redux/redux.dart';
+enum FireMapStatus { view, subscriptionConfirm, unsubscribe }
 
 @immutable
 class FireMapState {
-  final FireMapOperation currentOperation;
+  final FireMapStatus status;
+  final YourLocation yourLocation;
 
-  const FireMapState.initial(): this.currentOperation = FireMapOperation.view;
+  const FireMapState.initial(): this.status = FireMapStatus.view, this.yourLocation = null;
 
-  FireMapState({this.currentOperation: FireMapOperation.view});
+  FireMapState({this.status: FireMapStatus.view, this.yourLocation});
+
+  FireMapState copyWith({FireMapStatus status, YourLocation yourLocation}) {
+    return new FireMapState(
+      yourLocation: yourLocation ?? this.yourLocation,
+        status: status ?? this.status);
+  }
 
   @override
   bool operator ==(Object other) =>
     identical(this, other) ||
       other is FireMapState &&
         runtimeType == other.runtimeType &&
-        currentOperation == other.currentOperation;
+        status == other.status &&
+        yourLocation == other.yourLocation;
 
   @override
-  int get hashCode => currentOperation.hashCode;
-
-  FireMapState copyWith({FireMapOperation currentOperation}) {
-    return new FireMapState(
-        currentOperation: currentOperation ?? this.currentOperation);
-  }
+  int get hashCode =>
+    status.hashCode ^
+    yourLocation.hashCode;
 }

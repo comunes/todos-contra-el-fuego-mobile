@@ -1,5 +1,4 @@
 import 'actions.dart';
-import '../models/user.dart';
 import '../models/appState.dart';
 
 AppState appReducer(AppState state, action) {
