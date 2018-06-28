@@ -24,8 +24,9 @@ dependencies:
   shared_preferences: "^0.4.2"
   bson_objectid: "^0.1.0"
   comunes_flutter:
-    path: /home/vjrj/dev/comunes_flutter
-    version: "^0.0.12"
+    git: git@github.com:comunes/comunes-flutter.git
+    # path: /home/vjrj/dev/comunes_flutter
+    # version: "^0.0.12"
 
   # redux
   redux: "^3.0.0"
