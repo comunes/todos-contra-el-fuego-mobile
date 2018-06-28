@@ -91,7 +91,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                 : Icons.notifications_off),
             onPressed: () {
               loc.subscribed = !loc.subscribed;
-              onToggle(loc.id);
+              onToggle(loc);
               /* FIXME int i = globals.yourLocations.indexOf(loc);
               globals.yourLocations.removeAt(i);
               globals.yourLocations.insert(i, loc);
@@ -189,8 +189,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               onDelete: (id) {
                 store.dispatch(new DeleteYourLocationAction(id));
               },
-              onToggleSubs: (id) {
-                store.dispatch(new ToggleSubscriptionAction(id));
+              onToggleSubs: (loc) {
+                store.dispatch(new ToggleSubscriptionAction(loc));
               },
               yourLocations: store.state.yourLocations);
         },

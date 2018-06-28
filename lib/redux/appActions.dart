@@ -4,6 +4,8 @@ abstract class AppActions {}
 
 class FetchYourLocationsAction extends AppActions {}
 
+class PersistAppStateAction extends AppActions {}
+
 class FetchYourLocationsSucceededAction extends AppActions {
   final List<YourLocation> fetchedYourLocations;
 

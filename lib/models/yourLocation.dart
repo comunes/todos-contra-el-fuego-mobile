@@ -20,6 +20,7 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
   final double lon;
   String description;
   bool subscribed;
+  int distance;
 
   factory YourLocation.fromJson(Map<String, dynamic> json) =>
       _$YourLocationFromJson(json);
@@ -31,13 +32,12 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
       @required this.lat,
       @required this.lon,
       this.description,
+      this.distance: 10,
       this.subscribed: false}) {
     if (this.description == null)
       this.description = 'Position: ${this.lat}, ${this.lon}';
     if (this.id == null) this.id = new ObjectId();
   }
-
-
 
   @override
   bool operator ==(Object other) =>
@@ -48,7 +48,8 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
           lat == other.lat &&
           lon == other.lon &&
           description == other.description &&
-          subscribed == other.subscribed;
+          subscribed == other.subscribed &&
+          distance == other.distance;
 
   @override
   int get hashCode =>
@@ -56,11 +57,11 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
       lat.hashCode ^
       lon.hashCode ^
       description.hashCode ^
-      subscribed.hashCode;
+      subscribed.hashCode ^
+      distance.hashCode;
 
   @override
   String toString() {
-    return 'YourLocation {id: $id, lat: $lat, lon: $lon, description: $description, subscribed: $subscribed}';
+    return 'YourLocation {id: $id, lat: $lat, lon: $lon, description: $description, subscribed: $subscribed, distance: $distance}';
   }
-
 }

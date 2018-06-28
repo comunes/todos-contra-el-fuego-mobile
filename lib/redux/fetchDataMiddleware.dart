@@ -1,11 +1,10 @@
+import 'package:bson_objectid/bson_objectid.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:redux/redux.dart';
 
 import '../globals.dart' as globals;
 import '../models/appState.dart';
 import '../models/firesApi.dart';
-
-import 'package:fires_flutter/models/yourLocation.dart';
-
 import '../models/yourLocationPersist.dart';
 import 'actions.dart';
 
@@ -36,28 +35,52 @@ void fetchYourLocationsMiddleware(
       createUser(store, store.state.user.lang, action.token);
   }
 
-  if (action is FetchYourLocationsAction) {
-    final api = globals.getIt.get<FiresApi>();
+  if (action is AddYourLocationAction) {
+    if (action.loc.subscribed) {
+      subscribeViaApi(store, action.loc,
+          (sub) => store.dispatch(new AddedYourLocationAction(sub)));
+    } else {
+      // No subscribed (only local)
+      store.dispatch(new AddedYourLocationAction(action.loc));
+      persistYourLocations(store.state.yourLocations);
+    }
+  }
 
+  if (action is DeleteYourLocationAction) {
+    unsubsViaApi(store, action.id,
+        () => store.dispatch(new DeletedYourLocationAction(action.id)));
+  }
+
+  if (action is ToggleSubscriptionAction) {
+    if (action.loc.subscribed) {
+      subscribeViaApi(store, action.loc,
+          (sub) => store.dispatch(new ToggledSubscriptionAction(sub)));
+    } else {
+      unsubsViaApi(store, action.loc.id,
+          () => store.dispatch(new ToggledSubscriptionAction(action.loc)));
+    }
+  }
+
+  if (action is FetchYourLocationsAction) {
     // Use the api to fetch the YourLocations
-    api.fetchYourLocations(store.state).then((List<YourLocation> yourSubs) {
+    api
+        .fetchYourLocations(store.state)
+        .then((List<YourLocation> subscribedLocations) {
       // If it succeeds, dispatch a success action with the YourLocations.
       // Our reducer will then update the State using these YourLocations.
-
+      // print('Subscribed to: ${subscribedLocations.length}');
       loadYourLocations().then((localLocations) {
         // unsubscribe all locally to sync the subs state
         localLocations.forEach((location) => location.subscribed = false);
-
-        yourSubs.forEach((loc) {
+        // print('Local persisted: ${localLocations.length}');
+        subscribedLocations.forEach((subsLoc) {
           localLocations.firstWhere(
-              (localLocation) => localLocation.id == loc.id, orElse: () {
-            localLocations.add(loc);
+              (localLocation) => localLocation.id == subsLoc.id, orElse: () {
+            localLocations.add(subsLoc);
           }).subscribed = true;
         });
-
-        persistYourLocations(localLocations);
-
         store.dispatch(new FetchYourLocationsSucceededAction(localLocations));
+        persistYourLocations(localLocations);
       });
     }).catchError((Exception error) {
       // If it fails, dispatch a failure action. The reducer will
@@ -65,9 +88,26 @@ void fetchYourLocationsMiddleware(
       store.dispatch(new FetchYourLocationsFailedAction(error));
     });
   }
-
   // Make sure our actions continue on to the reducer.
   next(action);
+}
+
+void unsubsViaApi(Store<AppState> store, ObjectId id, onUnsubs) {
+  api.unsubscribe(store.state, id.toHexString()).then((res) {
+    onUnsubs();
+    persistYourLocations(store.state.yourLocations);
+  });
+}
+
+void subscribeViaApi(Store<AppState> store, YourLocation loc, onSubs) {
+  api.subscribe(store.state, loc).then((subsId) {
+    YourLocation sub = loc;
+    if (loc.id != subsId) {
+      sub.id = new ObjectId.fromHexString(subsId);
+    }
+    onSubs(sub);
+    persistYourLocations(store.state.yourLocations);
+  });
 }
 
 void createUser(store, lang, token) {

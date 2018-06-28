@@ -12,6 +12,7 @@ import 'models/firesApi.dart';
 import 'redux/fetchDataMiddleware.dart';
 import 'redux/reducers.dart';
 import 'package:fires_flutter/models/yourLocationPersist.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 
 Future<Map<String, dynamic>> loadSecrets() async {
   return await SecretLoader(secretPath: 'assets/private-settings.json').load();
@@ -40,8 +41,11 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
       // Run baby run!
       runApp(new FiresApp(store));
     });
+
+    // Listen to store changes, and re-render when the state is updated
+    // store.onChange.listen((state) {
+    // });
+
   });
 
-  // Listen to store changes, and re-render when the state is updated
-  // store.onChange.listen(render);
 }

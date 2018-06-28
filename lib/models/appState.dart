@@ -79,6 +79,6 @@ class AppState extends Object with _$AppStateSerializerMixin {
 typedef void AddYourLocationFunction(YourLocation loc);
 typedef void DeleteYourLocationFunction(ObjectId id);
 typedef void UpdateYourLocationFunction(ObjectId id, YourLocation loc);
-typedef void ToggleSubscriptionFunction(ObjectId id);
+typedef void ToggleSubscriptionFunction(YourLocation loc);
 typedef void SubscribeFunction(ObjectId id);
 typedef void UnSubscribeFunction(ObjectId id);

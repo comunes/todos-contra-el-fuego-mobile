@@ -14,24 +14,33 @@ YourLocation _$YourLocationFromJson(Map<String, dynamic> json) =>
         lat: (json['lat'] as num).toDouble(),
         lon: (json['lon'] as num).toDouble(),
         description: json['description'] as String,
+        distance: json['distance'] as int,
         subscribed: json['subscribed'] as bool);
 
 abstract class _$YourLocationSerializerMixin {
   ObjectId get id;
+
   double get lat;
+
   double get lon;
+
   String get description;
+
   bool get subscribed;
+
+  int get distance;
+
   Map<String, dynamic> toJson() => new _$YourLocationJsonMapWrapper(this);
 }
 
 class _$YourLocationJsonMapWrapper extends $JsonMapWrapper {
   final _$YourLocationSerializerMixin _v;
+
   _$YourLocationJsonMapWrapper(this._v);
 
   @override
   Iterable<String> get keys =>
-      const ['id', 'lat', 'lon', 'description', 'subscribed'];
+      const ['id', 'lat', 'lon', 'description', 'subscribed', 'distance'];
 
   @override
   dynamic operator [](Object key) {
@@ -47,6 +56,8 @@ class _$YourLocationJsonMapWrapper extends $JsonMapWrapper {
           return _v.description;
         case 'subscribed':
           return _v.subscribed;
+        case 'distance':
+          return _v.distance;
       }
     }
     return null;

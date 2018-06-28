@@ -11,11 +11,24 @@ class AddYourLocationAction extends YourLocationActions {
   AddYourLocationAction(this.loc);
 }
 
+class AddedYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+
+  AddedYourLocationAction(this.loc);
+}
+
 class DeleteYourLocationAction extends YourLocationActions {
   ObjectId id;
 
   DeleteYourLocationAction(this.id);
 }
+
+class DeletedYourLocationAction extends YourLocationActions {
+  ObjectId id;
+
+  DeletedYourLocationAction(this.id);
+}
+
 
 class UpdateYourLocationAction extends YourLocationActions {
   ObjectId id;
@@ -25,9 +38,15 @@ class UpdateYourLocationAction extends YourLocationActions {
 }
 
 class ToggleSubscriptionAction extends YourLocationActions {
-  ObjectId id;
+  YourLocation loc;
 
-  ToggleSubscriptionAction(this.id);
+  ToggleSubscriptionAction(this.loc);
+}
+
+class ToggledSubscriptionAction extends YourLocationActions {
+  YourLocation loc;
+
+  ToggledSubscriptionAction(this.loc);
 }
 
 class SubscribeAction extends YourLocationActions {
