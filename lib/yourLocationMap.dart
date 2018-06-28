@@ -1,4 +1,3 @@
-import 'dart:convert' show json;
 import 'dart:core';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
@@ -9,12 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:http/http.dart' as http;
-import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:latlong/latlong.dart';
 
 import 'colors.dart';
-import 'customBottomAppBar.dart';
 import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
 import 'fireMarker.dart';
@@ -24,6 +20,7 @@ import 'models/appState.dart';
 import 'models/fireMapState.dart';
 import 'redux/actions.dart';
 import 'slider.dart';
+import 'yourLocationMapBottom.dart';
 import 'zoomMapPlugin.dart';
 
 @immutable
@@ -32,12 +29,14 @@ class _ViewModel {
   final OnSubscribeFunction onSubs;
   final OnSubscribeConfirmedFunction onSubsConfirmed;
   final OnUnSubscribeFunction onUnSubs;
+  final OnSubscribeDistanceChangeFunction onSlide;
 
   _ViewModel(
       {@required this.mapState,
       @required this.onSubs,
       @required this.onSubsConfirmed,
-      @required this.onUnSubs});
+      @required this.onUnSubs,
+      @required this.onSlide});
 
   @override
   bool operator ==(Object other) =>
@@ -47,78 +46,57 @@ class _ViewModel {
           mapState == other.mapState &&
           onSubs == other.onSubs &&
           onSubsConfirmed == other.onSubsConfirmed &&
-          onUnSubs == other.onUnSubs;
+          onUnSubs == other.onUnSubs &&
+          onSlide == other.onSlide;
 
   @override
   int get hashCode =>
       mapState.hashCode ^
       onSubs.hashCode ^
       onSubsConfirmed.hashCode ^
-      onUnSubs.hashCode;
+      onUnSubs.hashCode ^
+      onSlide.hashCode;
 }
 
-class GenericMap extends StatefulWidget {
-  GenericMap();
+class YourLocationMap extends StatefulWidget {
+  YourLocationMap();
 
   @override
-  _GenericMapState createState() => _GenericMapState();
+  _YourLocationMapState createState() => _YourLocationMapState();
 }
 
-class _GenericMapState extends State<GenericMap> {
+class _YourLocationMapState extends State<YourLocationMap> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-  int numFires;
-  int kmAround = 100;
-  List<dynamic> fires = [];
-  List<dynamic> falsePos = [];
-  List<dynamic> industries = [];
-
-  void updateFireStats(YourLocation location) {
-    var url = '${globals.firesApiUrl}fires-in-full/${globals
-      .firesApiKey}/${location.lat}/${location.lon}/$kmAround';
-    http.read(url).then((result) {
-      setState(() {
-        var resultDecoded = json.decode(result);
-        // print(resultDecoded);
-        numFires = resultDecoded['real'];
-        fires = resultDecoded['fires'];
-        falsePos = resultDecoded['falsePos'];
-        industries = resultDecoded['industries'];
-
-        if (globals.isDevelopment) {
-          var firesCount = fires.length;
-          var industriesCount = industries.length;
-          var falsePosCount = falsePos.length;
-          print(
-              'real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
-        }
-      });
-    });
-  }
-
-  _GenericMapState();
+  _YourLocationMapState();
 
   @override
   Widget build(BuildContext context) {
-    // print('Build map with operation: $operation');
+
     return new StoreConnector<AppState, _ViewModel>(
         distinct: false, // FIXME
         converter: (store) {
           return new _ViewModel(
               onSubs: (loc) {
-                store.dispatch(new SubscribeAction(loc.id));
+                store.dispatch(new SubscribeAction());
               },
               onSubsConfirmed: (loc) {
-                store.dispatch(new SubscribeAction(loc.id));
+                loc.subscribed = true;
+                store.dispatch(new SubscribeConfirmAction(loc));
               },
               onUnSubs: (loc) {
-                store.dispatch(new UnSubscribeAction(loc.id));
+                loc.subscribed = false;
+                store.dispatch(new UnSubscribeAction(loc));
+              },
+              onSlide: (loc) {
+                store.dispatch(new UpdateLocalYourLocationAction(loc));
               },
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
           YourLocation location = view.mapState.yourLocation;
+          assert(location != null);
           MapOptions mapOptions = new MapOptions(
               center: new LatLng(location.lat, location.lon),
               plugins: globals.isDevelopment
@@ -137,7 +115,9 @@ class _GenericMapState extends State<GenericMap> {
           // mapController.fitBounds(bounds);
           // mapController.center
 
-          FireMapStatus operation = view.mapState.status;
+          FireMapState mapState = view.mapState;
+          FireMapStatus operation = mapState.status;
+          print('Build map with operation: $operation');
           final btnText = operation == FireMapStatus.view
               ? S.of(context).toFiresNotifications
               : operation == FireMapStatus.subscriptionConfirm
@@ -148,7 +128,6 @@ class _GenericMapState extends State<GenericMap> {
               : operation == FireMapStatus.subscriptionConfirm
                   ? Icons.check
                   : Icons.notifications_off;
-          updateFireStats(location);
           return new Scaffold(
               key: _scaffoldKey,
               appBar: new AppBar(
@@ -156,23 +135,19 @@ class _GenericMapState extends State<GenericMap> {
               ),
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
-
-                    switch (operation) {
-                      case FireMapStatus.view:
-                        view.onSubs(location);
-                        break;
-                      case FireMapStatus.subscriptionConfirm:
-                        view.onSubsConfirmed(location);
-                        // IOS specific
-                        _firebaseMessaging.requestNotificationPermissions();
-                        operation = FireMapStatus.unsubscribe;
-                        break;
-                      case FireMapStatus.unsubscribe:
-                        view.onUnSubs(location);
-                        operation = FireMapStatus.view;
-                        break;
-                    }
-
+                  switch (operation) {
+                    case FireMapStatus.view:
+                      view.onSubs(location);
+                      break;
+                    case FireMapStatus.subscriptionConfirm:
+                      view.onSubsConfirmed(location);
+                      // IOS specific
+                      _firebaseMessaging.requestNotificationPermissions();
+                      break;
+                    case FireMapStatus.unsubscribe:
+                      view.onUnSubs(location);
+                      break;
+                  }
                 },
                 // https://github.com/flutter/flutter/issues/17583
                 heroTag: "firesmap" + location.id.toHexString(),
@@ -185,24 +160,7 @@ class _GenericMapState extends State<GenericMap> {
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
-              bottomNavigationBar: new CustomBottomAppBar(
-                  fabLocation: FloatingActionButtonLocation.centerFloat,
-                  showNotch: false,
-                  color: fires100,
-                  // height: 170.0,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  actions: listWithoutNulls(<Widget>[
-                    operation == FireMapStatus.subscriptionConfirm ||
-                            numFires == null
-                        ? null
-                        : new Text(numFires > 0
-                            ? S.of(context).firesAroundThisArea(
-                                numFires.toString(), kmAround.toString())
-                            : S
-                                .of(context)
-                                .noFiresAroundThisArea(kmAround.toString())),
-                    SizedBox(width: 10.0)
-                  ])),
+              bottomNavigationBar: new YourLocationMapBottom(),
               body: LayoutBuilder(
                 builder: (context, constraints) =>
                     Stack(fit: StackFit.expand, children: <Widget>[
@@ -231,8 +189,8 @@ class _GenericMapState extends State<GenericMap> {
                                   ? new ZoomMapPluginOptions()
                                   : new DummyMapPluginOptions(),
                               new MarkerLayerOptions(
-                                markers: buildMarkers(location, this.fires,
-                                    this.industries, this.falsePos),
+                                markers: buildMarkers(location, mapState.fires,
+                                    mapState.industries, mapState.falsePos),
                               ),
                             ],
                           )),
@@ -243,19 +201,22 @@ class _GenericMapState extends State<GenericMap> {
                         child: new CenteredRow(
                           // Fit sample:
                           // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
-                          children: operation ==
-                                  FireMapStatus.subscriptionConfirm
-                              ? <Widget>[
-                                  new FireDistanceSlider(
-                                      initialValue: kmAround,
-                                      onSlide: (distance) {
+                          children:
+                              operation == FireMapStatus.subscriptionConfirm
+                                  ? <Widget>[
+                                      new FireDistanceSlider(
+                                          initialValue: location.distance,
+                                          onSlide: (distance) {
+                                            location.distance = distance;
+                                            view.onSlide(location);
+                                            /* FIXME
                                         setState(() {
                                           kmAround = distance;
                                           Debounce.seconds(1, updateFireStats);
-                                        });
-                                      })
-                                ]
-                              : [],
+                                        }); */
+                                          })
+                                    ]
+                                  : [],
                         ),
                       )
                     ]),

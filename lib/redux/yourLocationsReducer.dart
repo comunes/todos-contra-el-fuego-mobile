@@ -4,16 +4,14 @@ import 'package:redux/redux.dart';
 import 'actions.dart';
 
 final yourLocationsReducer = combineReducers<List<YourLocation>>([
-  new TypedReducer<List<YourLocation>, AddedYourLocationAction>(_addedYourLocation),
+  new TypedReducer<List<YourLocation>, AddedYourLocationAction>(
+      _addedYourLocation),
   new TypedReducer<List<YourLocation>, DeletedYourLocationAction>(
       _deletedYourLocation),
-  new TypedReducer<List<YourLocation>, UpdateYourLocationAction>(
-      _updateYourLocation),
-  new TypedReducer<List<YourLocation>, ToggledSubscriptionAction>(_toggledSubscriptionAction)
-
-  /*  new TypedReducer<List<YourLocation>, ToggleSubscriptionAction>(_toggleSubscriptionAction),
-  new TypedReducer<List<YourLocation>, SubscribeAction>(_setLoadedYourLocations),
-  new TypedReducer<List<YourLocation>, UnSubscribeAction>(_setNoYourLocations), */
+  new TypedReducer<List<YourLocation>, UpdateLocalYourLocationAction>(
+      _updateLocalYourLocation),
+  new TypedReducer<List<YourLocation>, ToggledSubscriptionAction>(
+      _toggledSubscriptionAction)
 ]);
 
 List<YourLocation> _addedYourLocation(
@@ -28,25 +26,18 @@ List<YourLocation> _deletedYourLocation(
       .toList();
 }
 
-List<YourLocation> _updateYourLocation(
-    List<YourLocation> yourLocations, UpdateYourLocationAction action) {
+List<YourLocation> _updateLocalYourLocation(
+    List<YourLocation> yourLocations, UpdateLocalYourLocationAction action) {
   return yourLocations
       .map((yourLocation) =>
-          yourLocation.id == action.id ? action.loc : yourLocation)
+          yourLocation.id == action.loc.id ? action.loc : yourLocation)
       .toList();
 }
 
-List<YourLocation> _toggledSubscriptionAction(List<YourLocation> yourLocations, ToggledSubscriptionAction action) {
+List<YourLocation> _toggledSubscriptionAction(
+    List<YourLocation> yourLocations, ToggledSubscriptionAction action) {
   return yourLocations
-    .map((yourLocation) => yourLocation.id == action.loc.id ? action.loc : yourLocation)
-    .toList();
+      .map((yourLocation) =>
+          yourLocation.id == action.loc.id ? action.loc : yourLocation)
+      .toList();
 }
-/*
-List<YourLocation> _setLoadedYourLocations(List<YourLocation> yourLocations, YourLocationsLoadedAction action) {
-  return action.yourLocations;
-}
-
-List<YourLocation> _setNoYourLocations(List<YourLocation> yourLocations, YourLocationsNotLoadedAction action) {
-  return [];
-}
-*/

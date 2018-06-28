@@ -72,16 +72,17 @@ class AppState extends Object with _$AppStateSerializerMixin {
     return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
       firesApiKey, 8)}\napiUrl: ${ellipse(
       firesApiUrl, 8)}\nyourLocations count: ${yourLocations
-      .length}\nyourLocations: ${yourLocations}';
+      .length}\nyourLocations: ${yourLocations}\nfireMapState: $fireMapState}';
   }
 }
 
 typedef void AddYourLocationFunction(YourLocation loc);
-typedef void DeleteYourLocationFunction(ObjectId id);
+typedef void DeleteYourLocationFunction(YourLocation loc);
 typedef void ToggleSubscriptionFunction(YourLocation loc);
 
 typedef void OnLocationTapFunction(YourLocation loc);
 typedef void OnSubscribeFunction(YourLocation loc);
+typedef void OnSubscribeDistanceChangeFunction(YourLocation loc);
 typedef void OnUnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeConfirmedFunction(YourLocation loc);
 

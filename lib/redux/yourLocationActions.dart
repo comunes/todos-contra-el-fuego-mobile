@@ -1,6 +1,6 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
-
+import 'package:meta/meta.dart';
 
 abstract class YourLocationActions {}
 
@@ -22,10 +22,23 @@ class ShowYourLocationMapAction extends YourLocationActions {
   ShowYourLocationMapAction(this.loc);
 }
 
-class DeleteYourLocationAction extends YourLocationActions {
-  ObjectId id;
+class UpdateYourLocationMapStatsAction extends YourLocationActions {
+  int numFires;
+  List<dynamic> fires = [];
+  List<dynamic> falsePos = [];
+  List<dynamic> industries = [];
 
-  DeleteYourLocationAction(this.id);
+  UpdateYourLocationMapStatsAction(
+      {@required this.numFires,
+      @required this.fires,
+      @required this.falsePos,
+      @required this.industries});
+}
+
+class DeleteYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+
+  DeleteYourLocationAction(this.loc);
 }
 
 class DeletedYourLocationAction extends YourLocationActions {
@@ -34,12 +47,10 @@ class DeletedYourLocationAction extends YourLocationActions {
   DeletedYourLocationAction(this.id);
 }
 
-
-class UpdateYourLocationAction extends YourLocationActions {
-  ObjectId id;
+class UpdateLocalYourLocationAction extends YourLocationActions {
   YourLocation loc;
 
-  UpdateYourLocationAction(this.id, this.loc);
+  UpdateLocalYourLocationAction(this.loc);
 }
 
 class ToggleSubscriptionAction extends YourLocationActions {
@@ -55,13 +66,18 @@ class ToggledSubscriptionAction extends YourLocationActions {
 }
 
 class SubscribeAction extends YourLocationActions {
-  ObjectId id;
+  SubscribeAction();
+}
 
-  SubscribeAction(this.id);
+class SubscribeConfirmAction extends YourLocationActions {
+  YourLocation loc;
+
+  SubscribeConfirmAction(this.loc);
 }
 
 class UnSubscribeAction extends YourLocationActions {
-  ObjectId id;
+  YourLocation loc;
 
-  UnSubscribeAction(this.id);
+  UnSubscribeAction(this.loc);
 }
+

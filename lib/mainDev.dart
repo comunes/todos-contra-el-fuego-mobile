@@ -6,7 +6,7 @@ import 'package:redux/redux.dart';
 
 void main() {
   globals.isDevelopment = true;
-  var logRedux = false;
+  var logRedux = true;
 
   List<Middleware> devMiddlewares = logRedux ? [
     LoggingMiddleware.printer(formatter: LoggingMiddleware.multiLineFormatter)

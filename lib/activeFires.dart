@@ -5,17 +5,17 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/src/store.dart';
 
 import 'colors.dart';
 import 'generated/i18n.dart';
-import 'genericMap.dart';
 import 'globalFiresBottomStats.dart';
 import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
-import 'package:redux/src/store.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
+import 'yourLocationMap.dart';
 
 @immutable
 class _ViewModel {
@@ -124,31 +124,13 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         });
   }
 
-  void handleUndo(YourLocation item) {
-    setState(() {
-      /* FIXME 
-      globals.yourLocations.add(item);
-      persistYourLocations(); */
-    });
-  }
-
   Widget _buildItem(YourLocation item, onDelete, onToggle, onTap) {
     final ThemeData theme = Theme.of(context);
     return new Dismissible(
         key: new ObjectKey(item),
         direction: DismissDirection.horizontal,
         onDismissed: (DismissDirection direction) {
-          setState(() {
-            onDelete(item.id);
-          });
-
-          _scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(S.of(context).youDeletedThisPlace),
-              action: new SnackBarAction(
-                  label: S.of(context).UNDO,
-                  onPressed: () {
-                    handleUndo(item);
-                  })));
+          onDelete(item);
         },
         background: new Container(
             color: theme.primaryColor,
@@ -175,11 +157,26 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         converter: (store) {
           return new _ViewModel(
               onAdd: (loc) {
-                store.dispatch(new AddYourLocationAction(loc));
-                gotoLocationMap(store, loc, context);
+                if (store.state.yourLocations
+                    .any((l) => loc.lat == l.lat && loc.lon == l.lon)) {
+                  // Already added
+                  showSnackMsg(S.of(context).addedThisLocation);
+                } else {
+                  store.dispatch(new AddYourLocationAction(loc));
+                  new Timer(new Duration(milliseconds: 1000), () {
+                    gotoLocationMap(store, loc, context);
+                  });
+                }
               },
-              onDelete: (id) {
-                store.dispatch(new DeleteYourLocationAction(id));
+              onDelete: (loc) {
+                store.dispatch(new DeleteYourLocationAction(loc));
+                _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                    content: new Text(S.of(context).youDeletedThisPlace),
+                    action: new SnackBarAction(
+                        label: S.of(context).UNDO,
+                        onPressed: () {
+                          store.dispatch(new AddYourLocationAction(loc));
+                        })));
               },
               onToggleSubs: (loc) {
                 store.dispatch(new ToggleSubscriptionAction(loc));
@@ -237,10 +234,11 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
         });
   }
 
-  void gotoLocationMap(Store<AppState> store, YourLocation loc, BuildContext context) {
+  void gotoLocationMap(
+      Store<AppState> store, YourLocation loc, BuildContext context) {
     store.dispatch(new ShowYourLocationMapAction(loc));
-    Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => new GenericMap()));
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => new YourLocationMap()));
   }
 
   void onAddYourLocation(AddYourLocationFunction onAdd) {

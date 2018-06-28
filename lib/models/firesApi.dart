@@ -6,6 +6,8 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:http/http.dart' as ht;
 import 'package:jaguar_resty/jaguar_resty.dart' as resty;
 
+import '../globals.dart' as globals;
+import '../redux/actions.dart';
 import 'appState.dart';
 
 class FiresApi {
@@ -108,6 +110,37 @@ class FiresApi {
         // print(response.body);
         return true;
       }
+    });
+  }
+
+  Future<UpdateYourLocationMapStatsAction> getYourLocationFireStats(
+      AppState state, YourLocation location) async {
+    assert(state.firesApiUrl != null);
+    assert(state.firesApiKey != null);
+    var url = '${state.firesApiUrl}fires-in-full/${state
+      .firesApiKey}/${location.lat}/${location.lon}/${location.distance}';
+    return await resty.get(url).go().then((response) {
+      if (response.statusCode == 200) {
+        var resultDecoded = json.decode(response.body);
+        // print(resultDecoded);
+        int numFires = resultDecoded['real'];
+        List fires = resultDecoded['fires'];
+        List falsePos = resultDecoded['falsePos'];
+        List industries = resultDecoded['industries'];
+
+        if (globals.isDevelopment) {
+          var firesCount = fires.length;
+          var industriesCount = industries.length;
+          var falsePosCount = falsePos.length;
+          print(
+              'real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
+        }
+        return new UpdateYourLocationMapStatsAction(
+            numFires: numFires,
+            fires: fires,
+            falsePos: falsePos,
+            industries: industries);
+      } else throw Exception('Wrong response trying to get stats');
     });
   }
 }

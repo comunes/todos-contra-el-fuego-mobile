@@ -1,5 +1,6 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
 
 import '../globals.dart' as globals;
@@ -47,8 +48,43 @@ void fetchYourLocationsMiddleware(
   }
 
   if (action is DeleteYourLocationAction) {
-    unsubsViaApi(store, action.id,
-        () => store.dispatch(new DeletedYourLocationAction(action.id)));
+    store.dispatch(new DeletedYourLocationAction(action.loc.id));
+    if (action.loc.subscribed) {
+      unsubsViaApi(store, action.loc.id, () {
+        persistYourLocations(store.state.yourLocations);
+      });
+    } else {
+      persistYourLocations(store.state.yourLocations);
+    }
+  }
+
+  if (action is ShowYourLocationMapAction) {
+    api
+        .getYourLocationFireStats(store.state, action.loc)
+        .then((result) => store.dispatch(result));
+  }
+
+  if (action is UpdateLocalYourLocationAction) {
+    if (action.loc.subscribed)
+      Debounce.seconds(
+          2,
+          () => api
+              .getYourLocationFireStats(store.state, action.loc)
+              .then((result) => store.dispatch(result)));
+  }
+
+  if (action is SubscribeConfirmAction) {
+    subscribeViaApi(store, action.loc, (sub) {
+      store.dispatch(new UpdateLocalYourLocationAction(action.loc));
+      persistYourLocations(store.state.yourLocations);
+    });
+  }
+
+  if (action is UnSubscribeAction) {
+    unsubsViaApi(store, action.loc.id, () {
+      store.dispatch(new UpdateLocalYourLocationAction(action.loc));
+      persistYourLocations(store.state.yourLocations);
+    });
   }
 
   if (action is ToggleSubscriptionAction) {
