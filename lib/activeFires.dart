@@ -37,11 +37,10 @@ class _ViewModel {
       identical(this, other) ||
       other is _ViewModel &&
           runtimeType == other.runtimeType &&
-          yourLocations == other.yourLocations ;
+          yourLocations == other.yourLocations;
 
   @override
-  int get hashCode =>
-      yourLocations.hashCode;
+  int get hashCode => yourLocations.hashCode;
 }
 
 class ActiveFiresPage extends StatelessWidget {
@@ -104,36 +103,30 @@ class ActiveFiresPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         itemCount: yl.length,
         itemBuilder: (BuildContext _context, int i) {
-          return _buildItem(
-              context, yl.elementAt(i), onDeleted, onToggle, onTap);
+          final ThemeData theme = Theme.of(context);
+          return new Dismissible(
+              key: new ObjectKey(yl.elementAt(i)),
+              direction: DismissDirection.horizontal,
+              onDismissed: (DismissDirection direction) {
+                onDeleted(yl.elementAt(i));
+              },
+              background: new Container(
+                  color: theme.primaryColor,
+                  child: const ListTile(
+                      leading: const Icon(Icons.delete,
+                          color: Colors.white, size: 36.0))),
+              secondaryBackground: new Container(
+                  color: theme.primaryColor,
+                  child: const ListTile(
+                      trailing: const Icon(Icons.delete,
+                          color: Colors.white, size: 36.0))),
+              child: new Container(
+                  decoration: new BoxDecoration(
+                      color: theme.canvasColor,
+                      border: new Border(
+                          bottom: new BorderSide(color: theme.dividerColor))),
+                  child: _buildRow(context, yl.elementAt(i), onToggle, onTap)));
         });
-  }
-
-  Widget _buildItem(
-      BuildContext context, YourLocation item, onDelete, onToggle, onTap) {
-    final ThemeData theme = Theme.of(context);
-    return new Dismissible(
-        key: new ObjectKey(item),
-        direction: DismissDirection.horizontal,
-        onDismissed: (DismissDirection direction) {
-          onDelete(item);
-        },
-        background: new Container(
-            color: theme.primaryColor,
-            child: const ListTile(
-                leading:
-                    const Icon(Icons.delete, color: Colors.white, size: 36.0))),
-        secondaryBackground: new Container(
-            color: theme.primaryColor,
-            child: const ListTile(
-                trailing:
-                    const Icon(Icons.delete, color: Colors.white, size: 36.0))),
-        child: new Container(
-            decoration: new BoxDecoration(
-                color: theme.canvasColor,
-                border: new Border(
-                    bottom: new BorderSide(color: theme.dividerColor))),
-            child: _buildRow(context, item, onToggle, onTap)));
   }
 
   @override

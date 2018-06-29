@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'globals.dart' as globals;
 import 'generated/i18n.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 Future<YourLocation> getUserLocation(
     GlobalKey<ScaffoldState> scaffoldKey) async {
@@ -47,7 +47,7 @@ Future<YourLocation> getUserLocation(
 Future<String> getReverseLocation(YourLocation loc,
     [bool external = false]) async {
   final coordinates = new Coordinates(loc.lat, loc.lon);
-  var geoCoder = external ? Geocoder.google(globals.gmapKey) : Geocoder.local;
+  var geoCoder = external ? Geocoder.google(Injector.getInjector().get(String, "gmapKey")) : Geocoder.local;
   var addresses = await geoCoder.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;
   print("${first.featureName} : ${first.addressLine}");

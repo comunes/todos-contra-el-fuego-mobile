@@ -5,15 +5,16 @@ import 'package:flutter_google_places_autocomplete/flutter_google_places_autocom
 
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'generated/i18n.dart';
-import 'globals.dart' as globals;
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 Future<YourLocation> openPlacesDialog(GlobalKey<ScaffoldState> sc) async {
   Mode _mode = Mode.overlay;
-  GoogleMapsPlaces _places = new GoogleMapsPlaces(globals.gmapKey);
+  String gmapKey = Injector.getInjector().get(String, "gmapKey");
+  GoogleMapsPlaces _places = new GoogleMapsPlaces(gmapKey);
   Prediction p = await showGooglePlacesAutocomplete(
       context: sc.currentContext,
       hint: S.of(sc.currentContext).typeTheNameOfAPlace,
-      apiKey: globals.gmapKey,
+      apiKey: gmapKey,
       onError: (res) {
         sc.currentState
             .showSnackBar(new SnackBar(content: new Text(res.errorMessage)));

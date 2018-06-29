@@ -7,6 +7,7 @@ import 'customBottomAppBar.dart';
 import 'colors.dart';
 import 'generated/i18n.dart';
 import 'customMoment.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 class GlobalFiresBottomStats extends StatefulWidget {
   @override
@@ -16,11 +17,12 @@ class GlobalFiresBottomStats extends StatefulWidget {
 class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
   String lastCheck;
   int activeFires = 0;
+  final firesApiUrl = Injector.getInjector().get(String, "firesApiUrl");
 
   @override
   void initState() {
     super.initState();
-    http.read('${globals.firesApiUrl}status/last-fire-check').then((result) {
+    http.read('${firesApiUrl}status/last-fire-check').then((result) {
       try {
         var now = Moment.now();
         var last = DateTime.parse(json.decode(result)['value']);
@@ -31,7 +33,7 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
         print('Cannot get the last fire check');
       }
     });
-    http.read('${globals.firesApiUrl}status/active-fires-count').then((result) {
+    http.read('${firesApiUrl}status/active-fires-count').then((result) {
       try {
         int count = json.decode(result)['total'];
         setState(() {

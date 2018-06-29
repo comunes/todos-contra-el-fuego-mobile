@@ -12,13 +12,16 @@ import 'models/firesApi.dart';
 import 'redux/fetchDataMiddleware.dart';
 import 'redux/reducers.dart';
 import 'package:fires_flutter/models/yourLocationPersist.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 Future<Map<String, dynamic>> loadSecrets() async {
   return await SecretLoader(secretPath: 'assets/private-settings.json').load();
 }
 
 void mainCommon(List<Middleware<AppState>> otherMiddleware) {
-  globals.getIt.registerSingleton<FiresApi>(new FiresApi());
+
+  final injector = Injector.getInjector();
+  injector.map(FiresApi, (i) => new FiresApi(), isSingleton: true);
   loadSecrets().then((secrets) {
 
     final store = new Store<AppState>(appStateReducer,
@@ -28,10 +31,9 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
             firesApiUrl: secrets['firesApiUrl'] + "api/v1/"),
         middleware: List.from(otherMiddleware)..add(fetchYourLocationsMiddleware));
 
-    // FIXME remove this later
-    globals.firesApiKey = store.state.firesApiKey;
-    globals.firesApiUrl = store.state.firesApiUrl;
-    globals.gmapKey = store.state.gmapKey;
+    injector.map(String, (i) => store.state.firesApiUrl, key: "firesApiUrl");
+    injector.map(String, (i) => store.state.firesApiKey, key: "firesApiKey");
+    injector.map(String, (i) => store.state.gmapKey, key: "gmapKey");
 
     globals.prefs.then((prefs) {
       loadYourLocationsWithPrefs(prefs);

@@ -1,9 +1,9 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
 
-import '../globals.dart' as globals;
 import '../models/appState.dart';
 import '../models/firesApi.dart';
 import '../models/yourLocationPersist.dart';
@@ -18,7 +18,7 @@ import 'actions.dart';
 // Middleware do not return any values themselves. They simply forward
 // actions on to the Reducer or swallow actions in some special cases.
 
-FiresApi api = globals.getIt.get<FiresApi>();
+FiresApi api = Injector.getInjector().get<FiresApi>(FiresApi);
 
 void fetchYourLocationsMiddleware(
     Store<AppState> store, action, NextDispatcher next) {

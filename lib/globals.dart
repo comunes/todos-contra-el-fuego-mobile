@@ -1,14 +1,9 @@
 library fires.globals;
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-// FIXME remove this later
-String gmapKey;
-String firesApiKey;
-String firesApiUrl;
 final String appVersion = '0.0.1';
 
 final Widget appMediumIcon =
@@ -16,5 +11,4 @@ final Widget appMediumIcon =
 final Widget appIcon =
     Image.asset('images/logo-200.png', width: 24.0, height: 24.0);
 final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-final GetIt getIt = new GetIt();
 bool isDevelopment = false;
