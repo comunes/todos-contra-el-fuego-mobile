@@ -43,39 +43,20 @@ class _ViewModel {
       identical(this, other) ||
       other is _ViewModel &&
           runtimeType == other.runtimeType &&
-          mapState == other.mapState &&
-          onSubs == other.onSubs &&
-          onSubsConfirmed == other.onSubsConfirmed &&
-          onUnSubs == other.onUnSubs &&
-          onSlide == other.onSlide;
+          mapState == other.mapState;
 
   @override
-  int get hashCode =>
-      mapState.hashCode ^
-      onSubs.hashCode ^
-      onSubsConfirmed.hashCode ^
-      onUnSubs.hashCode ^
-      onSlide.hashCode;
+  int get hashCode => mapState.hashCode;
 }
 
-class YourLocationMap extends StatefulWidget {
-  YourLocationMap();
-
-  @override
-  _YourLocationMapState createState() => _YourLocationMapState();
-}
-
-class _YourLocationMapState extends State<YourLocationMap> {
+class YourLocationMap extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-  _YourLocationMapState();
-
   @override
   Widget build(BuildContext context) {
-
     return new StoreConnector<AppState, _ViewModel>(
-        distinct: false, // FIXME
+        distinct: true,
         converter: (store) {
           return new _ViewModel(
               onSubs: (loc) {

@@ -37,34 +37,20 @@ class _ViewModel {
       identical(this, other) ||
       other is _ViewModel &&
           runtimeType == other.runtimeType &&
-          yourLocations == other.yourLocations &&
-          onAdd == other.onAdd &&
-          onDelete == other.onDelete &&
-          onToggleSubs == other.onToggleSubs &&
-          onTap == other.onTap;
+          yourLocations == other.yourLocations ;
 
   @override
   int get hashCode =>
-      yourLocations.hashCode ^
-      onAdd.hashCode ^
-      onDelete.hashCode ^
-      onToggleSubs.hashCode ^
-      onTap.hashCode;
+      yourLocations.hashCode;
 }
 
-class ActiveFiresPage extends StatefulWidget {
+class ActiveFiresPage extends StatelessWidget {
   static const String routeName = '/fires';
 
-  ActiveFiresPage();
-
-  @override
-  _ActiveFiresPageState createState() => _ActiveFiresPageState();
-}
-
-class _ActiveFiresPageState extends State<ActiveFiresPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<FabMiniMenuItem> _fabMiniMenuItemList(AddYourLocationFunction onAdd) {
+  List<FabMiniMenuItem> _fabMiniMenuItemList(
+      BuildContext context, AddYourLocationFunction onAdd) {
     return [
       new FabMiniMenuItem.withText(
         new Icon(Icons.location_searching),
@@ -85,9 +71,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
     ];
   }
 
-  _ActiveFiresPageState();
-
-  Widget _buildRow(YourLocation loc, onToggle, onTap) {
+  Widget _buildRow(BuildContext context, YourLocation loc, onToggle, onTap) {
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.location_on),
@@ -115,16 +99,18 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   Widget _buildSavedLocations(
-      List<YourLocation> yl, onDeleted, onToggle, onTap) {
+      BuildContext context, List<YourLocation> yl, onDeleted, onToggle, onTap) {
     return new ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: yl.length,
         itemBuilder: (BuildContext _context, int i) {
-          return _buildItem(yl.elementAt(i), onDeleted, onToggle, onTap);
+          return _buildItem(
+              context, yl.elementAt(i), onDeleted, onToggle, onTap);
         });
   }
 
-  Widget _buildItem(YourLocation item, onDelete, onToggle, onTap) {
+  Widget _buildItem(
+      BuildContext context, YourLocation item, onDelete, onToggle, onTap) {
     final ThemeData theme = Theme.of(context);
     return new Dismissible(
         key: new ObjectKey(item),
@@ -147,13 +133,13 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                 color: theme.canvasColor,
                 border: new Border(
                     bottom: new BorderSide(color: theme.dividerColor))),
-            child: _buildRow(item, onToggle, onTap)));
+            child: _buildRow(context, item, onToggle, onTap)));
   }
 
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
-        distinct: false, // FIXME
+        distinct: true,
         converter: (store) {
           return new _ViewModel(
               onAdd: (loc) {
@@ -211,10 +197,10 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             bottomNavigationBar: new GlobalFiresBottomStats(),
             body: hasLocations
                 ? new Stack(children: <Widget>[
-                    _buildSavedLocations(view.yourLocations, view.onDelete,
-                        view.onToggleSubs, view.onTap),
-                    new FabDialer(_fabMiniMenuItemList(view.onAdd), fires600,
-                        new Icon(Icons.add))
+                    _buildSavedLocations(context, view.yourLocations,
+                        view.onDelete, view.onToggleSubs, view.onTap),
+                    new FabDialer(_fabMiniMenuItemList(context, view.onAdd),
+                        fires600, new Icon(Icons.add))
                   ])
                 : new Center(
                     child: new CenteredColumn(children: <Widget>[
