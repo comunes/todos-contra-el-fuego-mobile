@@ -45,8 +45,11 @@ class FiresApp extends StatelessWidget {
             home: new MaterialAppWithIntroHome(
                 introWidget, continueWidget, 'showInitialWizard-2018-06-27-01'),
             onGenerateTitle: (context) {
-              String lang = Localizations.localeOf(context).languageCode;
-              this.store.dispatch(new OnUserLangAction(lang));
+              print('MaterialApp onGenerateTitle');
+              if (store.state.user.lang == null) {
+                String lang = Localizations.localeOf(context).languageCode;
+                this.store.dispatch(new OnUserLangAction(lang));
+              }
               return S.of(context).appName;
             },
             theme: firesTheme,

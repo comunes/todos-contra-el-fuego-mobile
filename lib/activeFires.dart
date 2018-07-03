@@ -199,13 +199,13 @@ class ActiveFiresPage extends StatelessWidget {
                     child: new CenteredColumn(children: <Widget>[
                     new RoundedBtn(
                         icon: Icons.location_searching,
-                        text: 'Fires near your',
+                        text: S.of(context).addYourCurrentPosition,
                         onPressed: () => onAddYourLocation(view.onAdd),
                         backColor: fires600),
                     const SizedBox(height: 26.0),
                     new RoundedBtn(
                         icon: Icons.edit_location,
-                        text: S.of(context).firesNearPlace,
+                        text: S.of(context).addSomePlace,
                         onPressed: () => onAddOtherLocation(view.onAdd),
                         backColor: fires600),
                   ])),

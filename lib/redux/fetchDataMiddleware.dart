@@ -36,6 +36,16 @@ void fetchYourLocationsMiddleware(
       createUser(store, store.state.user.lang, action.token);
   }
 
+  if (action is EditConfirmYourLocationAction) {
+    if (action.loc.subscribed) {
+      // FXIME save lat/lon
+    } else {
+      // No subscribed (only local)
+      store.dispatch(new UpdateYourLocationAction(action.loc));
+      persistYourLocations(store.state.yourLocations);
+    }
+  }
+
   if (action is AddYourLocationAction) {
     if (action.loc.subscribed) {
       subscribeViaApi(store, action.loc,
@@ -64,25 +74,28 @@ void fetchYourLocationsMiddleware(
         .then((result) => store.dispatch(result));
   }
 
-  if (action is UpdateLocalYourLocationAction) {
+  if (action is UpdateYourLocationAction) {
     if (action.loc.subscribed)
       Debounce.seconds(
           2,
           () => api
               .getYourLocationFireStats(store.state, action.loc)
               .then((result) => store.dispatch(result)));
+    else {
+      // FIXME do something?
+    }
   }
 
   if (action is SubscribeConfirmAction) {
     subscribeViaApi(store, action.loc, (sub) {
-      store.dispatch(new UpdateLocalYourLocationAction(action.loc));
+      store.dispatch(new UpdateYourLocationAction(action.loc));
       persistYourLocations(store.state.yourLocations);
     });
   }
 
   if (action is UnSubscribeAction) {
     unsubsViaApi(store, action.loc.id, () {
-      store.dispatch(new UpdateLocalYourLocationAction(action.loc));
+      store.dispatch(new UpdateYourLocationAction(action.loc));
       persistYourLocations(store.state.yourLocations);
     });
   }

@@ -22,27 +22,27 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
   @override
   void initState() {
     super.initState();
-    http.read('${firesApiUrl}status/last-fire-check').then((result) {
+    /* http.read('${firesApiUrl}status/last-fire-check').then((result) {
       try {
         var now = Moment.now();
         var last = DateTime.parse(json.decode(result)['value']);
-        setState(() {
-          lastCheck = now.from(context, last);
+        http.read('${firesApiUrl}status/active-fires-count').then((result) {
+          try {
+            int count = json.decode(result)['total'];
+            setState(() {
+              lastCheck = now.from(context, last);
+              activeFires = count;
+            });
+          } catch (e) {
+            print('Cannot get the last fire stats');
+            print(e);
+          }
         });
       } catch (e) {
         print('Cannot get the last fire check');
+        print(e);
       }
-    });
-    http.read('${firesApiUrl}status/active-fires-count').then((result) {
-      try {
-        int count = json.decode(result)['total'];
-        setState(() {
-          activeFires = count;
-        });
-      } catch (e) {
-        print('Cannot get the last fire stats');
-      }
-    });
+    }); */
   }
 
   @override

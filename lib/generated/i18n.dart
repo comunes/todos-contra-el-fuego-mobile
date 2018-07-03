@@ -22,6 +22,8 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
+  String get CANCEL => "CANCEL";
+  String get SAVE => "SAVE";
   String get UNDO => "UNDO";
   String get aDay => "a day";
   String get aF3wSeconds => "a few seconds";
@@ -104,6 +106,8 @@ class es extends S {
   @override
   String get supportThisInitiative => "Apoya esta iniciativa";
   @override
+  String get SAVE => "GUARDAR";
+  @override
   String get toFiresNotifications => "Suscríbete a alertas de fuegos";
   @override
   String get notPermsUbication => "No tenemos permisos para conocer tu ubicación";
@@ -133,6 +137,8 @@ class es extends S {
   String get warningThisIsAVeryLargeArea => "Cuidado: esta zona es muy grande";
   @override
   String get chooseAWatchRadio => "Elige un radio de vigilancia";
+  @override
+  String get CANCEL => "CANCELAR";
   @override
   String get chooseAPlace => "Elige un lugar";
   @override

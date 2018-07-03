@@ -42,5 +42,7 @@
   "aYear": "un año",
   "inYears": "$value años",
   "somethingAgo": "hace $something",
-  "inSomething": "en $something"
+  "inSomething": "en $something",
+    "SAVE": "GUARDAR",
+  "CANCEL": "CANCELAR"
 }

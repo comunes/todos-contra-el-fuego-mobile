@@ -7,6 +7,8 @@ import 'package:meta/meta.dart';
 import 'fireMapState.dart';
 import 'user.dart';
 
+export 'fireMapState.dart';
+
 part 'appState.g.dart';
 
 @immutable
@@ -85,6 +87,10 @@ typedef void OnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeDistanceChangeFunction(YourLocation loc);
 typedef void OnUnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeConfirmedFunction(YourLocation loc);
+
+typedef void OnLocationEdit(YourLocation loc);
+typedef void OnLocationEditConfirm(YourLocation loc);
+typedef void OnLocationEditCancel(YourLocation loc);
 
 // unused
 // typedef void UpdateYourLocationFunction(ObjectId id, YourLocation loc);

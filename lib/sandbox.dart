@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
-import 'slider.dart';
 
 /*
 Useful for debug
@@ -15,24 +13,14 @@ class Sandbox extends StatelessWidget {
   Widget build(BuildContext context) {
     //showDialog(context: context, child: builder(context));
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) =>
-            Stack(fit: StackFit.expand, children: <Widget>[
-              // Material(color: Colors.yellowAccent),
-              Positioned(
-                top: 0.0,
-                child: Icon(Icons.star, size: 40.0),
-              ),
-              Positioned(
-                top: constraints.maxHeight - 80,
-                right: 10.0,
-                left: 10.0,
-                child: new CenteredRow(
-                  children: <Widget>[new FireDistanceSlider()],
-                ),
-              )
-            ]),
-      ),
+      appBar: new AppBar(
+          title: new TextField(
+        controller: new TextEditingController(text: "kk"),
+        decoration: new InputDecoration(),
+        onSubmitted: (todoText) {},
+      )),
+      body: new Text("Sandbox"),
     );
   }
 }
+-añ

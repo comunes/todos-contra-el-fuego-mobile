@@ -8,8 +8,8 @@ final yourLocationsReducer = combineReducers<List<YourLocation>>([
       _addedYourLocation),
   new TypedReducer<List<YourLocation>, DeletedYourLocationAction>(
       _deletedYourLocation),
-  new TypedReducer<List<YourLocation>, UpdateLocalYourLocationAction>(
-      _updateLocalYourLocation),
+  new TypedReducer<List<YourLocation>, UpdateYourLocationAction>(
+      _updateYourLocation),
   new TypedReducer<List<YourLocation>, ToggledSubscriptionAction>(
       _toggledSubscriptionAction)
 ]);
@@ -26,8 +26,8 @@ List<YourLocation> _deletedYourLocation(
       .toList();
 }
 
-List<YourLocation> _updateLocalYourLocation(
-    List<YourLocation> yourLocations, UpdateLocalYourLocationAction action) {
+List<YourLocation> _updateYourLocation(
+    List<YourLocation> yourLocations, UpdateYourLocationAction action) {
   return yourLocations
       .map((yourLocation) =>
           yourLocation.id == action.loc.id ? action.loc : yourLocation)

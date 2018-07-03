@@ -1,7 +1,7 @@
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:meta/meta.dart';
 
-enum FireMapStatus { view, subscriptionConfirm, unsubscribe }
+enum FireMapStatus { view, subscriptionConfirm, unsubscribe, edit }
 
 @immutable
 class FireMapState {

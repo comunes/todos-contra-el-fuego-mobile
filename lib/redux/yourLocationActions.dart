@@ -16,25 +16,6 @@ class AddedYourLocationAction extends YourLocationActions {
   AddedYourLocationAction(this.loc);
 }
 
-class ShowYourLocationMapAction extends YourLocationActions {
-  YourLocation loc;
-
-  ShowYourLocationMapAction(this.loc);
-}
-
-class UpdateYourLocationMapStatsAction extends YourLocationActions {
-  int numFires;
-  List<dynamic> fires = [];
-  List<dynamic> falsePos = [];
-  List<dynamic> industries = [];
-
-  UpdateYourLocationMapStatsAction(
-      {@required this.numFires,
-      @required this.fires,
-      @required this.falsePos,
-      @required this.industries});
-}
-
 class DeleteYourLocationAction extends YourLocationActions {
   YourLocation loc;
 
@@ -47,10 +28,10 @@ class DeletedYourLocationAction extends YourLocationActions {
   DeletedYourLocationAction(this.id);
 }
 
-class UpdateLocalYourLocationAction extends YourLocationActions {
+class UpdateYourLocationAction extends YourLocationActions {
   YourLocation loc;
 
-  UpdateLocalYourLocationAction(this.loc);
+  UpdateYourLocationAction(this.loc);
 }
 
 class ToggleSubscriptionAction extends YourLocationActions {
@@ -81,3 +62,19 @@ class UnSubscribeAction extends YourLocationActions {
   UnSubscribeAction(this.loc);
 }
 
+class EditYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+
+  EditYourLocationAction(this.loc);
+}
+
+class EditConfirmYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+
+  EditConfirmYourLocationAction(this.loc);
+}
+
+class EditCancelYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+  EditCancelYourLocationAction(this.loc);
+}

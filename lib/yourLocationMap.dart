@@ -7,6 +7,7 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map/src/map/flutter_map_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:latlong/latlong.dart';
 
@@ -30,13 +31,17 @@ class _ViewModel {
   final OnSubscribeConfirmedFunction onSubsConfirmed;
   final OnUnSubscribeFunction onUnSubs;
   final OnSubscribeDistanceChangeFunction onSlide;
+  final OnLocationEdit onEdit;
+  final OnLocationEditConfirm onEditConfirm;
 
   _ViewModel(
       {@required this.mapState,
       @required this.onSubs,
       @required this.onSubsConfirmed,
       @required this.onUnSubs,
-      @required this.onSlide});
+      @required this.onSlide,
+      @required this.onEdit,
+      @required this.onEditConfirm});
 
   @override
   bool operator ==(Object other) =>
@@ -58,6 +63,7 @@ class YourLocationMap extends StatelessWidget {
     return new StoreConnector<AppState, _ViewModel>(
         distinct: true,
         converter: (store) {
+          print('New map viewer');
           return new _ViewModel(
               onSubs: (loc) {
                 store.dispatch(new SubscribeAction());
@@ -71,20 +77,27 @@ class YourLocationMap extends StatelessWidget {
                 store.dispatch(new UnSubscribeAction(loc));
               },
               onSlide: (loc) {
-                store.dispatch(new UpdateLocalYourLocationAction(loc));
+                store.dispatch(new UpdateYourLocationMapAction(loc));
               },
+              onEdit: (loc) => store.dispatch(new EditYourLocationAction(loc)),
+              onEditConfirm: (loc) =>
+                  store.dispatch(new EditConfirmYourLocationAction(loc)),
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
+          print('New map builder');
           YourLocation location = view.mapState.yourLocation;
           assert(location != null);
+          TextEditingController textController =
+              new TextEditingController(text: location.description);
+
           MapOptions mapOptions = new MapOptions(
               center: new LatLng(location.lat, location.lon),
               plugins: globals.isDevelopment
                   ? [new ZoomMapPlugin()]
                   : [new DummyMapPlugin()],
               // this works ?
-              // interactive: false,
+              interactive: false,
               zoom: 13.0,
               // THIS does not works as expected
               // maxZoom: 6.0,
@@ -93,115 +106,136 @@ class YourLocationMap extends StatelessWidget {
                 // print('${positionCallback.center}, ${positionCallback.zoom}');
               });
           var mapController = new MapController();
+
           // mapController.fitBounds(bounds);
           // mapController.center
 
           FireMapState mapState = view.mapState;
-          FireMapStatus operation = mapState.status;
-          print('Build map with operation: $operation');
-          final btnText = operation == FireMapStatus.view
+          FireMapStatus status = mapState.status;
+          print('Build map with status: $status');
+          final btnText = status == FireMapStatus.view
               ? S.of(context).toFiresNotifications
-              : operation == FireMapStatus.subscriptionConfirm
+              : status == FireMapStatus.subscriptionConfirm
                   ? S.of(context).confirm
                   : S.of(context).unsubscribe;
-          final btnIcon = operation == FireMapStatus.view
+          final btnIcon = status == FireMapStatus.view
               ? Icons.notifications_active
-              : operation == FireMapStatus.subscriptionConfirm
+              : status == FireMapStatus.subscriptionConfirm
                   ? Icons.check
                   : Icons.notifications_off;
+          FlutterMap map = new FlutterMap(
+            options: mapOptions,
+            mapController: mapController,
+            layers: [
+              new TileLayerOptions(
+                maxZoom: 6.0,
+                subdomains: ['a', 'b', 'c'],
+                urlTemplate:
+                    'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                additionalOptions: {
+                  // 'opacity': '0.1',
+                  'attribution':
+                      '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
+                },
+              ),
+              globals.isDevelopment
+                  ? new ZoomMapPluginOptions()
+                  : new DummyMapPluginOptions(),
+              new MarkerLayerOptions(
+                markers: buildMarkers(location, mapState.fires,
+                    mapState.industries, mapState.falsePos),
+              ),
+            ],
+          );
+          FlutterMapState leafletState = map.createState();
+          // Do something with it
           return new Scaffold(
               key: _scaffoldKey,
               appBar: new AppBar(
-                title: new Text(location.description),
+                title: status == FireMapStatus.edit
+                    ? new TextField(
+                        // autofocus: true,
+                        key: new Key('LocationDescField'),
+                        keyboardType: TextInputType.text,
+                        controller: textController,
+                        decoration: new InputDecoration(),
+                        /* onSubmitted: (newDesc) {
+                          // location.description = newDesc;
+                          // view.onEditConfirm(location);
+                          // view.editController.text = '';
+                        },*/
+                      )
+                    : new Text(location.description),
+                actions: listWithoutNulls(<Widget>[
+                  status == FireMapStatus.view ||
+                          status == FireMapStatus.unsubscribe
+                      ? new IconButton(
+                          icon: new Icon(Icons.edit),
+                          onPressed: () => view.onEdit(location))
+                      : null
+                ]),
               ),
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () {
-                  switch (operation) {
-                    case FireMapStatus.view:
-                      view.onSubs(location);
-                      break;
-                    case FireMapStatus.subscriptionConfirm:
-                      view.onSubsConfirmed(location);
-                      // IOS specific
-                      _firebaseMessaging.requestNotificationPermissions();
-                      break;
-                    case FireMapStatus.unsubscribe:
-                      view.onUnSubs(location);
-                      break;
-                  }
-                },
-                // https://github.com/flutter/flutter/issues/17583
-                heroTag: "firesmap" + location.id.toHexString(),
-                icon: new Icon(btnIcon, color: fires600),
-                label: new Text(
-                  btnText,
-                  style: const TextStyle(color: fires600),
-                ),
-                backgroundColor: Colors.white,
-              ),
+              floatingActionButton: status == FireMapStatus.edit
+                  ? null
+                  : FloatingActionButton.extended(
+                      onPressed: () {
+                        switch (status) {
+                          case FireMapStatus.view:
+                            view.onSubs(location);
+                            break;
+                          case FireMapStatus.subscriptionConfirm:
+                            view.onSubsConfirmed(location);
+                            // IOS specific
+                            _firebaseMessaging.requestNotificationPermissions();
+                            break;
+                          case FireMapStatus.unsubscribe:
+                            view.onUnSubs(location);
+                            break;
+                          case FireMapStatus.edit:
+                            break;
+                        }
+                      },
+                      // https://github.com/flutter/flutter/issues/17583
+                      heroTag: "firesmap" + location.id.toHexString(),
+                      icon: new Icon(btnIcon, color: fires600),
+                      label: new Text(
+                        btnText,
+                        style: const TextStyle(color: fires600),
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
               bottomNavigationBar: new YourLocationMapBottom(),
               body: LayoutBuilder(
-                builder: (context, constraints) =>
-                    Stack(fit: StackFit.expand, children: <Widget>[
-                      // Material(color: Colors.yellowAccent),
-                      new Opacity(
-                          opacity:
-                              operation == FireMapStatus.subscriptionConfirm
-                                  ? 0.5
-                                  : 1.0,
-                          child: new FlutterMap(
-                            options: mapOptions,
-                            mapController: mapController,
-                            layers: [
-                              new TileLayerOptions(
-                                maxZoom: 6.0,
-                                subdomains: ['a', 'b', 'c'],
-                                urlTemplate:
-                                    'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-                                additionalOptions: {
-                                  // 'opacity': '0.1',
-                                  'attribution':
-                                      '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
-                                },
-                              ),
-                              globals.isDevelopment
-                                  ? new ZoomMapPluginOptions()
-                                  : new DummyMapPluginOptions(),
-                              new MarkerLayerOptions(
-                                markers: buildMarkers(location, mapState.fires,
-                                    mapState.industries, mapState.falsePos),
-                              ),
-                            ],
-                          )),
-                      Positioned(
-                        top: constraints.maxHeight - 200,
-                        right: 10.0,
-                        left: 10.0,
-                        child: new CenteredRow(
-                          // Fit sample:
-                          // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
-                          children:
-                              operation == FireMapStatus.subscriptionConfirm
-                                  ? <Widget>[
-                                      new FireDistanceSlider(
-                                          initialValue: location.distance,
-                                          onSlide: (distance) {
-                                            location.distance = distance;
-                                            view.onSlide(location);
-                                            /* FIXME
-                                        setState(() {
-                                          kmAround = distance;
-                                          Debounce.seconds(1, updateFireStats);
-                                        }); */
-                                          })
-                                    ]
-                                  : [],
-                        ),
-                      )
-                    ]),
-              ));
+                  builder: (context, constraints) =>
+                      Stack(fit: StackFit.expand, children: <Widget>[
+                        // Material(color: Colors.yellowAccent),
+                        new Opacity(
+                            opacity: status == FireMapStatus.subscriptionConfirm
+                                ? 0.5
+                                : 1.0,
+                            child: map),
+                        Positioned(
+                          top: constraints.maxHeight - 200,
+                          right: 10.0,
+                          left: 10.0,
+                          child: new CenteredRow(
+                              // Fit sample:
+                              // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
+                              children:
+                                  status == FireMapStatus.subscriptionConfirm
+                                      ? <Widget>[
+                                          new FireDistanceSlider(
+                                              initialValue: location.distance,
+                                              onSlide: (distance) {
+                                                location.distance = distance;
+                                                view.onSlide(location);
+                                              })
+                                        ]
+                                      : []),
+                        )
+                      ])));
         });
   }
 
