@@ -19,6 +19,7 @@ Widget mainDrawer(BuildContext context) {
     children: listWithoutNulls(<Widget>[
       new GestureDetector(
         onTap: () {
+          Navigator.pop(context);
           Navigator.pushNamed(context, '/');
         },
         child: new DrawerHeader(
@@ -46,6 +47,7 @@ Widget mainDrawer(BuildContext context) {
         leading: const Icon(Icons.whatshot),
         title: new Text(S.of(context).activeFires),
         onTap: () {
+          Navigator.pop(context);
           Navigator.pushNamed(context, ActiveFiresPage.routeName);
         },
       ),
@@ -54,6 +56,7 @@ Widget mainDrawer(BuildContext context) {
         title: new Text(S.of(context).notifyAFire),
         onTap: () {
           // Then close the drawer
+          Navigator.pop(context);
           Navigator.pushNamed(context, Sandbox.routeName);
         },
       ),
@@ -63,6 +66,7 @@ Widget mainDrawer(BuildContext context) {
         title: new Text(S.of(context).supportThisInitiative),
         onTap: () {
           // Then close the drawer
+          Navigator.pop(context);
           Navigator.pushNamed(context, '/subscriptions');
         },
       ),
@@ -71,6 +75,7 @@ Widget mainDrawer(BuildContext context) {
         leading: const Icon(Icons.bug_report),
         title: new Text('Sandbox'),
         onTap: () {
+          Navigator.pop(context);
           Navigator.pushNamed(context, Sandbox.routeName);
         },
       ): null,

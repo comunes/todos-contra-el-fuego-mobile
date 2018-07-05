@@ -31,7 +31,10 @@ class FiresApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider(
+    StatefulWidget home = new MaterialAppWithIntroHome(
+        introWidget, continueWidget, 'showInitialWizard-2018-06-27-01');
+    return new StoreProvider<AppState>(
+
         store: this.store,
         child: new MaterialApp(
             localizationsDelegates: [
@@ -42,8 +45,7 @@ class FiresApp extends StatelessWidget {
             supportedLocales: S.delegate.supportedLocales,
             localeResolutionCallback:
                 S.delegate.resolution(fallback: new Locale("en", "")),
-            home: new MaterialAppWithIntroHome(
-                introWidget, continueWidget, 'showInitialWizard-2018-06-27-01'),
+            home: home,
             onGenerateTitle: (context) {
               print('MaterialApp onGenerateTitle');
               if (store.state.user.lang == null) {

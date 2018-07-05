@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'globals.dart' as globals;
-import 'package:http/http.dart' as http;
+
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'customBottomAppBar.dart';
-import 'colors.dart';
-import 'generated/i18n.dart';
-import 'customMoment.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:http/http.dart' as http;
+
+import 'colors.dart';
+import 'customBottomAppBar.dart';
+import 'customMoment.dart';
+import 'generated/i18n.dart';
 
 class GlobalFiresBottomStats extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
   @override
   void initState() {
     super.initState();
-    /* http.read('${firesApiUrl}status/last-fire-check').then((result) {
+    http.read('${firesApiUrl}status/last-fire-check').then((result) {
       try {
         var now = Moment.now();
         var last = DateTime.parse(json.decode(result)['value']);
@@ -42,27 +43,29 @@ class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
         print('Cannot get the last fire check');
         print(e);
       }
-    }); */
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return new CustomBottomAppBar(
-          fabLocation: FloatingActionButtonLocation.centerDocked,
-          showNotch: true,
-          color: fires100,
-          mainAxisAlignment: MainAxisAlignment.center,
-          actions: listWithoutNulls(<Widget>[
-        activeFires > 0 && lastCheck != null
-          ? new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            new Text(S.of(context).activeFiresWorldWide(activeFires.toString())),
-            new Text(S.of(context).updatedLastCheck(lastCheck))
-          ])
-          : null,
-        SizedBox(width: 10.0)
-      ]));
+        fabLocation: FloatingActionButtonLocation.centerDocked,
+        showNotch: true,
+        color: fires100,
+        mainAxisAlignment: MainAxisAlignment.center,
+        actions: listWithoutNulls(<Widget>[
+          activeFires > 0 && lastCheck != null
+              ? new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      new Text(S
+                          .of(context)
+                          .activeFiresWorldWide(activeFires.toString())),
+                      new Text(S.of(context).updatedLastCheck(lastCheck))
+                    ])
+              : null,
+          SizedBox(width: 10.0)
+        ]));
   }
 }

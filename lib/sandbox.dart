@@ -15,6 +15,7 @@ class Sandbox extends StatelessWidget {
     return Scaffold(
       appBar: new AppBar(
           title: new TextField(
+            autofocus: true,
         controller: new TextEditingController(text: "kk"),
         decoration: new InputDecoration(),
         onSubmitted: (todoText) {},
@@ -23,4 +24,3 @@ class Sandbox extends StatelessWidget {
     );
   }
 }
--añ

@@ -41,15 +41,16 @@ void fetchYourLocationsMiddleware(
       // FXIME save lat/lon
     } else {
       // No subscribed (only local)
-      store.dispatch(new UpdateYourLocationAction(action.loc));
-      persistYourLocations(store.state.yourLocations);
     }
   }
 
   if (action is AddYourLocationAction) {
     if (action.loc.subscribed) {
       subscribeViaApi(store, action.loc,
-          (sub) => store.dispatch(new AddedYourLocationAction(sub)));
+          (sub) {
+            store.dispatch(new AddedYourLocationAction(sub));
+            persistYourLocations(store.state.yourLocations);
+          });
     } else {
       // No subscribed (only local)
       store.dispatch(new AddedYourLocationAction(action.loc));
@@ -73,7 +74,6 @@ void fetchYourLocationsMiddleware(
         .getYourLocationFireStats(store.state, action.loc)
         .then((result) => store.dispatch(result));
   }
-
   if (action is UpdateYourLocationAction) {
     if (action.loc.subscribed)
       Debounce.seconds(
@@ -84,6 +84,8 @@ void fetchYourLocationsMiddleware(
     else {
       // FIXME do something?
     }
+    store.dispatch(new UpdatedYourLocationAction(action.loc));
+    persistYourLocations(store.state.yourLocations);
   }
 
   if (action is SubscribeConfirmAction) {

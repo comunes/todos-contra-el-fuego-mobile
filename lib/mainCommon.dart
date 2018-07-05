@@ -41,7 +41,8 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
     });
 
     // Listen to store changes, and re-render when the state is updated
-    // store.onChange.listen((state) {
-    // });
+    store.onChange.listen((state) {
+      // print('Store onChange');
+    });
   });
 }

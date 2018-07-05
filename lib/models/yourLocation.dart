@@ -39,6 +39,24 @@ class YourLocation extends Object with _$YourLocationSerializerMixin {
     if (this.id == null) this.id = new ObjectId();
   }
 
+  YourLocation copyWith(
+      {id,
+      lat,
+      lon,
+      description,
+      distance,
+      subscribed}) {
+    return new YourLocation(
+    id: id?? this.id,
+      lat: lat?? this.lat,
+      lon: lon?? this.lon,
+      description: description?? this.description,
+      distance: distance?? this.distance,
+      subscribed: subscribed?? this.subscribed
+    );
+  }
+
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

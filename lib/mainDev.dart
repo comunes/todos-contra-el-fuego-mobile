@@ -14,7 +14,7 @@ void main() {
     dynamic action,
     DateTime timestamp,
   ) {
-    return "${action.toString().replaceAll('Instance of ', '')}";
+    return ">>>>> ${action.toString().replaceAll('Instance of ', '')}";
   }
 
   LogLevel logRedux = LogLevel.actions;

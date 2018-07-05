@@ -25,6 +25,7 @@ Future<List<YourLocation>> loadYourLocations() async {
 }
 
 persistYourLocations(List<YourLocation> yl) {
+  print('Persisting $yl');
   globals.prefs.then((prefs) {
     List<String> ylAsString = [];
     yl.forEach((location) {

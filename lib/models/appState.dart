@@ -1,4 +1,3 @@
-import 'package:bson_objectid/bson_objectid.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:json_annotation/json_annotation.dart';

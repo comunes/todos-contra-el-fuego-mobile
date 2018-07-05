@@ -19,23 +19,16 @@ YourLocation _$YourLocationFromJson(Map<String, dynamic> json) =>
 
 abstract class _$YourLocationSerializerMixin {
   ObjectId get id;
-
   double get lat;
-
   double get lon;
-
   String get description;
-
   bool get subscribed;
-
   int get distance;
-
   Map<String, dynamic> toJson() => new _$YourLocationJsonMapWrapper(this);
 }
 
 class _$YourLocationJsonMapWrapper extends $JsonMapWrapper {
   final _$YourLocationSerializerMixin _v;
-
   _$YourLocationJsonMapWrapper(this._v);
 
   @override

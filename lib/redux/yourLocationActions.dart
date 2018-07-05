@@ -1,6 +1,5 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
-import 'package:meta/meta.dart';
 
 abstract class YourLocationActions {}
 
@@ -32,6 +31,12 @@ class UpdateYourLocationAction extends YourLocationActions {
   YourLocation loc;
 
   UpdateYourLocationAction(this.loc);
+}
+
+class UpdatedYourLocationAction extends YourLocationActions {
+  YourLocation loc;
+
+  UpdatedYourLocationAction(this.loc);
 }
 
 class ToggleSubscriptionAction extends YourLocationActions {

@@ -33,18 +33,25 @@ class _ViewModel {
       @required this.yourLocations});
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
+  bool operator ==(Object other) {
+    return identical(this, other) ||
       other is _ViewModel &&
-          runtimeType == other.runtimeType &&
-          yourLocations == other.yourLocations;
+        runtimeType == other.runtimeType &&
+        yourLocations == other.yourLocations;
+  }
 
   @override
   int get hashCode => yourLocations.hashCode;
 }
 
-class ActiveFiresPage extends StatelessWidget {
-  static const String routeName = '/fires';
+class ActiveFiresPage extends StatefulWidget {
+static const String routeName = '/fires';
+
+  @override
+  _ActiveFiresPageState createState() => _ActiveFiresPageState();
+}
+
+class _ActiveFiresPageState extends State<ActiveFiresPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -134,6 +141,7 @@ class ActiveFiresPage extends StatelessWidget {
     return new StoreConnector<AppState, _ViewModel>(
         distinct: true,
         converter: (store) {
+          print('New ViewModel of Active Fires');
           return new _ViewModel(
               onAdd: (loc) {
                 if (store.state.yourLocations

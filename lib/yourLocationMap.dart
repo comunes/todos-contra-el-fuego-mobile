@@ -54,9 +54,17 @@ class _ViewModel {
   int get hashCode => mapState.hashCode;
 }
 
-class YourLocationMap extends StatelessWidget {
+class YourLocationMap extends StatefulWidget {
+  @override
+  _YourLocationMapState createState() => _YourLocationMapState();
+}
+
+class _YourLocationMapState extends State<YourLocationMap> {
+  // This needs to be stateful so when resizes don't get a new globalkey
+  // https://github.com/flutter/flutter/issues/1632#issuecomment-180478202
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  YourLocation editingLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -80,16 +88,19 @@ class YourLocationMap extends StatelessWidget {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
               },
               onEdit: (loc) => store.dispatch(new EditYourLocationAction(loc)),
-              onEditConfirm: (loc) =>
-                  store.dispatch(new EditConfirmYourLocationAction(loc)),
+              onEditConfirm: (loc) {
+                store.dispatch(new UpdateYourLocationAction(loc));
+                store.dispatch(new UpdateYourLocationMapAction(loc));
+                store.dispatch(new EditConfirmYourLocationAction(loc));
+              },
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
-          print('New map builder');
           YourLocation location = view.mapState.yourLocation;
+          editingLocation = location.copyWith();
+          print('New map builder with ${editingLocation.description}');
+
           assert(location != null);
-          TextEditingController textController =
-              new TextEditingController(text: location.description);
 
           MapOptions mapOptions = new MapOptions(
               center: new LatLng(location.lat, location.lon),
@@ -151,29 +162,23 @@ class YourLocationMap extends StatelessWidget {
           // Do something with it
           return new Scaffold(
               key: _scaffoldKey,
+              resizeToAvoidBottomPadding: true,
               appBar: new AppBar(
                 title: status == FireMapStatus.edit
                     ? new TextField(
                         // autofocus: true,
                         key: new Key('LocationDescField'),
                         keyboardType: TextInputType.text,
-                        controller: textController,
+
                         decoration: new InputDecoration(),
-                        /* onSubmitted: (newDesc) {
-                          // location.description = newDesc;
-                          // view.onEditConfirm(location);
-                          // view.editController.text = '';
-                        },*/
+                  controller: new TextEditingController.fromValue(new TextEditingValue(text: editingLocation.description,selection: new TextSelection.collapsed(offset: editingLocation.description.length-1))),
+                        onChanged: (newDesc) {
+                          editingLocation =
+                              location.copyWith(description: newDesc);
+                        },
                       )
                     : new Text(location.description),
-                actions: listWithoutNulls(<Widget>[
-                  status == FireMapStatus.view ||
-                          status == FireMapStatus.unsubscribe
-                      ? new IconButton(
-                          icon: new Icon(Icons.edit),
-                          onPressed: () => view.onEdit(location))
-                      : null
-                ]),
+                actions: buildAppBarActions(status, view, location),
               ),
               floatingActionButton: status == FireMapStatus.edit
                   ? null
@@ -237,6 +242,27 @@ class YourLocationMap extends StatelessWidget {
                         )
                       ])));
         });
+  }
+
+  List<Widget> buildAppBarActions(
+      FireMapStatus status, _ViewModel view, YourLocation location) {
+    switch (status) {
+      case FireMapStatus.view:
+      case FireMapStatus.unsubscribe:
+        return <Widget>[
+          new IconButton(
+              icon: new Icon(Icons.edit),
+              onPressed: () => view.onEdit(location))
+        ];
+      case FireMapStatus.edit:
+        return <Widget>[
+          new IconButton(
+              icon: new Icon(Icons.save),
+              onPressed: () => view.onEditConfirm(editingLocation))
+        ];
+      default:
+        return <Widget>[];
+    }
   }
 
   List<Marker> buildMarkers(YourLocation yourLocation, List<dynamic> fires,
