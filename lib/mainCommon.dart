@@ -5,9 +5,11 @@ import 'package:fires_flutter/models/yourLocationPersist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:redux/redux.dart';
+import 'package:sentry/sentry.dart';
 
 import 'firebaseMessagingConf.dart';
 import 'firesApp.dart';
+import 'globals.dart' as globals;
 import 'models/appState.dart';
 import 'models/firesApi.dart';
 import 'redux/fetchDataMiddleware.dart';
@@ -33,16 +35,35 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
     injector.map(String, (i) => store.state.firesApiKey, key: "firesApiKey");
     injector.map(String, (i) => store.state.gmapKey, key: "gmapKey");
 
-    loadYourLocations().then((yl) {
-      firebaseConfig(store);
+    VoidCallback mainFn = () {
+      loadYourLocations().then((yl) {
+        firebaseConfig(store);
 
-      // Run baby run!
-      runApp(new FiresApp(store));
-    });
+        // Run baby run!
+        runApp(new FiresApp(store));
+      });
+    };
+
+    if (!globals.isDevelopment)
+      // Run in production with sentry catch
+      main(mainFn, secrets['sentryDSN']);
+    else
+      mainFn();
 
     // Listen to store changes, and re-render when the state is updated
     store.onChange.listen((state) {
       // print('Store onChange');
     });
   });
+}
+
+main(mainFn, key) async {
+  SentryClient sentry = new SentryClient(dsn: key);
+  mainFn();
+  try {} catch (error, stackTrace) {
+    await sentry.captureException(
+      exception: error,
+      stackTrace: stackTrace,
+    );
+  }
 }

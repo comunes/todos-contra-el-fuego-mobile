@@ -15,6 +15,7 @@ dependencies:
   simple_moment: "^0.0.3"
   just_debounce_it: "^1.0.4"
   flutter_simple_dependency_injection: "^0.0.2"
+  sentry: "^2.0.2"
 
   # net
   http: "^0.11.3+16"
