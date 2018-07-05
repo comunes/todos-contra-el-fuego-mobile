@@ -7,7 +7,6 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:flutter_map/src/map/flutter_map_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:latlong/latlong.dart';
 
@@ -33,6 +32,8 @@ class _ViewModel {
   final OnSubscribeDistanceChangeFunction onSlide;
   final OnLocationEdit onEdit;
   final OnLocationEditConfirm onEditConfirm;
+  final OnLocationEditCancel onEditCancel;
+  final OnLocationEditing onEditing;
 
   _ViewModel(
       {@required this.mapState,
@@ -41,7 +42,9 @@ class _ViewModel {
       @required this.onUnSubs,
       @required this.onSlide,
       @required this.onEdit,
-      @required this.onEditConfirm});
+      @required this.onEditing,
+      @required this.onEditConfirm,
+      @required this.onEditCancel});
 
   @override
   bool operator ==(Object other) =>
@@ -64,12 +67,16 @@ class _YourLocationMapState extends State<YourLocationMap> {
   // https://github.com/flutter/flutter/issues/1632#issuecomment-180478202
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-  YourLocation editingLocation;
+  YourLocation _location;
+  YourLocation _initialLocation;
 
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
         distinct: true,
+        onInitialBuild: (store) {
+          _initialLocation = _location.copyWith();
+        },
         converter: (store) {
           print('New map viewer');
           return new _ViewModel(
@@ -88,6 +95,11 @@ class _YourLocationMapState extends State<YourLocationMap> {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
               },
               onEdit: (loc) => store.dispatch(new EditYourLocationAction(loc)),
+              onEditing: (loc) {
+                store.dispatch(new UpdateYourLocationMapAction(loc));
+              },
+              onEditCancel: (loc) =>
+                  store.dispatch(new EditCancelYourLocationAction(loc)),
               onEditConfirm: (loc) {
                 store.dispatch(new UpdateYourLocationAction(loc));
                 store.dispatch(new UpdateYourLocationMapAction(loc));
@@ -97,13 +109,16 @@ class _YourLocationMapState extends State<YourLocationMap> {
         },
         builder: (context, view) {
           YourLocation location = view.mapState.yourLocation;
-          editingLocation = location.copyWith();
-          print('New map builder with ${editingLocation.description}');
+          _location = location.copyWith();
+          print('New map builder with ${_location.description}');
 
-          assert(location != null);
+          assert(_location != null);
+          FireMapState mapState = view.mapState;
+          FireMapStatus status = mapState.status;
+          print('Build map with status: $status');
 
           MapOptions mapOptions = new MapOptions(
-              center: new LatLng(location.lat, location.lon),
+              center: new LatLng(_location.lat, _location.lon),
               plugins: globals.isDevelopment
                   ? [new ZoomMapPlugin()]
                   : [new DummyMapPlugin()],
@@ -112,8 +127,15 @@ class _YourLocationMapState extends State<YourLocationMap> {
               zoom: 13.0,
               // THIS does not works as expected
               // maxZoom: 6.0,
+              onTap: (callback) {
+                print('On tap ${callback}');
+                if (status == FireMapStatus.edit) {
+                  _location = _location.copyWith(
+                      lat: callback.latitude, lon: callback.longitude);
+                  view.onEditing(_location);
+                }
+              },
               onPositionChanged: (positionCallback) {
-                // decouple
                 // print('${positionCallback.center}, ${positionCallback.zoom}');
               });
           var mapController = new MapController();
@@ -121,9 +143,6 @@ class _YourLocationMapState extends State<YourLocationMap> {
           // mapController.fitBounds(bounds);
           // mapController.center
 
-          FireMapState mapState = view.mapState;
-          FireMapStatus status = mapState.status;
-          print('Build map with status: $status');
           final btnText = status == FireMapStatus.view
               ? S.of(context).toFiresNotifications
               : status == FireMapStatus.subscriptionConfirm
@@ -153,12 +172,17 @@ class _YourLocationMapState extends State<YourLocationMap> {
                   ? new ZoomMapPluginOptions()
                   : new DummyMapPluginOptions(),
               new MarkerLayerOptions(
-                markers: buildMarkers(location, mapState.fires,
+                markers: buildMarkers(_location, mapState.fires,
                     mapState.industries, mapState.falsePos),
               ),
             ],
           );
-          FlutterMapState leafletState = map.createState();
+          // mapController.
+          /* FlutterMapState leafletState = map.createState();
+          leafletState.mapState.onMoved.listen((Null) {
+
+            ;
+          }); */
           // Do something with it
           return new Scaffold(
               key: _scaffoldKey,
@@ -171,14 +195,17 @@ class _YourLocationMapState extends State<YourLocationMap> {
                         keyboardType: TextInputType.text,
 
                         decoration: new InputDecoration(),
-                  controller: new TextEditingController.fromValue(new TextEditingValue(text: editingLocation.description,selection: new TextSelection.collapsed(offset: editingLocation.description.length-1))),
+                        controller: new TextEditingController.fromValue(
+                            new TextEditingValue(
+                                text: _location.description,
+                                selection: new TextSelection.collapsed(
+                                    offset: _location.description.length - 1))),
                         onChanged: (newDesc) {
-                          editingLocation =
-                              location.copyWith(description: newDesc);
+                          _location = _location.copyWith(description: newDesc);
                         },
                       )
-                    : new Text(location.description),
-                actions: buildAppBarActions(status, view, location),
+                    : new Text(_location.description),
+                actions: buildAppBarActions(status, view, _location),
               ),
               floatingActionButton: status == FireMapStatus.edit
                   ? null
@@ -186,22 +213,22 @@ class _YourLocationMapState extends State<YourLocationMap> {
                       onPressed: () {
                         switch (status) {
                           case FireMapStatus.view:
-                            view.onSubs(location);
+                            view.onSubs(_location);
                             break;
                           case FireMapStatus.subscriptionConfirm:
-                            view.onSubsConfirmed(location);
+                            view.onSubsConfirmed(_location);
                             // IOS specific
                             _firebaseMessaging.requestNotificationPermissions();
                             break;
                           case FireMapStatus.unsubscribe:
-                            view.onUnSubs(location);
+                            view.onUnSubs(_location);
                             break;
                           case FireMapStatus.edit:
                             break;
                         }
                       },
                       // https://github.com/flutter/flutter/issues/17583
-                      heroTag: "firesmap" + location.id.toHexString(),
+                      heroTag: "firesmap" + _location.id.toHexString(),
                       icon: new Icon(btnIcon, color: fires600),
                       label: new Text(
                         btnText,
@@ -211,7 +238,10 @@ class _YourLocationMapState extends State<YourLocationMap> {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
-              bottomNavigationBar: new YourLocationMapBottom(),
+              bottomNavigationBar: new YourLocationMapBottom(
+                  onSave: () => view.onEditConfirm(_location),
+                  onCancel: () => view.onEditCancel(_initialLocation),
+                  state: view.mapState),
               body: LayoutBuilder(
                   builder: (context, constraints) =>
                       Stack(fit: StackFit.expand, children: <Widget>[
@@ -232,10 +262,10 @@ class _YourLocationMapState extends State<YourLocationMap> {
                                   status == FireMapStatus.subscriptionConfirm
                                       ? <Widget>[
                                           new FireDistanceSlider(
-                                              initialValue: location.distance,
+                                              initialValue: _location.distance,
                                               onSlide: (distance) {
-                                                location.distance = distance;
-                                                view.onSlide(location);
+                                                _location.distance = distance;
+                                                view.onSlide(_location);
                                               })
                                         ]
                                       : []),
@@ -258,7 +288,7 @@ class _YourLocationMapState extends State<YourLocationMap> {
         return <Widget>[
           new IconButton(
               icon: new Icon(Icons.save),
-              onPressed: () => view.onEditConfirm(editingLocation))
+              onPressed: () => view.onEditConfirm(_location))
         ];
       default:
         return <Widget>[];

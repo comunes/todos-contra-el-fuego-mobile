@@ -66,20 +66,3 @@ class UnSubscribeAction extends YourLocationActions {
 
   UnSubscribeAction(this.loc);
 }
-
-class EditYourLocationAction extends YourLocationActions {
-  YourLocation loc;
-
-  EditYourLocationAction(this.loc);
-}
-
-class EditConfirmYourLocationAction extends YourLocationActions {
-  YourLocation loc;
-
-  EditConfirmYourLocationAction(this.loc);
-}
-
-class EditCancelYourLocationAction extends YourLocationActions {
-  YourLocation loc;
-  EditCancelYourLocationAction(this.loc);
-}

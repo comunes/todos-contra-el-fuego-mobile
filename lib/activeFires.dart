@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';

@@ -88,6 +88,7 @@ typedef void OnUnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeConfirmedFunction(YourLocation loc);
 
 typedef void OnLocationEdit(YourLocation loc);
+typedef void OnLocationEditing(YourLocation loc);
 typedef void OnLocationEditConfirm(YourLocation loc);
 typedef void OnLocationEditCancel(YourLocation loc);
 

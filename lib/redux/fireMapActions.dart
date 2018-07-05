@@ -29,3 +29,26 @@ class ShowYourLocationMapAction extends FiresMapActions {
 
   ShowYourLocationMapAction(this.loc);
 }
+
+class EditYourLocationAction extends FiresMapActions {
+  YourLocation loc;
+
+  EditYourLocationAction(this.loc);
+}
+
+class EditingYourLocationAction extends FiresMapActions {
+  YourLocation loc;
+
+  EditingYourLocationAction(this.loc);
+}
+
+class EditConfirmYourLocationAction extends FiresMapActions{
+  YourLocation loc;
+
+  EditConfirmYourLocationAction(this.loc);
+}
+
+class EditCancelYourLocationAction extends FiresMapActions {
+  YourLocation loc;
+  EditCancelYourLocationAction(this.loc);
+}
