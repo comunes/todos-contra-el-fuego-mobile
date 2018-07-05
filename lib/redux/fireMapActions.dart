@@ -36,12 +36,6 @@ class EditYourLocationAction extends FiresMapActions {
   EditYourLocationAction(this.loc);
 }
 
-class EditingYourLocationAction extends FiresMapActions {
-  YourLocation loc;
-
-  EditingYourLocationAction(this.loc);
-}
-
 class EditConfirmYourLocationAction extends FiresMapActions{
   YourLocation loc;
 

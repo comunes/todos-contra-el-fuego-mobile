@@ -259,7 +259,9 @@ class _YourLocationMapState extends State<YourLocationMap> {
                               // Fit sample:
                               // https://github.com/apptreesoftware/flutter_map/blob/master/flutter_map_example/lib/pages/map_controller.dart
                               children:
-                                  status == FireMapStatus.subscriptionConfirm
+                                  status == FireMapStatus.subscriptionConfirm ||
+                                          (status == FireMapStatus.edit &&
+                                              _location.subscribed)
                                       ? <Widget>[
                                           new FireDistanceSlider(
                                               initialValue: _location.distance,

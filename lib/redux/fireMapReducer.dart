@@ -16,8 +16,6 @@ final fireMapReducer = combineReducers<FireMapState>([
   new TypedReducer<FireMapState, EditYourLocationAction>(_editYourLocationMap),
   new TypedReducer<FireMapState, EditConfirmYourLocationAction>(
       _editConfirmYourLocationMap),
-  new TypedReducer<FireMapState, EditingYourLocationAction>(
-      _editingYourLocationMap),
   new TypedReducer<FireMapState, EditCancelYourLocationAction>(
       _editCancelYourLocationMap),
   new TypedReducer<FireMapState, UpdateYourLocationMapAction>(
@@ -54,22 +52,17 @@ FireMapState _subscribeYourLocationMap(
 
 FireMapState _subscribeConfirmYourLocationMap(
     FireMapState state, SubscribeConfirmAction action) {
-  return state.copyWith(status: FireMapStatus.unsubscribe);
+  return state.copyWith(status: FireMapStatus.unsubscribe, yourLocation: action.loc);
 }
 
 FireMapState _unsubscribeYourLocationMap(
     FireMapState state, UnSubscribeAction action) {
-  return state.copyWith(status: FireMapStatus.view);
+  return state.copyWith(status: FireMapStatus.view, yourLocation: action.loc);
 }
 
 FireMapState _editYourLocationMap(
     FireMapState state, EditYourLocationAction action) {
   return state.copyWith(status: FireMapStatus.edit);
-}
-
-FireMapState _editingYourLocationMap(
-    FireMapState state, EditingYourLocationAction action) {
-  return state.copyWith(yourLocation: action.loc);
 }
 
 FireMapState _editConfirmYourLocationMap(
