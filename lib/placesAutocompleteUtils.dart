@@ -9,7 +9,7 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 
 Future<YourLocation> openPlacesDialog(GlobalKey<ScaffoldState> sc) async {
   Mode _mode = Mode.overlay;
-  String gmapKey = Injector.getInjector().get(String, "gmapKey");
+  String gmapKey = Injector.getInjector().get<String>(key: "gmapKey");
   GoogleMapsPlaces _places = new GoogleMapsPlaces(gmapKey);
   Prediction p = await showGooglePlacesAutocomplete(
       context: sc.currentContext,

@@ -16,6 +16,7 @@ dependencies:
   just_debounce_it: "^1.0.4"
   flutter_simple_dependency_injection: "^0.0.2"
   sentry: "^2.0.2"
+  flutter_markdown: "^0.1.5"
 
   # net
   http: "^0.11.3+16"
@@ -82,6 +83,8 @@ flutter:
 
   assets:
     - assets/private-settings.json
+    - assets/pages/privacy-en.md
+    - assets/pages/privacy-es.md
     - images/logo-200.png
     - images/fire-marker-l.png
     - images/fire-marker-m.png

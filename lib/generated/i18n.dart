@@ -47,6 +47,7 @@ class S implements WidgetsLocalizations {
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
+  String get privacyPolicy => "Privacy Policy";
   String get supportThisInitiative => "Support this initiative";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
   String get toFiresNotifications => "Subscribe to fires notifications";
@@ -119,6 +120,8 @@ class es extends S {
   String get appName => "¡Tod@s contra el Fuego!";
   @override
   String get aF3wSeconds => "unos segundos";
+  @override
+  String get privacyPolicy => "Política de Privacidad";
   @override
   String get activeFires => "Fuegos activos";
   @override

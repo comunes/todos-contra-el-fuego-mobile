@@ -18,7 +18,7 @@ import 'actions.dart';
 // Middleware do not return any values themselves. They simply forward
 // actions on to the Reducer or swallow actions in some special cases.
 
-FiresApi api = Injector.getInjector().get<FiresApi>(FiresApi);
+FiresApi api = Injector.getInjector().get<FiresApi>();
 
 void fetchYourLocationsMiddleware(
     Store<AppState> store, action, NextDispatcher next) {

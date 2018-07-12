@@ -44,5 +44,6 @@
   "somethingAgo": "$something ago",
   "inSomething": "in $something",
   "SAVE": "SAVE",
-  "CANCEL": "CANCEL"
+  "CANCEL": "CANCEL",
+  "privacyPolicy": "Privacy Policy"
 }

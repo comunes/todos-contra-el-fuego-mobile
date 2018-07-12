@@ -43,6 +43,7 @@
   "inYears": "$value años",
   "somethingAgo": "hace $something",
   "inSomething": "en $something",
-    "SAVE": "GUARDAR",
-  "CANCEL": "CANCELAR"
+  "SAVE": "GUARDAR",
+  "CANCEL": "CANCELAR",
+  "privacyPolicy": "Política de Privacidad"
 }

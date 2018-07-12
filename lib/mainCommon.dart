@@ -21,7 +21,7 @@ Future<Map<String, dynamic>> loadSecrets() async {
 
 void mainCommon(List<Middleware<AppState>> otherMiddleware) {
   final injector = Injector.getInjector();
-  injector.map(FiresApi, (i) => new FiresApi(), isSingleton: true);
+  injector.map<FiresApi>((i) => new FiresApi(), isSingleton: true);
   loadSecrets().then((secrets) {
     final store = new Store<AppState>(appStateReducer,
         initialState: new AppState(
@@ -31,9 +31,9 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
         middleware: List.from(otherMiddleware)
           ..add(fetchYourLocationsMiddleware));
 
-    injector.map(String, (i) => store.state.firesApiUrl, key: "firesApiUrl");
-    injector.map(String, (i) => store.state.firesApiKey, key: "firesApiKey");
-    injector.map(String, (i) => store.state.gmapKey, key: "gmapKey");
+    injector.map<String>((i) => store.state.firesApiUrl, key: "firesApiUrl");
+    injector.map<String>((i) => store.state.firesApiKey, key: "firesApiKey");
+    injector.map<String>((i) => store.state.gmapKey, key: "gmapKey");
 
     VoidCallback mainFn = () {
       loadYourLocations().then((yl) {

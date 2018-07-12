@@ -318,7 +318,7 @@ class _YourLocationMapState extends State<YourLocationMap> {
     });
     fires.forEach((fire) {
       var loc = new BasicLocation(lat: fire['lat'], lon: fire['lon']);
-      markers.add(FireMarker(loc, FireMarkType.fire));
+      markers.add(FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
       markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     return markers;

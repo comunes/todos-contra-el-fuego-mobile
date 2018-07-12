@@ -20,6 +20,10 @@ flutter packages pub run build_runner build
 ```
 also you can run with `watch` instead of `build` to build with any code change.
 
+## Testing
+
+Run `flutter test` for doing unit testing.
+
 ## Data source acknowledgements
 
 *We acknowledge the use of data and imagery from LANCE FIRMS operated by the NASA/GSFC/Earth Science Data and Information System (ESDIS) with funding provided by NASA/HQ*.

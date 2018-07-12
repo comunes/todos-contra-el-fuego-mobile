@@ -18,7 +18,7 @@ class GlobalFiresBottomStats extends StatefulWidget {
 class _GlobalFiresBottomStatsState extends State<GlobalFiresBottomStats> {
   String lastCheck;
   int activeFires = 0;
-  final firesApiUrl = Injector.getInjector().get(String, "firesApiUrl");
+  final firesApiUrl = Injector.getInjector().get<String>(key: "firesApiUrl");
 
   @override
   void initState() {
