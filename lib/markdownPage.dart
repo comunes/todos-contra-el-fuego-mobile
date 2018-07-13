@@ -36,7 +36,7 @@ class _MarkdownPageState extends State<MarkdownPage> {
       });
     });
     return new Scaffold(
-        appBar: new SliverAppBar(title: new Text(title ?? '')),
+        appBar: new AppBar(title: new Text(title ?? '')),
         body: new Markdown(data: pageData));
   }
 }
