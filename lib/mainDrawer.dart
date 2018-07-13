@@ -63,21 +63,21 @@ Widget mainDrawer(BuildContext context) {
       ),
       new Divider(),
       new ListTile(
-        leading: const Icon(Icons.lock),
-        title: new Text(S.of(context).privacyPolicy),
-        onTap: () {
-          // Then close the drawer
-          Navigator.pop(context);
-          Navigator.pushNamed(context, PrivacyPage.routeName);
-        },
-      ),
-      new ListTile(
         leading: const Icon(Icons.favorite),
         title: new Text(S.of(context).supportThisInitiative),
         onTap: () {
           // Then close the drawer
           Navigator.pop(context);
           Navigator.pushNamed(context, '/subscriptions');
+        },
+      ),
+      new ListTile(
+        leading: const Icon(Icons.lock),
+        title: new Text(S.of(context).privacyPolicy),
+        onTap: () {
+          // Then close the drawer
+          Navigator.pop(context);
+          Navigator.pushNamed(context, PrivacyPage.routeName);
         },
       ),
       globals.isDevelopment ?
