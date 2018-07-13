@@ -143,10 +143,14 @@ We may update this privacy policy from time to time. The updated version will be
 
 If you have questions or comments about this policy, you may email us at info@comunes.org or by post to:
 
-COMUNES ASSOCIATION
-ALICANTE
+ASOCIACIÓN COMUNES
+CL COLÓN, 21 PORTAL D 5ºD
+03001 ALICANTE
+SPAIN
 
 If you have any further questions or comments about us or our policies, email us at info@comunes.org or by post to:
 
-COMUNES ASSOCIATION
-ALICANTE
+ASOCIACIÓN COMUNES
+CL COLÓN, 21 PORTAL D 5ºD
+03001 ALICANTE
+SPAIN
