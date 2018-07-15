@@ -143,13 +143,13 @@ Podemos actualizar esta política de privacidad de vez en cuando. La versión ac
 Si tiene preguntas o comentarios sobre esta política, puede enviarnos un correo electrónico a info@comunes.org o por correo postal a:
 
 ASOCIACIÓN COMUNES
-CL COLÓN, 21 PORTAL D 5ºD
+C/ COLÓN 21, 5º DCHA, ESC DCHA
 03001 ALICANTE
 ESPAÑA
 
 Si tiene más preguntas o comentarios sobre nosotras/os o nuestras políticas, envíenos un correo electrónico a info@comunes.org o por correo postal a:
 
 ASOCIACIÓN COMUNES
-CL COLÓN, 21 PORTAL D 5ºD
+C/ COLÓN 21, 5º DCHA, ESC DCHA
 03001 ALICANTE
 ESPAÑA

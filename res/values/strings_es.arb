@@ -45,5 +45,8 @@
   "inSomething": "en $something",
   "SAVE": "GUARDAR",
   "CANCEL": "CANCELAR",
-  "privacyPolicy": "Política de Privacidad"
+  "privacyPolicy": "Política de Privacidad",
+  "errorFirePlaceDialog": "No hemos podido obtener la ubicación del fuego",
+  "callEmergencyServicesDescription": "Puedes llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.",
+  "tweetAboutAFireDescription": "Adicionalmente si usas twitter puedes notificarles con información adicional, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla)."
 }

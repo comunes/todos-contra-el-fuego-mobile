@@ -13,6 +13,7 @@ import 'redux/actions.dart';
 import 'sandbox.dart';
 import 'theme.dart';
 import 'privacyPage.dart';
+import 'fireAlert.dart';
 
 class FiresApp extends StatelessWidget {
   static final WidgetBuilder introWidget = (context) => new IntroPage();
@@ -24,6 +25,7 @@ class FiresApp extends StatelessWidget {
     PrivacyPage.routeName: (BuildContext context) => new PrivacyPage(context),
     ActiveFiresPage.routeName: (BuildContext context) => new ActiveFiresPage(),
     Sandbox.routeName: (BuildContext context) => new Sandbox(),
+    FireAlert.routeName: (BuildContext context) => new FireAlert()
   };
 
   final Store<AppState> store;

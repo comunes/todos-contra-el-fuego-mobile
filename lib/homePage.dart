@@ -2,6 +2,7 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'activeFires.dart';
+import 'fireAlert.dart';
 import 'colors.dart';
 import 'generated/i18n.dart';
 import 'mainDrawer.dart';
@@ -45,7 +46,7 @@ class HomePage extends StatelessWidget {
             child: FloatingActionButton.extended(
               elevation: 0.0,
               onPressed: () {
-                Navigator.pushNamed(context, ActiveFiresPage.routeName);
+                Navigator.pushNamed(context, FireAlert.routeName);
               },
               heroTag: 'notifyFire',
               backgroundColor: fires600,

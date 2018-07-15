@@ -17,11 +17,13 @@ dependencies:
   flutter_simple_dependency_injection: "^0.0.2"
   sentry: "^2.0.2"
   flutter_markdown: "^0.1.5"
+  url_launcher: "^3.0.2"
 
   # net
   http: "^0.11.3+16"
   jaguar_resty: "^2.5.5"
   connectivity: "^0.3.1"
+  share: "^0.5.2"
 
   # data
   json_annotation: ^0.2.3
@@ -56,12 +58,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: "^0.1.2"
+  community_material_icon: "^0.1.2"
+
   # not using yet
-
-  # community_material_icon: "^0.1.2"
-  # url_launcher: "^3.0.2"
-  # share: "^0.5.2"
-
   # package_info: "^0.3.2"
 
 dev_dependencies:
