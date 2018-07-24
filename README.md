@@ -35,3 +35,5 @@ GNU APLv3. See our [LICENSE](https://github.com/comunes/todos-contra-el-fuego-we
 ## Thanks & other acknowlegments
 
 (...)
+
+flutter packages pub run build_runner build --delete-conflicting-outputs
