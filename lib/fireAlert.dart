@@ -3,6 +3,7 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'customStepper.dart';
 
 import 'generated/i18n.dart';
 import 'placesAutocompleteUtils.dart';
@@ -55,13 +56,13 @@ class _FireAlertState extends State<FireAlert> {
     );
   }
 
-  List<Step> listWithoutNulls(List<Step> children) =>
+  List<CustomStep> listWithoutNulls(List<CustomStep> children) =>
       children.where(notNull).toList();
 
   @override
   Widget build(BuildContext context) {
-    List fireSteps = listWithoutNulls(<Step>[
-      new Step(
+    List<CustomStep> fireSteps = listWithoutNulls(<CustomStep>[
+      new CustomStep(
           title: new Text(S.of(context).callEmergencyServicesTitle),
           // subtitle:
           content: new Column(children: <Widget>[
@@ -70,7 +71,7 @@ class _FireAlertState extends State<FireAlert> {
             buildCallButton()
           ])),
       // TODO conditional: this only in Spain
-      new Step(
+      new CustomStep(
           title: new Text(S.of(context).tweetAboutAFireTitle),
           // subtitle: new Text(S.of(context).tweetAboutAFireDescription),
           content: new Column(children: <Widget>[
@@ -91,14 +92,12 @@ class _FireAlertState extends State<FireAlert> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(title: new Text(S.of(context).notifyAFire)),
-        body: new Stepper(
-            currentStep: _currentStep,
+        body: new CustomStepper(
+            currentCustomStep: _currentStep,
             // type: StepperType.horizontal,
-            onStepTapped: (num) => setState(() {
+            onCustomStepTapped: (num) => setState(() {
                   _currentStep = num;
                 }),
-            onStepContinue: stepInc,
-            onStepCancel: stepInc,
             steps: fireSteps));
   }
 }
