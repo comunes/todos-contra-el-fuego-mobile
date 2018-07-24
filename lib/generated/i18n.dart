@@ -38,6 +38,7 @@ class S implements WidgetsLocalizations {
   String get anHour => "an hour";
   String get appName => "All Against The Fire!";
   String get callEmergencyServicesDescription => "You can call 112 if you have not already done so to notify the emergency services.";
+  String get callEmergencyServicesTitle => "Call 112";
   String get chooseAPlace => "Choose a place";
   String get chooseAWatchRadio => "Choose a watch radio";
   String get confirm => "Confirm";
@@ -50,10 +51,12 @@ class S implements WidgetsLocalizations {
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
   String get privacyPolicy => "Privacy Policy";
+  String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, etc.";
   String get supportThisInitiative => "Support this initiative";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
   String get toFiresNotifications => "Subscribe to fires notifications";
-  String get tweetAboutAFireDescription => "Additionally if you use twitter you can notify them with additional information, for example, attaching photos to the tweet if you have good visibility of the fire, when you took the photos, exact location, etc. Use #hashtags type #IFMinicipalTerminal for example #IFJumilla (Forest Fire in Jumilla).";
+  String get tweetAboutAFireDescription => "Additionally if you use twitter you can share additional information with the emergency services, for example, attaching photos to the tweet if you have good visibility of the fire, when you took the photos, exact location, etc. Use #hashtags type #IFMinicipalTerminal for example #IFJumilla (Forest Fire in Jumilla).";
+  String get tweetAboutAFireTitle => "Tweet about";
   String get typeTheNameOfAPlace => "Type the name of a place, region, etc";
   String get unsubscribe => "Unsubscribe";
   String get warningThisIsAVeryLargeArea => "Warning: this is a very large area";
@@ -98,7 +101,7 @@ class es extends S {
   @override
   String get toDeleteThisPlace => "Desliza horizontalmente para borrar este lugar";
   @override
-  String get tweetAboutAFireDescription => "Adicionalmente si usas twitter puedes notificarles con información adicional, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).";
+  String get tweetAboutAFireDescription => "Adicionalmente si usas twitter puedes compartir información adicional con los servicios de emergencia, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).";
   @override
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   @override
@@ -112,6 +115,8 @@ class es extends S {
   @override
   String get youDeletedThisPlace => "Has borrado este lugar";
   @override
+  String get callEmergencyServicesTitle => "Llama al 112";
+  @override
   String get chooseAPlace => "Elige un lugar";
   @override
   String get firesNearPlace => "Fuegos cercanos a ti";
@@ -119,6 +124,10 @@ class es extends S {
   String get aYear => "un año";
   @override
   String get UNDO => "DESHACER";
+  @override
+  String get tweetAboutAFireTitle => "Twittea";
+  @override
+  String get supportPageDescription => "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, etc.";
   @override
   String get aMinute => "un minuto";
   @override

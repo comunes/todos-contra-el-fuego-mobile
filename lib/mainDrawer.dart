@@ -8,6 +8,7 @@ import 'generated/i18n.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'privacyPage.dart';
 import 'fireAlert.dart';
+import 'supportPage.dart';
 
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
@@ -69,7 +70,7 @@ Widget mainDrawer(BuildContext context) {
         onTap: () {
           // Then close the drawer
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/subscriptions');
+          Navigator.pushNamed(context, SupportPage.routeName);
         },
       ),
       new ListTile(

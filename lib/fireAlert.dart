@@ -16,6 +16,7 @@ class FireAlert extends StatefulWidget {
 
 class _FireAlertState extends State<FireAlert> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  int _currentStep = 0;
 
   Widget buildCallButton() {
     return new Align(
@@ -54,25 +55,50 @@ class _FireAlertState extends State<FireAlert> {
     );
   }
 
+  List<Step> listWithoutNulls(List<Step> children) =>
+      children.where(notNull).toList();
+
   @override
   Widget build(BuildContext context) {
+    List fireSteps = listWithoutNulls(<Step>[
+      new Step(
+          title: new Text(S.of(context).callEmergencyServicesTitle),
+          // subtitle:
+          content: new Column(children: <Widget>[
+            new Text(S.of(context).callEmergencyServicesDescription),
+            new SizedBox(height: 20.0),
+            buildCallButton()
+          ])),
+      // TODO conditional: this only in Spain
+      new Step(
+          title: new Text(S.of(context).tweetAboutAFireTitle),
+          // subtitle: new Text(S.of(context).tweetAboutAFireDescription),
+          content: new Column(children: <Widget>[
+            new Text(S.of(context).tweetAboutAFireDescription),
+            new SizedBox(height: 20.0),
+            buildTweetButton()
+          ])),
+    ]);
+    final stepInc = () {
+      setState(() {
+        if (_currentStep < fireSteps.length - 1) {
+          _currentStep += 1;
+        } else {
+          _currentStep = 0;
+        }
+      });
+    };
     return Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(title: new Text(S.of(context).notifyAFire)),
-        body: new CenteredColumn(
-          children: <Widget>[
-            new Flexible(
-              child: new CenteredColumn(
-                children: <Widget>[
-                  new Text(S.of(context).callEmergencyServicesDescription,
-                      softWrap: true),
-                  new Text(S.of(context).tweetAboutAFireDescription),
-                ],
-              ),
-            ),
-            buildCallButton(),
-            buildTweetButton()
-          ],
-        ));
+        body: new Stepper(
+            currentStep: _currentStep,
+            // type: StepperType.horizontal,
+            onStepTapped: (num) => setState(() {
+                  _currentStep = num;
+                }),
+            onStepContinue: stepInc,
+            onStepCancel: stepInc,
+            steps: fireSteps));
   }
 }
