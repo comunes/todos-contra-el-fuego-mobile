@@ -1,12 +1,14 @@
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:meta/meta.dart';
 
-enum FireMapStatus { view, subscriptionConfirm, unsubscribe, edit }
+enum FireMapStatus { view, subscriptionConfirm, unsubscribe, edit, viewFireNotification }
 
 @immutable
 class FireMapState {
   final FireMapStatus status;
   final int numFires;
+  final FireNotification fireNotification;
   final List<dynamic> fires;
   final List<dynamic> falsePos;
   final List<dynamic> industries;
@@ -15,6 +17,7 @@ class FireMapState {
   const FireMapState.initial()
       : this.status = FireMapStatus.view,
         this.yourLocation = null,
+  this.fireNotification = null,
         this.numFires = 0,
         this.fires = const [],
         this.falsePos = const [],
@@ -24,13 +27,15 @@ class FireMapState {
       {this.status: FireMapStatus.view,
       this.yourLocation,
       this.numFires,
-      this.fires,
+        this.fires,
+        this.fireNotification,
       this.falsePos,
       this.industries});
 
   FireMapState copyWith({
     FireMapStatus status,
     YourLocation yourLocation,
+    FireNotification fireNotication,
     int numFires,
     List<dynamic> fires,
     List<dynamic> falsePos,
@@ -38,6 +43,7 @@ class FireMapState {
   }) {
     return new FireMapState(
         yourLocation: yourLocation ?? this.yourLocation,
+        fireNotification: fireNotication ?? this.fireNotification,
         numFires: numFires ?? this.numFires,
         fires: fires ?? this.fires,
         falsePos: falsePos ?? this.falsePos,
@@ -52,6 +58,7 @@ class FireMapState {
           runtimeType == other.runtimeType &&
           status == other.status &&
           numFires == other.numFires &&
+        fireNotification == other.fireNotification &&
           fires == other.fires &&
           falsePos == other.falsePos &&
           industries == other.industries &&
@@ -61,6 +68,7 @@ class FireMapState {
   int get hashCode =>
       status.hashCode ^
       numFires.hashCode ^
+      fireNotification.hashCode ^
       fires.hashCode ^
       falsePos.hashCode ^
       industries.hashCode ^
@@ -70,6 +78,6 @@ class FireMapState {
   String toString() {
     return 'FireMapState{status: $status, numFires: $numFires, fires: ${fires
       .length}, falsePos: ${falsePos.length}, industries: ${industries
-      .length}, yourLocation: $yourLocation}';
+      .length}, yourLocation: $yourLocation, fireNotification: $fireNotification}';
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 import 'customBottomAppBar.dart';
+import 'customMoment.dart';
 import 'generated/i18n.dart';
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
@@ -10,12 +11,13 @@ import 'models/fireMapState.dart';
 typedef void OnSave();
 typedef void OnCancel();
 
-class YourLocationMapBottom extends StatelessWidget {
+class GenericMapBottom extends StatelessWidget {
   final OnSave onSave;
   final OnCancel onCancel;
   final FireMapState state;
 
-  YourLocationMapBottom({@required this.onSave,@required this.onCancel,@required this.state});
+  GenericMapBottom(
+      {@required this.onSave, @required this.onCancel, @required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,6 @@ class YourLocationMapBottom extends StatelessWidget {
         fabLocation: FloatingActionButtonLocation.centerFloat,
         showNotch: false,
         color: fires100,
-        // height: 170.0,
         mainAxisAlignment: MainAxisAlignment.center,
         actions: buildActionList(loc, context, kmAround));
   }
@@ -45,6 +46,27 @@ class YourLocationMapBottom extends StatelessWidget {
                 style: Theme.of(context).textTheme.button)));
         break;
       case FireMapStatus.subscriptionConfirm:
+        break;
+      case FireMapStatus.viewFireNotification:
+        actionList.add(new Flexible(
+            child: new Padding(
+                padding: new EdgeInsets.all(10.0),
+                child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      new Text(state.fireNotification.description),
+                      new SizedBox(height: 5.0),
+                      new Row(
+                        children: <Widget>[
+                          new Icon(Icons.access_time),
+                          new SizedBox(width: 5.0),
+                          new Text(Moment
+                              .now()
+                              .from(context, state.fireNotification.when))
+                        ],
+                      )
+                    ]))));
         break;
       case FireMapStatus.unsubscribe:
       case FireMapStatus.view:

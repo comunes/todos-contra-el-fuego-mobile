@@ -46,8 +46,10 @@ class S implements WidgetsLocalizations {
   String get confirm => "Confirm";
   String get deleteAllFireNotificationsAlertDescription => "This will remove all your fire notifications";
   String get errorFirePlaceDialog => "We couldn't get the location of the fire";
+  String get fireNotificationTitle => "Fire Notification";
   String get fireNotificationsDescription => "Here you will receive fire notifications in locations you are subscribed to";
   String get fireNotificationsTitle => "Fire Notifications";
+  String get fireNotificationsTitleShort => "Notifications";
   String get firesInTheWorld => "Active fires in the world";
   String get firesInYourPlaces => "Active fires in your places";
   String get firesNearPlace => "Fires near other place";
@@ -127,6 +129,8 @@ class es extends S {
   @override
   String get notPermsUbication => "No tenemos permisos para conocer tu ubicación";
   @override
+  String get fireNotificationTitle => "Notificación de fuego";
+  @override
   String get youDeletedThisPlace => "Has borrado este lugar";
   @override
   String get callEmergencyServicesTitle => "Llama al 112";
@@ -150,6 +154,8 @@ class es extends S {
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override
   String get isYourUbicationEnabled => "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?";
+  @override
+  String get fireNotificationsTitleShort => "Notificaciones";
   @override
   String get DELETE => "BORRAR";
   @override

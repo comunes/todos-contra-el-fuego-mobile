@@ -67,7 +67,7 @@ Widget mainDrawer(BuildContext context) {
       ),
       new ListTile(
         leading: const Icon(Icons.notifications),
-        title: new Text(S.of(context).fireNotificationsTitle),
+        title: new Text(S.of(context).fireNotificationsTitleShort),
         onTap: () {
           // Then close the drawer
           Navigator.pop(context);

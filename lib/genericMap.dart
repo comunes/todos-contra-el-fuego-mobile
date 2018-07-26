@@ -15,12 +15,12 @@ import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
 import 'fireMarker.dart';
 import 'generated/i18n.dart';
+import 'genericMapBottom.dart';
 import 'globals.dart' as globals;
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
 import 'redux/actions.dart';
 import 'slider.dart';
-import 'yourLocationMapBottom.dart';
 import 'zoomMapPlugin.dart';
 
 @immutable
@@ -57,12 +57,12 @@ class _ViewModel {
   int get hashCode => mapState.hashCode;
 }
 
-class YourLocationMap extends StatefulWidget {
+class genericMap extends StatefulWidget {
   @override
-  _YourLocationMapState createState() => _YourLocationMapState();
+  _genericMapState createState() => _genericMapState();
 }
 
-class _YourLocationMapState extends State<YourLocationMap> {
+class _genericMapState extends State<genericMap> {
   // This needs to be stateful so when resizes don't get a new globalkey
   // https://github.com/flutter/flutter/issues/1632#issuecomment-180478202
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -128,7 +128,6 @@ class _YourLocationMapState extends State<YourLocationMap> {
               // THIS does not works as expected
               // maxZoom: 6.0,
               onTap: (callback) {
-                print('On tap ${callback}');
                 if (status == FireMapStatus.edit) {
                   _location = _location.copyWith(
                       lat: callback.latitude, lon: callback.longitude);
@@ -172,8 +171,12 @@ class _YourLocationMapState extends State<YourLocationMap> {
                   ? new ZoomMapPluginOptions()
                   : new DummyMapPluginOptions(),
               new MarkerLayerOptions(
-                markers: buildMarkers(_location, mapState.fires,
-                    mapState.industries, mapState.falsePos),
+                markers: buildMarkers(
+                    _location,
+                    mapState.fires,
+                    mapState.industries,
+                    mapState.falsePos,
+                    mapState.fireNotification != null),
               ),
             ],
           );
@@ -204,10 +207,13 @@ class _YourLocationMapState extends State<YourLocationMap> {
                           _location = _location.copyWith(description: newDesc);
                         },
                       )
-                    : new Text(_location.description),
+                    : status == FireMapStatus.viewFireNotification
+                        ? new Text(S.of(context).fireNotificationTitle)
+                        : new Text(_location.description),
                 actions: buildAppBarActions(status, view, _location),
               ),
-              floatingActionButton: status == FireMapStatus.edit
+              floatingActionButton: status == FireMapStatus.edit ||
+                      status == FireMapStatus.viewFireNotification
                   ? null
                   : FloatingActionButton.extended(
                       onPressed: () {
@@ -224,6 +230,7 @@ class _YourLocationMapState extends State<YourLocationMap> {
                             view.onUnSubs(_location);
                             break;
                           case FireMapStatus.edit:
+                          case FireMapStatus.viewFireNotification:
                             break;
                         }
                       },
@@ -238,7 +245,7 @@ class _YourLocationMapState extends State<YourLocationMap> {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
-              bottomNavigationBar: new YourLocationMapBottom(
+              bottomNavigationBar: new GenericMapBottom(
                   onSave: () => view.onEditConfirm(_location),
                   onCancel: () => view.onEditCancel(_initialLocation),
                   state: view.mapState),
@@ -298,10 +305,11 @@ class _YourLocationMapState extends State<YourLocationMap> {
   }
 
   List<Marker> buildMarkers(YourLocation yourLocation, List<dynamic> fires,
-      List<dynamic> falsePos, List<dynamic> industries) {
+      List<dynamic> falsePos, List<dynamic> industries, bool isNotif) {
     List<Marker> markers = [];
     const calibrate = false; // useful when we change the fire icons size
-    markers.add(FireMarker(yourLocation, FireMarkType.position));
+    markers.add(FireMarker(
+        yourLocation, isNotif ? FireMarkType.fire : FireMarkType.position));
     if (calibrate) markers.add(FireMarker(yourLocation, FireMarkType.pixel));
     falsePos.forEach((fire) {
       var coords = fire['geo']['coordinates'];
@@ -318,7 +326,8 @@ class _YourLocationMapState extends State<YourLocationMap> {
     });
     fires.forEach((fire) {
       var loc = new BasicLocation(lat: fire['lat'], lon: fire['lon']);
-      markers.add(FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
+      markers.add(
+          FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
       markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     return markers;

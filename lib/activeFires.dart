@@ -15,7 +15,7 @@ import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
-import 'yourLocationMap.dart';
+import 'genericMap.dart';
 
 @immutable
 class _ViewModel {
@@ -225,7 +225,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
       Store<AppState> store, YourLocation loc, BuildContext context) {
     store.dispatch(new ShowYourLocationMapAction(loc));
     Navigator.push(context,
-        new MaterialPageRoute(builder: (context) => new YourLocationMap()));
+        new MaterialPageRoute(builder: (context) => new genericMap()));
   }
 
   void onAddYourLocation(AddYourLocationFunction onAdd) {

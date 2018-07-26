@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /*
 Useful for debug
 import 'package:fluttery/framing.dart';
-new RandomColorBlock( child:
+new RandomColorBlock( child
 */
 
 class Sandbox extends StatelessWidget {

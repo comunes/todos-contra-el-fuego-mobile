@@ -1,4 +1,5 @@
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:meta/meta.dart';
 
 abstract class FiresMapActions {}
@@ -28,6 +29,12 @@ class ShowYourLocationMapAction extends FiresMapActions {
   YourLocation loc;
 
   ShowYourLocationMapAction(this.loc);
+}
+
+class ShowFireNotificationMapAction extends FiresMapActions {
+  FireNotification notif;
+
+  ShowFireNotificationMapAction(this.notif);
 }
 
 class EditYourLocationAction extends FiresMapActions {

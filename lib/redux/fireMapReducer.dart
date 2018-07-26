@@ -1,11 +1,13 @@
 import 'package:redux/redux.dart';
-
+import 'package:fires_flutter/models/yourLocation.dart';
 import '../models/fireMapState.dart';
 import 'actions.dart';
 
 final fireMapReducer = combineReducers<FireMapState>([
   new TypedReducer<FireMapState, ShowYourLocationMapAction>(
       _showYourLocationMap),
+  new TypedReducer<FireMapState, ShowFireNotificationMapAction>(
+    _showFireNotificationMap),
   new TypedReducer<FireMapState, UpdateYourLocationMapStatsAction>(
       _updateYourLocationMapStats),
   new TypedReducer<FireMapState, SubscribeAction>(_subscribeYourLocationMap),
@@ -45,6 +47,14 @@ FireMapState _showYourLocationMap(
       yourLocation: action.loc);
 }
 
+FireMapState _showFireNotificationMap(
+    FireMapState state, ShowFireNotificationMapAction action) {
+  // TODO: use here you real location?
+  YourLocation pseudoLoc = new YourLocation(lat: action.notif.lat, lon: action.notif.lon, description: action.notif.description);
+  return state.copyWith(
+      status: FireMapStatus.viewFireNotification, yourLocation: pseudoLoc, fireNotication: action.notif);
+}
+
 FireMapState _subscribeYourLocationMap(
     FireMapState state, SubscribeAction action) {
   return state.copyWith(status: FireMapStatus.subscriptionConfirm);
@@ -52,7 +62,8 @@ FireMapState _subscribeYourLocationMap(
 
 FireMapState _subscribeConfirmYourLocationMap(
     FireMapState state, SubscribeConfirmAction action) {
-  return state.copyWith(status: FireMapStatus.unsubscribe, yourLocation: action.loc);
+  return state.copyWith(
+      status: FireMapStatus.unsubscribe, yourLocation: action.loc);
 }
 
 FireMapState _unsubscribeYourLocationMap(

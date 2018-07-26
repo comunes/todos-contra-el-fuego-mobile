@@ -11,7 +11,7 @@ import 'generated/i18n.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'redux/actions.dart';
-// import 'fireNotificationMap.dart';
+import 'genericMap.dart';
 
 @immutable
 class _ViewModel {
@@ -145,6 +145,9 @@ class _FireNotificationListState extends State<FireNotificationList> {
                   store.dispatch(new ReadFireNotificationAction(
                       notif.copyWith(read: true)));
                 }
+                new Timer(new Duration(milliseconds: 1000), () {
+                  gotoMap(store, notif, context);
+                });
               },
               fireNotifications: store.state.fireNotifications);
         },
@@ -193,11 +196,11 @@ class _FireNotificationListState extends State<FireNotificationList> {
         });
   }
 
-  void gotoLocationMap(
+  void gotoMap(
       Store<AppState> store, FireNotification notif, BuildContext context) {
-    /*    store.dispatch(new ShowFireNotificationMapAction(notif));
+        store.dispatch(new ShowFireNotificationMapAction(notif));
     Navigator.push(context,
-        new MaterialPageRoute(builder: (context) => new FireNotificationMap())); */
+        new MaterialPageRoute(builder: (context) => new genericMap()));
   }
 
   _showConfirmDialog(_ViewModel view) {
