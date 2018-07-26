@@ -23,6 +23,7 @@ class S implements WidgetsLocalizations {
 
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   String get CANCEL => "CANCEL";
+  String get DELETE => "DELETE";
   String get SAVE => "SAVE";
   String get UNDO => "UNDO";
   String get aDay => "a day";
@@ -37,11 +38,13 @@ class S implements WidgetsLocalizations {
   String get alertWhenThereIsAFire => "Alert when there is a fire";
   String get anHour => "an hour";
   String get appName => "All Against The Fire!";
+  String get areYouSureTitle => "Are you sure?";
   String get callEmergencyServicesDescription => "You can call 112 if you have not already done so to notify the emergency services.";
   String get callEmergencyServicesTitle => "Call 112";
   String get chooseAPlace => "Choose a place";
   String get chooseAWatchRadio => "Choose a watch radio";
   String get confirm => "Confirm";
+  String get deleteAllFireNotificationsAlertDescription => "This will remove all your fire notifications";
   String get errorFirePlaceDialog => "We couldn't get the location of the fire";
   String get fireNotificationsDescription => "Here you will receive fire notifications in locations you are subscribed to";
   String get fireNotificationsTitle => "Fire Notifications";
@@ -97,6 +100,8 @@ class es extends S {
   @override
   String get anHour => "una hora";
   @override
+  String get areYouSureTitle => "¿Seguro?";
+  @override
   String get notifyAFire => "Notificar un fuego";
   @override
   String get callEmergencyServicesDescription => "Puedes llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.";
@@ -104,6 +109,8 @@ class es extends S {
   String get errorFirePlaceDialog => "No hemos podido obtener la ubicación del fuego";
   @override
   String get toDeleteThisPlace => "Desliza horizontalmente para borrar este lugar";
+  @override
+  String get deleteAllFireNotificationsAlertDescription => "Esto borrará todas las notificaciones de fuegos";
   @override
   String get tweetAboutAFireDescription => "Adicionalmente si usas twitter puedes compartir información adicional con los servicios de emergencia, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).";
   @override
@@ -140,6 +147,8 @@ class es extends S {
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override
   String get isYourUbicationEnabled => "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?";
+  @override
+  String get DELETE => "BORRAR";
   @override
   String get aDay => "un día";
   @override

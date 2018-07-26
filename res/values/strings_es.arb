@@ -53,5 +53,8 @@
   "tweetAboutAFireDescription": "Adicionalmente si usas twitter puedes compartir información adicional con los servicios de emergencia, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).",
   "supportPageDescription": "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, etc.",
   "fireNotificationsTitle": "Notificaciones de fuegos",
-  "fireNotificationsDescription": "Aquí recibirás las notificaciones de fuegos en los lugares a los que te subscribas"
+  "fireNotificationsDescription": "Aquí recibirás las notificaciones de fuegos en los lugares a los que te subscribas",
+  "areYouSureTitle": "¿Seguro?",
+  "deleteAllFireNotificationsAlertDescription": "Esto borrará todas las notificaciones de fuegos",
+  "DELETE": "BORRAR"
 }

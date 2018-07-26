@@ -159,7 +159,8 @@ class _FireNotificationListState extends State<FireNotificationList> {
                     hasFireNotifications
                         ? IconButton(
                             icon: Icon(Icons.delete),
-                            onPressed: () => view.onDeleteAll(),
+                            onPressed: () =>
+                              _showConfirmDialog(view)
                           )
                         : null
                   ])),
@@ -178,7 +179,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
                                     textAlign: TextAlign.center,
                                     textScaleFactor: 1.1,
                                     style: new TextStyle(
-                                        height: 1.5, color: Colors.black45))
+                                        height: 1.3, color: Colors.black45))
                               ]))))
                   : _buildSavedFireNotifications(context,
                       view.fireNotifications, view.onDelete, view.onTap));
@@ -191,4 +192,34 @@ class _FireNotificationListState extends State<FireNotificationList> {
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => new FireNotificationMap())); */
   }
+
+  _showConfirmDialog(_ViewModel view) {
+    return showDialog<Null>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text(S.of(context).areYouSureTitle),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                new Text(S.of(context).deleteAllFireNotificationsAlertDescription
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text(S.of(context).DELETE),
+              onPressed: () {
+                view.onDeleteAll();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
