@@ -20,20 +20,20 @@ class FireNotification extends Object with _$FireNotificationSerializerMixin {
   final double lon;
   final String description;
   final DateTime when;
+  final bool read;
 
   factory FireNotification.fromJson(Map<String, dynamic> json) => _$FireNotificationFromJson(json);
 
-  // static FireNotification noLocation = new FireNotification(lat: 0.0, lon: 0.0, description: '', when: new DateTime(0));
-
-  FireNotification({this.id, @required this.lat, @required this.lon, @required this.description, @required this.when}) {
+  FireNotification({this.id, @required this.lat, @required this.lon, @required this.description, @required this.when, @required this.read}) {
     if (this.id == null) this.id = new ObjectId();
   }
 
-  FireNotification copyWith({id, lat, lon, description, when}) {
+  FireNotification copyWith({id, lat, lon, description, read, when}) {
     return new FireNotification(
         id: id ?? this.id,
         lat: lat ?? this.lat,
-        lon: lon ?? this.lon,
+      lon: lon ?? this.lon,
+      read: read ?? this.read,
         description: description ?? this.description,
         when: when ?? this.when);
   }
@@ -45,15 +45,16 @@ class FireNotification extends Object with _$FireNotificationSerializerMixin {
           runtimeType == other.runtimeType &&
           id == other.id &&
           lat == other.lat &&
-          lon == other.lon &&
+        lon == other.lon &&
+        read == other.read &&
           description == other.description &&
           when == other.when;
 
   @override
-  int get hashCode => id.hashCode ^ lat.hashCode ^ lon.hashCode ^ description.hashCode ^ when.hashCode;
+  int get hashCode => id.hashCode ^ lat.hashCode ^ lon.hashCode ^ description.hashCode ^ when.hashCode ^ read.hashCode;
 
   @override
   String toString() {
-    return 'FireNotification {id: $id, lat: $lat, lon: $lon, description: $description, when: $when}';
+    return 'FireNotification {id: $id, lat: $lat, lon: $lon, description: $description, when: $when, read: $read}';
   }
 }

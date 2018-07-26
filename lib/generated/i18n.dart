@@ -58,6 +58,7 @@ class S implements WidgetsLocalizations {
   String get privacyPolicy => "Privacy Policy";
   String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, etc.";
   String get supportThisInitiative => "Support this initiative";
+  String get toDeleteThisNotification => "Slide horizontally to delete this notification";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
   String get toFiresNotifications => "Subscribe to fires notifications";
   String get tweetAboutAFireDescription => "Additionally if you use twitter you can share additional information with the emergency services, for example, attaching photos to the tweet if you have good visibility of the fire, when you took the photos, exact location, etc. Use #hashtags type #IFMinicipalTerminal for example #IFJumilla (Forest Fire in Jumilla).";
@@ -93,6 +94,8 @@ class es extends S {
 
   @override
   String get addYourCurrentPosition => "Añade tu ubicación actual";
+  @override
+  String get toDeleteThisNotification => "Desliza horizontalmente para borrar esta notificación";
   @override
   String get alertWhenThereIsAFire => "Alerta cuando hay un fuego";
   @override

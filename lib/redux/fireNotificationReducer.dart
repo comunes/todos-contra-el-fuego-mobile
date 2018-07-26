@@ -9,17 +9,27 @@ final fireNotificationReducer = combineReducers<List<FireNotification>>([
   new TypedReducer<List<FireNotification>, DeletedFireNotificationAction>(
     _deletedFireNotification),
   new TypedReducer<List<FireNotification>, DeletedAllFireNotificationAction>(
-    _deletedAllFireNotifications)
+    _deletedAllFireNotifications),
+  new TypedReducer<List<FireNotification>, ReadedFireNotificationAction>(
+    _readedFireNotification)
 ]);
 
 List<FireNotification> _receivedFireNotification(
-    List<FireNotification> yourLocations, AddedFireNotificationAction action) {
-  return new List.from(yourLocations)..add(action.notif);
+    List<FireNotification> notifications, AddedFireNotificationAction action) {
+  return new List.from(notifications)..add(action.notif);
 }
 
 List<FireNotification> _deletedFireNotification(
   List<FireNotification> notifications, DeletedFireNotificationAction action) {
   return new List.from(notifications)..remove(action.notif);
+}
+
+List<FireNotification> _readedFireNotification(
+    List<FireNotification> notifications, ReadedFireNotificationAction action) {
+  return notifications
+      .map((yourLocation) =>
+          yourLocation.id == action.notif.id ? action.notif : yourLocation)
+      .toList();
 }
 
 List<FireNotification> _deletedAllFireNotifications(

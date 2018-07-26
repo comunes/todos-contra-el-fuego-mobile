@@ -56,10 +56,12 @@ class _FireNotificationListState extends State<FireNotificationList> {
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.whatshot),
-        title: new Text(notif.description),
+        title: new Text(notif.description,
+            style: new TextStyle(
+                fontWeight: notif.read ? FontWeight.normal : FontWeight.bold)),
         subtitle: new Text(Moment.now().from(context, notif.when)),
         onLongPress: () {
-          showSnackMsg(S.of(context).toDeleteThisPlace);
+          showSnackMsg(S.of(context).toDeleteThisNotification);
         },
         onTap: () {
           onTap(notif);
@@ -77,6 +79,8 @@ class _FireNotificationListState extends State<FireNotificationList> {
     return new RefreshIndicator(
         child: new ListView.builder(
             padding: const EdgeInsets.all(16.0),
+            reverse: true,
+            shrinkWrap: true,
             itemCount: notifList.length,
             itemBuilder: (BuildContext _context, int i) {
               final ThemeData theme = Theme.of(context);
@@ -136,7 +140,12 @@ class _FireNotificationListState extends State<FireNotificationList> {
                           store.dispatch(new AddFireNotificationAction(notif));
                         })));
               },
-              onTap: (notif) {},
+              onTap: (notif) {
+                if (!notif.read) {
+                  store.dispatch(new ReadFireNotificationAction(
+                      notif.copyWith(read: true)));
+                }
+              },
               fireNotifications: store.state.fireNotifications);
         },
         builder: (context, view) {
@@ -159,9 +168,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
                     hasFireNotifications
                         ? IconButton(
                             icon: Icon(Icons.delete),
-                            onPressed: () =>
-                              _showConfirmDialog(view)
-                          )
+                            onPressed: () => _showConfirmDialog(view))
                         : null
                   ])),
               body: !hasFireNotifications
@@ -203,8 +210,8 @@ class _FireNotificationListState extends State<FireNotificationList> {
           content: new SingleChildScrollView(
             child: new ListBody(
               children: <Widget>[
-                new Text(S.of(context).deleteAllFireNotificationsAlertDescription
-                )
+                new Text(
+                    S.of(context).deleteAllFireNotificationsAlertDescription)
               ],
             ),
           ),
@@ -222,4 +229,3 @@ class _FireNotificationListState extends State<FireNotificationList> {
     );
   }
 }
-

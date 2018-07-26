@@ -33,6 +33,7 @@ void onMessage(Map<String, dynamic> message, Store<AppState> store) {
       lat: double.parse(message['lat']),
       lon: double.parse(message['lon']),
       description: message['description'],
+      read: false,
       when: DateTime.parse(message['when']));
   print(notif);
   store.dispatch(new AddFireNotificationAction(notif));

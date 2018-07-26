@@ -126,6 +126,11 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
     }
   }
 
+  if (action is ReadFireNotificationAction) {
+    store.dispatch(new ReadedFireNotificationAction(action.notif));
+    persistFireNotifications(store.state.fireNotifications);
+  }
+
   if (action is FetchYourLocationsAction) {
     // Use the api to fetch the YourLocations
     api

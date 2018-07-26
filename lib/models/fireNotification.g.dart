@@ -14,7 +14,8 @@ FireNotification _$FireNotificationFromJson(Map<String, dynamic> json) =>
         lat: (json['lat'] as num).toDouble(),
         lon: (json['lon'] as num).toDouble(),
         description: json['description'] as String,
-        when: DateTime.parse(json['when'] as String));
+        when: DateTime.parse(json['when'] as String),
+        read: json['read'] as bool);
 
 abstract class _$FireNotificationSerializerMixin {
   ObjectId get id;
@@ -22,6 +23,7 @@ abstract class _$FireNotificationSerializerMixin {
   double get lon;
   String get description;
   DateTime get when;
+  bool get read;
   Map<String, dynamic> toJson() => new _$FireNotificationJsonMapWrapper(this);
 }
 
@@ -31,7 +33,7 @@ class _$FireNotificationJsonMapWrapper extends $JsonMapWrapper {
 
   @override
   Iterable<String> get keys =>
-      const ['id', 'lat', 'lon', 'description', 'when'];
+      const ['id', 'lat', 'lon', 'description', 'when', 'read'];
 
   @override
   dynamic operator [](Object key) {
@@ -47,6 +49,8 @@ class _$FireNotificationJsonMapWrapper extends $JsonMapWrapper {
           return _v.description;
         case 'when':
           return _v.when.toIso8601String();
+        case 'read':
+          return _v.read;
       }
     }
     return null;

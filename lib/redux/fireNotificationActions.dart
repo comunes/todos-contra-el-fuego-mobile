@@ -33,3 +33,15 @@ class AddedFireNotificationAction extends FireNotificationActions {
 
   AddedFireNotificationAction(this.notif);
 }
+
+class ReadFireNotificationAction extends FireNotificationActions {
+  final FireNotification notif;
+
+  ReadFireNotificationAction(this.notif);
+}
+
+class ReadedFireNotificationAction extends FireNotificationActions {
+  final FireNotification notif;
+
+  ReadedFireNotificationAction(this.notif);
+}
