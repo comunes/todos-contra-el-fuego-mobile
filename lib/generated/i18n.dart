@@ -39,7 +39,7 @@ class S implements WidgetsLocalizations {
   String get anHour => "an hour";
   String get appName => "All Against The Fire!";
   String get areYouSureTitle => "Are you sure?";
-  String get callEmergencyServicesDescription => "You can call 112 if you have not already done so to notify the emergency services.";
+  String get callEmergencyServicesDescription => "You should call 112 if you have not already done so to notify the emergency services.";
   String get callEmergencyServicesTitle => "Call 112";
   String get chooseAPlace => "Choose a place";
   String get chooseAWatchRadio => "Choose a watch radio";
@@ -109,7 +109,7 @@ class es extends S {
   @override
   String get notifyAFire => "Notificar un fuego";
   @override
-  String get callEmergencyServicesDescription => "Puedes llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.";
+  String get callEmergencyServicesDescription => "Deberías llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.";
   @override
   String get errorFirePlaceDialog => "No hemos podido obtener la ubicación del fuego";
   @override
