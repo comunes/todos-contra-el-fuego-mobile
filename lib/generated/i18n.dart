@@ -43,6 +43,8 @@ class S implements WidgetsLocalizations {
   String get chooseAWatchRadio => "Choose a watch radio";
   String get confirm => "Confirm";
   String get errorFirePlaceDialog => "We couldn't get the location of the fire";
+  String get fireNotificationsDescription => "Here you will receive fire notifications in locations you are subscribed to";
+  String get fireNotificationsTitle => "Fire Notifications";
   String get firesInTheWorld => "Active fires in the world";
   String get firesInYourPlaces => "Active fires in your places";
   String get firesNearPlace => "Fires near other place";
@@ -91,6 +93,8 @@ class es extends S {
   @override
   String get alertWhenThereIsAFire => "Alerta cuando hay un fuego";
   @override
+  String get fireNotificationsDescription => "Aquí recibirás las notificaciones de fuegos en los lugares a los que te subscribas";
+  @override
   String get anHour => "una hora";
   @override
   String get notifyAFire => "Notificar un fuego";
@@ -130,6 +134,8 @@ class es extends S {
   String get supportPageDescription => "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, etc.";
   @override
   String get aMinute => "un minuto";
+  @override
+  String get fireNotificationsTitle => "Notificaciones de fuegos";
   @override
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override

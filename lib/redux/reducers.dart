@@ -7,6 +7,7 @@ import 'userReducer.dart';
 import 'yourLocationsReducer.dart';
 import 'actions.dart';
 import 'appReducer.dart';
+import 'fireNotificationReducer.dart';
 
 // We create the State reducer by combining many smaller reducers into one!
 AppState appStateReducer(AppState prevState, action) {
@@ -14,7 +15,8 @@ AppState appStateReducer(AppState prevState, action) {
   if (action is AppActions)
     state = appReducer(prevState, action);
   return AppState(
-      yourLocations: yourLocationsReducer(state.yourLocations, action),
+    yourLocations: yourLocationsReducer(state.yourLocations, action),
+    fireNotifications: fireNotificationReducer(state.fireNotifications, action),
       user: userReducer(state.user, action),
       isLoading: loadingReducer(state.isLoading, action),
       isLoaded: loadedReducer(state.isLoaded, action),

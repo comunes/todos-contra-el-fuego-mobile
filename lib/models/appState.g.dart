@@ -11,10 +11,14 @@ part of 'appState.dart';
 AppState _$AppStateFromJson(Map<String, dynamic> json) => new AppState(
     yourLocations: (json['yourLocations'] as List)
         .map((e) => new YourLocation.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    fireNotifications: (json['fireNotifications'] as List)
+        .map((e) => new FireNotification.fromJson(e as Map<String, dynamic>))
         .toList());
 
 abstract class _$AppStateSerializerMixin {
   List<YourLocation> get yourLocations;
+  List<FireNotification> get fireNotifications;
   Map<String, dynamic> toJson() => new _$AppStateJsonMapWrapper(this);
 }
 
@@ -23,7 +27,7 @@ class _$AppStateJsonMapWrapper extends $JsonMapWrapper {
   _$AppStateJsonMapWrapper(this._v);
 
   @override
-  Iterable<String> get keys => const ['yourLocations'];
+  Iterable<String> get keys => const ['yourLocations', 'fireNotifications'];
 
   @override
   dynamic operator [](Object key) {
@@ -31,6 +35,8 @@ class _$AppStateJsonMapWrapper extends $JsonMapWrapper {
       switch (key) {
         case 'yourLocations':
           return _v.yourLocations;
+        case 'fireNotifications':
+          return _v.fireNotifications;
       }
     }
     return null;

@@ -1,4 +1,5 @@
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 
 abstract class AppActions {}
 
@@ -11,6 +12,8 @@ class FetchYourLocationsSucceededAction extends AppActions {
 
   FetchYourLocationsSucceededAction(this.fetchedYourLocations);
 }
+
+class FetchFireNotificationsAction extends AppActions {}
 
 class FetchYourLocationsFailedAction extends AppActions {
   final Exception error;
@@ -34,4 +37,10 @@ class OnUserLangAction extends AppActions {
   final String lang;
 
   OnUserLangAction(this.lang);
+}
+
+class FetchFireNotificationsSucceededAction extends AppActions {
+  final List<FireNotification> fetchedFireNotifications;
+
+  FetchFireNotificationsSucceededAction(this.fetchedFireNotifications);
 }

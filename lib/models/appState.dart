@@ -1,5 +1,6 @@
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -28,6 +29,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
   @JsonKey(ignore: true)
   final String firesApiUrl;
   final List<YourLocation> yourLocations;
+  final List<FireNotification> fireNotifications;
   @JsonKey(ignore: true)
   final FireMapState fireMapState;
 
@@ -37,6 +39,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
 
   AppState(
       {this.yourLocations: const <YourLocation>[],
+      this.fireNotifications: const <FireNotification>[],
       this.user: const User.initial(),
       this.isLoading: false,
       this.isLoaded: false,
@@ -55,6 +58,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
       String firesApiKey,
       String firesApiUrl,
       List<YourLocation> yourLocations,
+        List<FireNotification> fireNotifications,
       FireMapState fireMapState}) {
     return new AppState(
         isLoading: isLoading ?? this.isLoading,
@@ -65,6 +69,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
         firesApiKey: firesApiKey ?? this.firesApiKey,
         firesApiUrl: firesApiUrl ?? this.firesApiUrl,
         yourLocations: yourLocations ?? this.yourLocations,
+        fireNotifications: fireNotifications ?? this.fireNotifications,
         fireMapState: fireMapState ?? this.fireMapState);
   }
 
@@ -73,24 +78,26 @@ class AppState extends Object with _$AppStateSerializerMixin {
     return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
       firesApiKey, 8)}\napiUrl: ${ellipse(
       firesApiUrl, 8)}\nyourLocations count: ${yourLocations
-      .length}\nyourLocations: ${yourLocations}\nfireMapState: $fireMapState}';
+      .length}\nyourLocations: ${yourLocations}\nfireNotifications: ${fireNotifications}\nfireMapState: $fireMapState}';
   }
 }
 
 typedef void AddYourLocationFunction(YourLocation loc);
 typedef void DeleteYourLocationFunction(YourLocation loc);
 typedef void ToggleSubscriptionFunction(YourLocation loc);
-
 typedef void OnLocationTapFunction(YourLocation loc);
 typedef void OnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeDistanceChangeFunction(YourLocation loc);
 typedef void OnUnSubscribeFunction(YourLocation loc);
 typedef void OnSubscribeConfirmedFunction(YourLocation loc);
-
 typedef void OnLocationEdit(YourLocation loc);
 typedef void OnLocationEditing(YourLocation loc);
 typedef void OnLocationEditConfirm(YourLocation loc);
 typedef void OnLocationEditCancel(YourLocation loc);
+typedef void TapFireNotificationFunction(FireNotification notif);
+// typedef void OnReceivedFireNotificationFunction(FireNotification notif);
+typedef void DeleteFireNotificationFunction(FireNotification notif);
+typedef void DeleteAllFireNotificationFunction();
 
 // unused
 // typedef void UpdateYourLocationFunction(ObjectId id, YourLocation loc);

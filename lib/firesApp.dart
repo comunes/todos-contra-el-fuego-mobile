@@ -15,6 +15,7 @@ import 'theme.dart';
 import 'privacyPage.dart';
 import 'fireAlert.dart';
 import 'supportPage.dart';
+import 'fireNotificationList.dart';
 
 class FiresApp extends StatelessWidget {
   static final WidgetBuilder introWidget = (context) => new IntroPage();
@@ -28,6 +29,7 @@ class FiresApp extends StatelessWidget {
     Sandbox.routeName: (BuildContext context) => new Sandbox(),
     FireAlert.routeName: (BuildContext context) => new FireAlert(),
     SupportPage.routeName: (BuildContext context) => new SupportPage(),
+    FireNotificationList.routeName: (BuildContext context) => new FireNotificationList(),
   };
 
   final Store<AppState> store;

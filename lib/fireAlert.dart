@@ -80,15 +80,6 @@ class _FireAlertState extends State<FireAlert> {
             buildTweetButton()
           ])),
     ]);
-    final stepInc = () {
-      setState(() {
-        if (_currentStep < fireSteps.length - 1) {
-          _currentStep += 1;
-        } else {
-          _currentStep = 0;
-        }
-      });
-    };
     return Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(title: new Text(S.of(context).notifyAFire)),

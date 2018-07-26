@@ -9,6 +9,8 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'privacyPage.dart';
 import 'fireAlert.dart';
 import 'supportPage.dart';
+import 'fireNotificationList.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
@@ -61,6 +63,15 @@ Widget mainDrawer(BuildContext context) {
           // Then close the drawer
           Navigator.pop(context);
           Navigator.pushNamed(context, FireAlert.routeName);
+        },
+      ),
+      new ListTile(
+        leading: const Icon(Icons.notifications),
+        title: new Text(S.of(context).fireNotificationsTitle),
+        onTap: () {
+          // Then close the drawer
+          Navigator.pop(context);
+          Navigator.pushNamed(context, FireNotificationList.routeName);
         },
       ),
       new Divider(),

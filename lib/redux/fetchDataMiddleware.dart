@@ -5,6 +5,7 @@ import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
 
 import '../models/appState.dart';
+import '../models/fireNotificationsPersist.dart';
 import '../models/firesApi.dart';
 import '../models/yourLocationPersist.dart';
 import 'actions.dart';
@@ -20,8 +21,7 @@ import 'actions.dart';
 
 FiresApi api = Injector.getInjector().get<FiresApi>();
 
-void fetchYourLocationsMiddleware(
-    Store<AppState> store, action, NextDispatcher next) {
+void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
   // If our Middleware encounters a `FetchYourLocationAction`
 
   if (action is OnUserLangAction) {
@@ -46,11 +46,10 @@ void fetchYourLocationsMiddleware(
 
   if (action is AddYourLocationAction) {
     if (action.loc.subscribed) {
-      subscribeViaApi(store, action.loc,
-          (sub) {
-            store.dispatch(new AddedYourLocationAction(sub));
-            persistYourLocations(store.state.yourLocations);
-          });
+      subscribeViaApi(store, action.loc, (sub) {
+        store.dispatch(new AddedYourLocationAction(sub));
+        persistYourLocations(store.state.yourLocations);
+      });
     } else {
       // No subscribed (only local)
       store.dispatch(new AddedYourLocationAction(action.loc));
@@ -67,6 +66,21 @@ void fetchYourLocationsMiddleware(
     } else {
       persistYourLocations(store.state.yourLocations);
     }
+  }
+
+  if (action is DeleteFireNotificationAction) {
+    store.dispatch(new DeletedFireNotificationAction(action.notif));
+    persistFireNotifications(store.state.fireNotifications);
+  }
+
+  if (action is DeleteAllFireNotificationAction) {
+    store.dispatch(new DeletedAllFireNotificationAction());
+    persistFireNotifications(store.state.fireNotifications);
+  }
+
+  if (action is AddFireNotificationAction) {
+    store.dispatch(new AddedFireNotificationAction(action.notif));
+    persistFireNotifications(store.state.fireNotifications);
   }
 
   if (action is ShowYourLocationMapAction) {
@@ -139,6 +153,15 @@ void fetchYourLocationsMiddleware(
       store.dispatch(new FetchYourLocationsFailedAction(error));
     });
   }
+
+  if (action is FetchFireNotificationsAction) {
+    loadFireNotifications().then((fireNotifications) {
+      store.dispatch(
+          new FetchFireNotificationsSucceededAction(fireNotifications));
+      persistFireNotifications(fireNotifications);
+    });
+  }
+
   // Make sure our actions continue on to the reducer.
   next(action);
 }
@@ -167,5 +190,6 @@ void createUser(store, lang, token) {
   api.createUser(store.state, token, lang).then((userId) {
     store.dispatch(new OnUserCreatedAction(userId));
     store.dispatch(new FetchYourLocationsAction());
+    store.dispatch(new FetchFireNotificationsAction());
   });
 }

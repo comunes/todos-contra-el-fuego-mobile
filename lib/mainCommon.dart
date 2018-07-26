@@ -29,7 +29,7 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
             firesApiKey: secrets['firesApiKey'],
             firesApiUrl: secrets['firesApiUrl'] + "api/v1/"),
         middleware: List.from(otherMiddleware)
-          ..add(fetchYourLocationsMiddleware));
+          ..add(fetchDataMiddleware));
 
     injector.map<String>((i) => store.state.firesApiUrl, key: "firesApiUrl");
     injector.map<String>((i) => store.state.firesApiKey, key: "firesApiKey");
