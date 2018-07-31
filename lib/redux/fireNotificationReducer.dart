@@ -16,7 +16,7 @@ final fireNotificationReducer = combineReducers<List<FireNotification>>([
 
 List<FireNotification> _receivedFireNotification(
     List<FireNotification> notifications, AddedFireNotificationAction action) {
-  return new List.from(notifications)..add(action.notif);
+  return new List.from(notifications)..insert(0, action.notif);
 }
 
 List<FireNotification> _deletedFireNotification(

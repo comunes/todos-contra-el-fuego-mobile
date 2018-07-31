@@ -17,7 +17,7 @@ void main() {
     return ">>>>> ${action.toString().replaceAll('Instance of ', '')}";
   }
 
-  LogLevel logRedux = LogLevel.actions;
+  LogLevel logRedux = LogLevel.full;
 
   List<Middleware> devMiddlewares = logRedux == LogLevel.none
       ? []

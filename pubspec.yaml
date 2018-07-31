@@ -50,6 +50,8 @@ dependencies:
   # https://pub.dartlang.org/packages/padder
   padder: "^1.0.1"
   flutter_fab_dialer: "^0.0.5"
+  badge: "^0.0.2"
+  flutter_spinkit: "^1.0.0"
 
   # firebase
   firebase_messaging: "^1.0.4"

@@ -23,8 +23,10 @@ class S implements WidgetsLocalizations {
 
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   String get CANCEL => "CANCEL";
+  String get CLOSE => "CLOSE";
   String get DELETE => "DELETE";
   String get SAVE => "SAVE";
+  String get SHOW => "SHOW";
   String get UNDO => "UNDO";
   String get aDay => "a day";
   String get aF3wSeconds => "a few seconds";
@@ -111,6 +113,8 @@ class es extends S {
   @override
   String get callEmergencyServicesDescription => "Deberías llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.";
   @override
+  String get CLOSE => "CERRAR";
+  @override
   String get errorFirePlaceDialog => "No hemos podido obtener la ubicación del fuego";
   @override
   String get toDeleteThisPlace => "Desliza horizontalmente para borrar este lugar";
@@ -162,6 +166,8 @@ class es extends S {
   String get aDay => "un día";
   @override
   String get SAVE => "GUARDAR";
+  @override
+  String get SHOW => "MOSTRAR";
   @override
   String get addedThisLocation => "Ya has añadido este lugar antes";
   @override

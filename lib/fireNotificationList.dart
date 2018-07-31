@@ -2,43 +2,49 @@ import 'dart:async';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/src/store.dart';
 
 import 'customMoment.dart';
 import 'generated/i18n.dart';
+import 'genericMap.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'redux/actions.dart';
-import 'genericMap.dart';
 
 @immutable
 class _ViewModel {
   final List<FireNotification> fireNotifications;
+  final int fireNotificationsUnread;
+  final List<YourLocation> yourLocations;
   final TapFireNotificationFunction onTap;
-
-  //final OnReceivedFireNotificationFunction onReceived;
   final DeleteFireNotificationFunction onDelete;
   final DeleteAllFireNotificationFunction onDeleteAll;
 
   _ViewModel(
       {@required this.onTap,
-      //      @required this.onReceived,
       @required this.onDelete,
       @required this.onDeleteAll,
-      @required this.fireNotifications});
+      @required this.fireNotifications,
+      @required this.yourLocations,
+      @required this.fireNotificationsUnread});
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is _ViewModel &&
-            runtimeType == other.runtimeType &&
-            fireNotifications == other.fireNotifications;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ViewModel &&
+          runtimeType == other.runtimeType &&
+          fireNotifications == other.fireNotifications &&
+          fireNotificationsUnread == other.fireNotificationsUnread &&
+          yourLocations == other.yourLocations;
 
   @override
-  int get hashCode => fireNotifications.hashCode;
+  int get hashCode =>
+      fireNotifications.hashCode ^
+      fireNotificationsUnread.hashCode ^
+      yourLocations.hashCode;
 }
 
 class FireNotificationList extends StatefulWidget {
@@ -51,12 +57,13 @@ class FireNotificationList extends StatefulWidget {
 class _FireNotificationListState extends State<FireNotificationList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Widget _buildRow(
-      BuildContext context, FireNotification notif, onDeleted, onTap) {
+  Widget _buildRow(BuildContext context, List<YourLocation> yourLocations,
+      FireNotification notif, onDeleted, onTap) {
+    YourLocation yl = yourLocations.singleWhere((yl) => yl.id == notif.subsId);
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.whatshot),
-        title: new Text(notif.description,
+        title: new Text('${yl.description}. ${notif.description}',
             style: new TextStyle(
                 fontWeight: notif.read ? FontWeight.normal : FontWeight.bold)),
         subtitle: new Text(Moment.now().from(context, notif.when)),
@@ -74,13 +81,17 @@ class _FireNotificationListState extends State<FireNotificationList> {
     ));
   }
 
-  Widget _buildSavedFireNotifications(BuildContext context,
-      List<FireNotification> notifList, onDeleted, onTap) {
+  Widget _buildSavedFireNotifications(
+      BuildContext context,
+      List<YourLocation> yourLocations,
+      List<FireNotification> notifList,
+      onDeleted,
+      onTap) {
     return new RefreshIndicator(
         child: new ListView.builder(
             padding: const EdgeInsets.all(16.0),
-            reverse: true,
-            shrinkWrap: true,
+            // reverse: true,
+            // shrinkWrap: true,
             itemCount: notifList.length,
             itemBuilder: (BuildContext _context, int i) {
               final ThemeData theme = Theme.of(context);
@@ -106,8 +117,8 @@ class _FireNotificationListState extends State<FireNotificationList> {
                           border: new Border(
                               bottom:
                                   new BorderSide(color: theme.dividerColor))),
-                      child: _buildRow(
-                          context, notifList.elementAt(i), onDeleted, onTap)));
+                      child: _buildRow(context, yourLocations,
+                          notifList.elementAt(i), onDeleted, onTap)));
             }),
         onRefresh: _handleRefresh);
   }
@@ -145,11 +156,13 @@ class _FireNotificationListState extends State<FireNotificationList> {
                   store.dispatch(new ReadFireNotificationAction(
                       notif.copyWith(read: true)));
                 }
-                new Timer(new Duration(milliseconds: 1000), () {
+                new Timer(new Duration(milliseconds: 500), () {
                   gotoMap(store, notif, context);
                 });
               },
-              fireNotifications: store.state.fireNotifications);
+              yourLocations: store.state.yourLocations,
+              fireNotifications: store.state.fireNotifications,
+              fireNotificationsUnread: store.state.fireNotificationsUnread);
         },
         builder: (context, view) {
           var hasFireNotifications = view.fireNotifications.length > 0;
@@ -191,16 +204,16 @@ class _FireNotificationListState extends State<FireNotificationList> {
                                     style: new TextStyle(
                                         height: 1.3, color: Colors.black45))
                               ]))))
-                  : _buildSavedFireNotifications(context,
+                  : _buildSavedFireNotifications(context, view.yourLocations,
                       view.fireNotifications, view.onDelete, view.onTap));
         });
   }
 
   void gotoMap(
       Store<AppState> store, FireNotification notif, BuildContext context) {
-        store.dispatch(new ShowFireNotificationMapAction(notif));
-    Navigator.push(context,
-        new MaterialPageRoute(builder: (context) => new genericMap()));
+    store.dispatch(new ShowFireNotificationMapAction(notif));
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => new genericMap()));
   }
 
   _showConfirmDialog(_ViewModel view) {

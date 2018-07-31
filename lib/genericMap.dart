@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fires_flutter/models/basicLocation.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:latlong/latlong.dart';
+import 'package:share/share.dart';
 
 import 'colors.dart';
 import 'dummyMapPlugin.dart';
@@ -25,6 +25,7 @@ import 'zoomMapPlugin.dart';
 
 @immutable
 class _ViewModel {
+  final String serverUrl;
   final FireMapState mapState;
   final OnSubscribeFunction onSubs;
   final OnSubscribeConfirmedFunction onSubsConfirmed;
@@ -37,6 +38,7 @@ class _ViewModel {
 
   _ViewModel(
       {@required this.mapState,
+        @required this.serverUrl,
       @required this.onSubs,
       @required this.onSubsConfirmed,
       @required this.onUnSubs,
@@ -66,7 +68,7 @@ class _genericMapState extends State<genericMap> {
   // This needs to be stateful so when resizes don't get a new globalkey
   // https://github.com/flutter/flutter/issues/1632#issuecomment-180478202
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
   YourLocation _location;
   YourLocation _initialLocation;
 
@@ -105,6 +107,7 @@ class _genericMapState extends State<genericMap> {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
                 store.dispatch(new EditConfirmYourLocationAction(loc));
               },
+            serverUrl: store.state.firesApiUrl,
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
@@ -223,8 +226,6 @@ class _genericMapState extends State<genericMap> {
                             break;
                           case FireMapStatus.subscriptionConfirm:
                             view.onSubsConfirmed(_location);
-                            // IOS specific
-                            _firebaseMessaging.requestNotificationPermissions();
                             break;
                           case FireMapStatus.unsubscribe:
                             view.onUnSubs(_location);
@@ -298,6 +299,14 @@ class _genericMapState extends State<genericMap> {
           new IconButton(
               icon: new Icon(Icons.save),
               onPressed: () => view.onEditConfirm(_location))
+        ];
+      case FireMapStatus.viewFireNotification:
+        return <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.share),
+            onPressed: ()  {
+              Share.share('${view.mapState.fireNotification.description}. ${view.serverUrl}fire/${view.mapState.fireNotification.sealed}');
+            })
         ];
       default:
         return <Widget>[];

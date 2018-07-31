@@ -1,6 +1,6 @@
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -25,11 +25,15 @@ class AppState extends Object with _$AppStateSerializerMixin {
   @JsonKey(ignore: true)
   final String gmapKey;
   @JsonKey(ignore: true)
+  final String serverUrl;
+  @JsonKey(ignore: true)
   final String firesApiKey;
   @JsonKey(ignore: true)
   final String firesApiUrl;
   final List<YourLocation> yourLocations;
   final List<FireNotification> fireNotifications;
+  @JsonKey(ignore: true)
+  final int fireNotificationsUnread;
   @JsonKey(ignore: true)
   final FireMapState fireMapState;
 
@@ -40,13 +44,15 @@ class AppState extends Object with _$AppStateSerializerMixin {
   AppState(
       {this.yourLocations: const <YourLocation>[],
       this.fireNotifications: const <FireNotification>[],
+      this.fireNotificationsUnread: 0,
       this.user: const User.initial(),
       this.isLoading: false,
       this.isLoaded: false,
       this.error: null,
       this.gmapKey,
       this.firesApiKey,
-      this.firesApiUrl,
+        this.firesApiUrl,
+        this.serverUrl,
       this.fireMapState: const FireMapState.initial()});
 
   AppState copyWith(
@@ -55,10 +61,12 @@ class AppState extends Object with _$AppStateSerializerMixin {
       String user,
       String error,
       String gmapKey,
-      String firesApiKey,
+        String firesApiKey,
+        String serverUrl,
       String firesApiUrl,
       List<YourLocation> yourLocations,
-        List<FireNotification> fireNotifications,
+      List<FireNotification> fireNotifications,
+      int fireNotificationsUnread,
       FireMapState fireMapState}) {
     return new AppState(
         isLoading: isLoading ?? this.isLoading,
@@ -67,9 +75,12 @@ class AppState extends Object with _$AppStateSerializerMixin {
         error: error ?? this.error,
         gmapKey: gmapKey ?? this.gmapKey,
         firesApiKey: firesApiKey ?? this.firesApiKey,
-        firesApiUrl: firesApiUrl ?? this.firesApiUrl,
+      firesApiUrl: firesApiUrl ?? this.firesApiUrl,
+      serverUrl: serverUrl ?? this.serverUrl,
         yourLocations: yourLocations ?? this.yourLocations,
         fireNotifications: fireNotifications ?? this.fireNotifications,
+        fireNotificationsUnread:
+            fireNotificationsUnread ?? this.fireNotificationsUnread,
         fireMapState: fireMapState ?? this.fireMapState);
   }
 
@@ -77,8 +88,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
   String toString() {
     return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
       firesApiKey, 8)}\napiUrl: ${ellipse(
-      firesApiUrl, 8)}\nyourLocations count: ${yourLocations
-      .length}\nyourLocations: ${yourLocations}\nfireNotifications: ${fireNotifications}\nfireMapState: $fireMapState}';
+      firesApiUrl, 8)}\nserverUrl: ${serverUrl}\nfireNotifications: ${fireNotifications}\nyourLocations count: ${yourLocations
+      .length}\nunread notif: ${fireNotificationsUnread}\nyourLocations: ${yourLocations}\nfireMapState: $fireMapState}';
   }
 }
 

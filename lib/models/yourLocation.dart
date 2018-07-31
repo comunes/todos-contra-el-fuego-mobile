@@ -1,20 +1,15 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:fires_flutter/objectIdUtils.dart';
 
 part 'yourLocation.g.dart';
 
-_objectIdFromJson(String json) {
-  return new ObjectId.fromHexString(json);
-}
 
-_objectIdToJson(ObjectId o) {
-  return o.toString();
-}
 
 @JsonSerializable(nullable: false)
 class YourLocation extends Object with _$YourLocationSerializerMixin {
-  @JsonKey(toJson: _objectIdToJson, fromJson: _objectIdFromJson)
+  @JsonKey(toJson: objectIdToJson, fromJson: objectIdFromJson)
   ObjectId id;
   final double lat;
   final double lon;

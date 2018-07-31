@@ -59,5 +59,7 @@
   "fireNotificationsDescription": "Aquí recibirás las notificaciones de fuegos en los lugares a los que te subscribas",
   "areYouSureTitle": "¿Seguro?",
   "deleteAllFireNotificationsAlertDescription": "Esto borrará todas las notificaciones de fuegos",
-  "DELETE": "BORRAR"
+  "DELETE": "BORRAR",
+  "SHOW": "MOSTRAR",
+  "CLOSE": "CERRAR"
 }

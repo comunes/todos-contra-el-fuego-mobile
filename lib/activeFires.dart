@@ -5,17 +5,18 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:redux/src/store.dart';
 
 import 'colors.dart';
 import 'generated/i18n.dart';
+import 'genericMap.dart';
 import 'globalFiresBottomStats.dart';
 import 'locationUtils.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
-import 'genericMap.dart';
 
 @immutable
 class _ViewModel {
@@ -24,35 +25,36 @@ class _ViewModel {
   final DeleteYourLocationFunction onDelete;
   final ToggleSubscriptionFunction onToggleSubs;
   final OnLocationTapFunction onTap;
+  final bool isLoading;
 
   _ViewModel(
       {@required this.onAdd,
       @required this.onDelete,
       @required this.onToggleSubs,
       @required this.onTap,
-      @required this.yourLocations});
+      @required this.yourLocations,
+      @required this.isLoading});
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
+  bool operator ==(Object other) =>
+      identical(this, other) ||
       other is _ViewModel &&
-        runtimeType == other.runtimeType &&
-        yourLocations == other.yourLocations;
-  }
+          runtimeType == other.runtimeType &&
+          yourLocations == other.yourLocations &&
+          isLoading == other.isLoading;
 
   @override
-  int get hashCode => yourLocations.hashCode;
+  int get hashCode => yourLocations.hashCode ^ isLoading.hashCode;
 }
 
 class ActiveFiresPage extends StatefulWidget {
-static const String routeName = '/fires';
+  static const String routeName = '/fires';
 
   @override
   _ActiveFiresPageState createState() => _ActiveFiresPageState();
 }
 
 class _ActiveFiresPageState extends State<ActiveFiresPage> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<FabMiniMenuItem> _fabMiniMenuItemList(
@@ -171,7 +173,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               onTap: (loc) {
                 gotoLocationMap(store, loc, context);
               },
-              yourLocations: store.state.yourLocations);
+              yourLocations: store.state.yourLocations,
+              isLoading: !store.state.isLoaded);
         },
         builder: (context, view) {
           var hasLocations = view.yourLocations.length > 0;
@@ -196,27 +199,29 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: new GlobalFiresBottomStats(),
-            body: hasLocations
-                ? new Stack(children: <Widget>[
-                    _buildSavedLocations(context, view.yourLocations,
-                        view.onDelete, view.onToggleSubs, view.onTap),
-                    new FabDialer(_fabMiniMenuItemList(context, view.onAdd),
-                        fires600, new Icon(Icons.add))
-                  ])
-                : new Center(
-                    child: new CenteredColumn(children: <Widget>[
-                    new RoundedBtn(
-                        icon: Icons.location_searching,
-                        text: S.of(context).addYourCurrentPosition,
-                        onPressed: () => onAddYourLocation(view.onAdd),
-                        backColor: fires600),
-                    const SizedBox(height: 26.0),
-                    new RoundedBtn(
-                        icon: Icons.edit_location,
-                        text: S.of(context).addSomePlace,
-                        onPressed: () => onAddOtherLocation(view.onAdd),
-                        backColor: fires600),
-                  ])),
+            body: view.isLoading
+                ? new SpinKitPulse(color: fires600)
+                : hasLocations
+                    ? new Stack(children: <Widget>[
+                        _buildSavedLocations(context, view.yourLocations,
+                            view.onDelete, view.onToggleSubs, view.onTap),
+                        new FabDialer(_fabMiniMenuItemList(context, view.onAdd),
+                            fires600, new Icon(Icons.add))
+                      ])
+                    : new Center(
+                        child: new CenteredColumn(children: <Widget>[
+                        new RoundedBtn(
+                            icon: Icons.location_searching,
+                            text: S.of(context).addYourCurrentPosition,
+                            onPressed: () => onAddYourLocation(view.onAdd),
+                            backColor: fires600),
+                        const SizedBox(height: 26.0),
+                        new RoundedBtn(
+                            icon: Icons.edit_location,
+                            text: S.of(context).addSomePlace,
+                            onPressed: () => onAddOtherLocation(view.onAdd),
+                            backColor: fires600),
+                      ])),
           );
         });
   }
@@ -224,8 +229,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   void gotoLocationMap(
       Store<AppState> store, YourLocation loc, BuildContext context) {
     store.dispatch(new ShowYourLocationMapAction(loc));
-    Navigator.push(context,
-        new MaterialPageRoute(builder: (context) => new genericMap()));
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => new genericMap()));
   }
 
   void onAddYourLocation(AddYourLocationFunction onAdd) {

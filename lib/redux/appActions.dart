@@ -41,6 +41,7 @@ class OnUserLangAction extends AppActions {
 
 class FetchFireNotificationsSucceededAction extends AppActions {
   final List<FireNotification> fetchedFireNotifications;
+  final int unreadCount;
 
-  FetchFireNotificationsSucceededAction(this.fetchedFireNotifications);
+  FetchFireNotificationsSucceededAction(this.fetchedFireNotifications, this.unreadCount);
 }

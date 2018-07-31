@@ -10,7 +10,7 @@ part of 'yourLocation.dart';
 
 YourLocation _$YourLocationFromJson(Map<String, dynamic> json) =>
     new YourLocation(
-        id: _objectIdFromJson(json['id'] as String),
+        id: objectIdFromJson(json['id'] as String),
         lat: (json['lat'] as num).toDouble(),
         lon: (json['lon'] as num).toDouble(),
         description: json['description'] as String,
@@ -40,7 +40,7 @@ class _$YourLocationJsonMapWrapper extends $JsonMapWrapper {
     if (key is String) {
       switch (key) {
         case 'id':
-          return _objectIdToJson(_v.id);
+          return objectIdToJson(_v.id);
         case 'lat':
           return _v.lat;
         case 'lon':

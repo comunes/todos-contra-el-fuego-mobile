@@ -44,7 +44,7 @@ FireMapState _showYourLocationMap(
       status: action.loc.subscribed
           ? FireMapStatus.unsubscribe
           : FireMapStatus.view,
-      yourLocation: action.loc);
+      yourLocation: action.loc, fireNotication: null);
 }
 
 FireMapState _showFireNotificationMap(

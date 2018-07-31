@@ -10,12 +10,14 @@ part of 'fireNotification.dart';
 
 FireNotification _$FireNotificationFromJson(Map<String, dynamic> json) =>
     new FireNotification(
-        id: _objectIdFromJson(json['id'] as String),
+        id: objectIdFromJson(json['id'] as String),
         lat: (json['lat'] as num).toDouble(),
         lon: (json['lon'] as num).toDouble(),
         description: json['description'] as String,
         when: DateTime.parse(json['when'] as String),
-        read: json['read'] as bool);
+        read: json['read'] as bool,
+        sealed: json['sealed'] as String,
+        subsId: objectIdFromJson(json['subsId'] as String));
 
 abstract class _$FireNotificationSerializerMixin {
   ObjectId get id;
@@ -23,6 +25,8 @@ abstract class _$FireNotificationSerializerMixin {
   double get lon;
   String get description;
   DateTime get when;
+  String get sealed;
+  ObjectId get subsId;
   bool get read;
   Map<String, dynamic> toJson() => new _$FireNotificationJsonMapWrapper(this);
 }
@@ -32,15 +36,23 @@ class _$FireNotificationJsonMapWrapper extends $JsonMapWrapper {
   _$FireNotificationJsonMapWrapper(this._v);
 
   @override
-  Iterable<String> get keys =>
-      const ['id', 'lat', 'lon', 'description', 'when', 'read'];
+  Iterable<String> get keys => const [
+        'id',
+        'lat',
+        'lon',
+        'description',
+        'when',
+        'sealed',
+        'subsId',
+        'read'
+      ];
 
   @override
   dynamic operator [](Object key) {
     if (key is String) {
       switch (key) {
         case 'id':
-          return _objectIdToJson(_v.id);
+          return objectIdToJson(_v.id);
         case 'lat':
           return _v.lat;
         case 'lon':
@@ -49,6 +61,10 @@ class _$FireNotificationJsonMapWrapper extends $JsonMapWrapper {
           return _v.description;
         case 'when':
           return _v.when.toIso8601String();
+        case 'sealed':
+          return _v.sealed;
+        case 'subsId':
+          return objectIdToJson(_v.subsId);
         case 'read':
           return _v.read;
       }

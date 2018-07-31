@@ -7,7 +7,6 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:redux/redux.dart';
 import 'package:sentry/sentry.dart';
 
-import 'firebaseMessagingConf.dart';
 import 'firesApp.dart';
 import 'globals.dart' as globals;
 import 'models/appState.dart';
@@ -27,6 +26,7 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
         initialState: new AppState(
             gmapKey: secrets['gmapKey'],
             firesApiKey: secrets['firesApiKey'],
+          serverUrl: secrets['firesApiUrl'],
             firesApiUrl: secrets['firesApiUrl'] + "api/v1/"),
         middleware: List.from(otherMiddleware)
           ..add(fetchDataMiddleware));
@@ -37,8 +37,6 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
 
     VoidCallback mainFn = () {
       loadYourLocations().then((yl) {
-        firebaseConfig(store);
-
         // Run baby run!
         runApp(new FiresApp(store));
       });

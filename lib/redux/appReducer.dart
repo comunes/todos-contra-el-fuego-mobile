@@ -6,7 +6,16 @@ AppState appReducer(AppState state, action) {
     return state.copyWith(yourLocations: action.fetchedYourLocations);
   }
   if (action is FetchFireNotificationsSucceededAction) {
-    return state.copyWith(fireNotifications: action.fetchedFireNotifications);
+    return state.copyWith(fireNotifications: action.fetchedFireNotifications,
+      fireNotificationsUnread: action.unreadCount);
   }
+  if (action is AddedFireNotificationAction)
+    return state.copyWith(
+      fireNotificationsUnread: state.fireNotificationsUnread + 1);
+
+  if (action is ReadedFireNotificationAction)
+    return state.copyWith(
+      fireNotificationsUnread: state.fireNotificationsUnread - 1);
+
   return state;
 }

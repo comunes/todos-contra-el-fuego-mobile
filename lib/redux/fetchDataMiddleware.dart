@@ -1,5 +1,6 @@
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
@@ -161,8 +162,12 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
 
   if (action is FetchFireNotificationsAction) {
     loadFireNotifications().then((fireNotifications) {
+      int unread = 0;
+      for (FireNotification notif in fireNotifications) {
+        if (!notif.read) { unread++; }
+      }
       store.dispatch(
-          new FetchFireNotificationsSucceededAction(fireNotifications));
+          new FetchFireNotificationsSucceededAction(fireNotifications, unread));
       persistFireNotifications(fireNotifications);
     });
   }

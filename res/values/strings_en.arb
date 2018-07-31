@@ -59,5 +59,7 @@
   "fireNotificationsDescription": "Here you will receive fire notifications in locations you are subscribed to",
   "areYouSureTitle": "Are you sure?",
   "deleteAllFireNotificationsAlertDescription": "This will remove all your fire notifications",
-  "DELETE": "DELETE"
+  "DELETE": "DELETE",
+  "SHOW": "SHOW",
+  "CLOSE": "CLOSE"
 }
