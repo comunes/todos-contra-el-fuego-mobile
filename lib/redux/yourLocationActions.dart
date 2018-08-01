@@ -51,9 +51,7 @@ class ToggledSubscriptionAction extends YourLocationActions {
   ToggledSubscriptionAction(this.loc);
 }
 
-class SubscribeAction extends YourLocationActions {
-  SubscribeAction();
-}
+class SubscribeAction extends YourLocationActions {}
 
 class SubscribeConfirmAction extends YourLocationActions {
   YourLocation loc;

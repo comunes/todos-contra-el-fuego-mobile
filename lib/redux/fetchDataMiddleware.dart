@@ -4,6 +4,7 @@ import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
+import 'dart:async';
 
 import '../models/appState.dart';
 import '../models/fireNotificationsPersist.dart';
@@ -150,8 +151,20 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
             localLocations.add(subsLoc);
           }).subscribed = true;
         });
+
+        localLocations.forEach((yl)  {
+          api.getYourLocationFireStats(store.state, yl).then((value) {
+            yl.currentNumFires = value.numFires;
+          store.dispatch(new UpdateYourLocationAction(yl));
+          });
+        });
+
         store.dispatch(new FetchYourLocationsSucceededAction(localLocations));
         persistYourLocations(localLocations);
+        Completer<Null> completer = action.refreshCallback;
+        if (completer != null) {
+          completer.complete(null);
+        }
       });
     }).catchError((Exception error) {
       // If it fails, dispatch a failure action. The reducer will

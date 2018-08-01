@@ -25,6 +25,7 @@ class _ViewModel {
   final DeleteYourLocationFunction onDelete;
   final ToggleSubscriptionFunction onToggleSubs;
   final OnLocationTapFunction onTap;
+  final OnRefreshYourLocationsFunction onRefresh;
   final bool isLoading;
 
   _ViewModel(
@@ -32,6 +33,7 @@ class _ViewModel {
       @required this.onDelete,
       @required this.onToggleSubs,
       @required this.onTap,
+      @required this.onRefresh,
       @required this.yourLocations,
       @required this.isLoading});
 
@@ -91,7 +93,12 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
             }),
-        title: new Text(loc.description),
+        title:
+            new Text(loc.description)
+            ,
+        subtitle: loc.currentNumFires == YourLocation.withoutStats ||
+          loc.currentNumFires == 0 ? null:  new Text(S.of(context).firesAroundThisArea(
+          loc.currentNumFires.toString(), loc.distance.toString())),
         onLongPress: () {
           showSnackMsg(S.of(context).toDeleteThisPlace);
         },
@@ -173,6 +180,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               onTap: (loc) {
                 gotoLocationMap(store, loc, context);
               },
+              onRefresh: (refreshCallback) =>
+                  store.dispatch(new FetchYourLocationsAction(refreshCallback)),
               yourLocations: store.state.yourLocations,
               isLoading: !store.state.isLoaded);
         },
@@ -203,8 +212,19 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                 ? new SpinKitPulse(color: fires600)
                 : hasLocations
                     ? new Stack(children: <Widget>[
-                        _buildSavedLocations(context, view.yourLocations,
-                            view.onDelete, view.onToggleSubs, view.onTap),
+                        new RefreshIndicator(
+                            child: _buildSavedLocations(
+                                context,
+                                view.yourLocations,
+                                view.onDelete,
+                                view.onToggleSubs,
+                                view.onTap),
+                            onRefresh: () async {
+                              final Completer<Null> completer =
+                                  new Completer<Null>();
+                              view.onRefresh(completer);
+                              return completer.future;
+                            }),
                         new FabDialer(_fabMiniMenuItemList(context, view.onAdd),
                             fires600, new Icon(Icons.add))
                       ])

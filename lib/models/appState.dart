@@ -3,6 +3,8 @@ import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'fireMapState.dart';
 import 'user.dart';
@@ -95,6 +97,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
 
 typedef void AddYourLocationFunction(YourLocation loc);
 typedef void DeleteYourLocationFunction(YourLocation loc);
+typedef void OnRefreshYourLocationsFunction(Completer<Null> callback);
 typedef void ToggleSubscriptionFunction(YourLocation loc);
 typedef void OnLocationTapFunction(YourLocation loc);
 typedef void OnSubscribeFunction(YourLocation loc);

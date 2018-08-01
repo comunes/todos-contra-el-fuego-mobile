@@ -1,9 +1,14 @@
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
+import 'dart:async';
 
 abstract class AppActions {}
 
-class FetchYourLocationsAction extends AppActions {}
+class FetchYourLocationsAction extends AppActions {
+  Completer<Null> refreshCallback;
+
+  FetchYourLocationsAction([this.refreshCallback]);
+}
 
 class PersistAppStateAction extends AppActions {}
 
