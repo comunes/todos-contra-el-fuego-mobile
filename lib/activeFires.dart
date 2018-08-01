@@ -82,9 +82,11 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
   }
 
   Widget _buildRow(BuildContext context, YourLocation loc, onToggle, onTap) {
+    final fireStatsStyle = new TextStyle(color: fires600);
     return new ListTile(
         dense: true,
-        leading: const Icon(Icons.location_on),
+        isThreeLine: false,
+        // leading: const Icon(Icons.location_on),
         trailing: new IconButton(
             icon: new Icon(loc.subscribed
                 ? Icons.notifications_active
@@ -93,12 +95,18 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
             }),
-        title:
-            new Text(loc.description)
-            ,
-        subtitle: loc.currentNumFires == YourLocation.withoutStats ||
-          loc.currentNumFires == 0 ? null:  new Text(S.of(context).firesAroundThisArea(
-          loc.currentNumFires.toString(), loc.distance.toString())),
+        title: new Text(loc.description),
+        subtitle: loc.currentNumFires == YourLocation.withoutStats
+            ? null
+            : loc.currentNumFires == 0
+                ? new Text(S.of(context).noFiresAround)
+                : loc.currentNumFires == 1
+                    ? new Text(S
+                        .of(context)
+                        .fireAroundThisArea(loc.distance.toString()), style: fireStatsStyle)
+                    : new Text(S.of(context).firesAroundThisArea(
+                        loc.currentNumFires.toString(),
+                        loc.distance.toString()), style: fireStatsStyle),
         onLongPress: () {
           showSnackMsg(S.of(context).toDeleteThisPlace);
         },

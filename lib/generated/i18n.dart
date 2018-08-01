@@ -57,6 +57,7 @@ class S implements WidgetsLocalizations {
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
+  String get noFiresAround => "There is no fires";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
   String get privacyPolicy => "Privacy Policy";
@@ -73,6 +74,7 @@ class S implements WidgetsLocalizations {
   String get youDeletedThisPlace => "You deleted this place";
   String activeFiresWorldWide(String activeFires) => "$activeFires active fires worldwide";
   String appLicense(String thisYear) => "(c) 2017-$thisYear Comunes Association under the GNU Affero GPL v3";
+  String fireAroundThisArea(String kmAround) => "A fire at $kmAround км around this area";
   String firesAroundThisArea(String numFires, String kmAround) => "$numFires fires at $kmAround км around this area";
   String inDays(String value) => "$value days";
   String inHours(String value) => "$value hours";
@@ -138,6 +140,8 @@ class es extends S {
   String get youDeletedThisPlace => "Has borrado este lugar";
   @override
   String get callEmergencyServicesTitle => "Llama al 112";
+  @override
+  String get noFiresAround => "Sin fuegos";
   @override
   String get chooseAPlace => "Elige un lugar";
   @override
@@ -218,6 +222,8 @@ class es extends S {
   String inDays(String value) => "$value días";
   @override
   String activeFiresWorldWide(String activeFires) => "$activeFires fuegos activos en el mundo";
+  @override
+  String fireAroundThisArea(String kmAround) => "Un fuego a $kmAround км a la redonda";
   @override
   String inSomething(String something) => "en $something";
   @override

@@ -38,7 +38,7 @@ class _ViewModel {
 
   _ViewModel(
       {@required this.mapState,
-        @required this.serverUrl,
+      @required this.serverUrl,
       @required this.onSubs,
       @required this.onSubsConfirmed,
       @required this.onUnSubs,
@@ -107,7 +107,7 @@ class _genericMapState extends State<genericMap> {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
                 store.dispatch(new EditConfirmYourLocationAction(loc));
               },
-            serverUrl: store.state.firesApiUrl,
+              serverUrl: store.state.firesApiUrl,
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
@@ -205,9 +205,15 @@ class _genericMapState extends State<genericMap> {
                             new TextEditingValue(
                                 text: _location.description,
                                 selection: new TextSelection.collapsed(
-                                    offset: _location.description.length - 1))),
+                                    offset: _location.description.length ))),
                         onChanged: (newDesc) {
+                          debugPrint("OnChanged");
                           _location = _location.copyWith(description: newDesc);
+                        },
+                        onSubmitted: (newDesc) {
+                          debugPrint("OnSubmitted");
+                          _location = _location.copyWith(description: newDesc);
+                          view.onEditConfirm(_location);
                         },
                       )
                     : status == FireMapStatus.viewFireNotification
@@ -255,7 +261,8 @@ class _genericMapState extends State<genericMap> {
                       Stack(fit: StackFit.expand, children: <Widget>[
                         // Material(color: Colors.yellowAccent),
                         new Opacity(
-                            opacity: status == FireMapStatus.subscriptionConfirm
+                            opacity: status == FireMapStatus.subscriptionConfirm ||
+                          status == FireMapStatus.edit
                                 ? 0.5
                                 : 1.0,
                             child: map),
@@ -303,10 +310,12 @@ class _genericMapState extends State<genericMap> {
       case FireMapStatus.viewFireNotification:
         return <Widget>[
           new IconButton(
-            icon: new Icon(Icons.share),
-            onPressed: ()  {
-              Share.share('${view.mapState.fireNotification.description}. ${view.serverUrl}fire/${view.mapState.fireNotification.sealed}');
-            })
+              icon: new Icon(Icons.share),
+              onPressed: () {
+                Share.share(
+                    '${view.mapState.fireNotification.description}. ${view
+                .serverUrl}fire/${view.mapState.fireNotification.sealed}');
+              })
         ];
       default:
         return <Widget>[];

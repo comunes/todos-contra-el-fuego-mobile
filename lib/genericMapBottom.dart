@@ -72,8 +72,10 @@ class GenericMapBottom extends StatelessWidget {
       case FireMapStatus.view:
         if (state.numFires != null) {
           actionList.add(new Text(state.numFires > 0
-              ? S.of(context).firesAroundThisArea(
-                  state.numFires.toString(), kmAround.toString())
+              ? loc.currentNumFires == 1
+                  ? S.of(context).fireAroundThisArea(loc.distance.toString())
+                  : S.of(context).firesAroundThisArea(
+                      state.numFires.toString(), kmAround.toString())
               : S.of(context).noFiresAroundThisArea(kmAround.toString())));
           // SizedBox(width: 10.0)
         }

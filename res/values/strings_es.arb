@@ -15,6 +15,8 @@
   "confirm": "Confirmar",
   "unsubscribe": "Desuscríbete",
   "firesAroundThisArea": "$numFires fuegos a $kmAround км a la redonda",
+  "fireAroundThisArea": "Un fuego a $kmAround км a la redonda",
+  "noFiresAround": "Sin fuegos",
   "noFiresAroundThisArea": "No hay fuegos a $kmAround км a la redonda",
   "activeFiresWorldWide": "$activeFires fuegos activos en el mundo",
   "updatedLastCheck": "Actualizado $lastCheck",
