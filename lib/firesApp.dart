@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -49,9 +53,36 @@ class _FiresAppState extends State<FiresApp> {
   };
 
   final Store<AppState> store;
+  String _connectionStatus = 'Unknown';
+  final Connectivity _connectivity = new Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   // globals.getIt.registerSingleton
   _FiresAppState(this.store);
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<Null> initConnectivity() async {
+    String connectionStatus;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      connectionStatus = (await _connectivity.checkConnectivity()).toString();
+    } on PlatformException catch (e) {
+      print(e.toString());
+      connectionStatus = 'Failed to get connectivity.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      // store.dispatch(action);
+      _connectionStatus = connectionStatus;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +117,13 @@ class _FiresAppState extends State<FiresApp> {
   void initState() {
     super.initState();
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      print("onMessage in fireApp: $message");
+      debugPrint("onMessage in fireApp: $message");
       _showItemDialog(message, store);
     }, onLaunch: (Map<String, dynamic> message) {
-      print("onLaunch: $message");
+      debugPrint("onLaunch: $message");
       _navigateToItemDetail(message, store);
     }, onResume: (Map<String, dynamic> message) {
-      print("onResume: $message");
+      debugPrint("onResume: $message");
       _navigateToItemDetail(message, store);
     });
     _firebaseMessaging.requestNotificationPermissions(
@@ -105,6 +136,11 @@ class _FiresAppState extends State<FiresApp> {
       assert(token != null);
       store.dispatch(new OnUserTokenAction(token));
       setState(() {});
+    });
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() => _connectionStatus = result.toString());
     });
   }
 
@@ -155,23 +191,23 @@ class _FiresAppState extends State<FiresApp> {
 
   FireNotification _notifForMessage(Map<String, dynamic> message) {
     FireNotification notif;
-    print('start parse notif');
+    // print('start parse notif');
     try {
       notif = new FireNotification(
           id: new ObjectId.fromHexString(message['id']),
+          subsId: new ObjectId.fromHexString(message['subsId']),
           lat: double.parse(message['lat']),
           lon: double.parse(message['lon']),
           description: message['description'],
           read: false,
           when: DateTime.parse(message['when']),
-          sealed: message['sealed'],
-          subsId: new ObjectId.fromHexString(message['subsId']));
-      print('end parse notif');
+          sealed: message['sealed']);
+      // print('end parse notif');
       debugPrint(notif.toString());
     } catch (e) {
       debugPrint(e.toString());
     }
-    store.dispatch(new AddFireNotificationAction(notif));
+    if (notif != null) store.dispatch(new AddFireNotificationAction(notif));
     return notif;
   }
 }

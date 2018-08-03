@@ -50,3 +50,5 @@ class FetchFireNotificationsSucceededAction extends AppActions {
 
   FetchFireNotificationsSucceededAction(this.fetchedFireNotifications, this.unreadCount);
 }
+
+// OnConnect
