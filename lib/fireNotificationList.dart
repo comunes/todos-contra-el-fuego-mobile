@@ -59,11 +59,18 @@ class _FireNotificationListState extends State<FireNotificationList> {
 
   Widget _buildRow(BuildContext context, List<YourLocation> yourLocations,
       FireNotification notif, onDeleted, onTap) {
-    YourLocation yl = yourLocations.singleWhere((yl) => yl.id == notif.subsId);
+    String prefix = "";
+
+    if (notif.subsId != null) {
+      YourLocation yl =
+          yourLocations.singleWhere((yl) => yl.id == notif.subsId);
+      prefix = '${yl.description}. ';
+    }
+
     return new ListTile(
         dense: true,
         leading: const Icon(Icons.whatshot),
-        title: new Text('${yl.description}. ${notif.description}',
+        title: new Text('${prefix}${notif.description}',
             style: new TextStyle(
                 fontWeight: notif.read ? FontWeight.normal : FontWeight.bold)),
         subtitle: new Text(Moment.now().from(context, notif.when)),
