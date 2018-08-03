@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
 
 import 'fireMapState.dart';
 import 'user.dart';
@@ -53,8 +54,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
       this.error: null,
       this.gmapKey,
       this.firesApiKey,
-        this.firesApiUrl,
-        this.serverUrl,
+      this.firesApiUrl,
+      this.serverUrl,
       this.fireMapState: const FireMapState.initial()});
 
   AppState copyWith(
@@ -63,8 +64,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
       String user,
       String error,
       String gmapKey,
-        String firesApiKey,
-        String serverUrl,
+      String firesApiKey,
+      String serverUrl,
       String firesApiUrl,
       List<YourLocation> yourLocations,
       List<FireNotification> fireNotifications,
@@ -77,8 +78,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
         error: error ?? this.error,
         gmapKey: gmapKey ?? this.gmapKey,
         firesApiKey: firesApiKey ?? this.firesApiKey,
-      firesApiUrl: firesApiUrl ?? this.firesApiUrl,
-      serverUrl: serverUrl ?? this.serverUrl,
+        firesApiUrl: firesApiUrl ?? this.firesApiUrl,
+        serverUrl: serverUrl ?? this.serverUrl,
         yourLocations: yourLocations ?? this.yourLocations,
         fireNotifications: fireNotifications ?? this.fireNotifications,
         fireNotificationsUnread:
@@ -89,9 +90,9 @@ class AppState extends Object with _$AppStateSerializerMixin {
   @override
   String toString() {
     return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
-      firesApiKey, 8)}\napiUrl: ${ellipse(
-      firesApiUrl, 8)}\nserverUrl: ${serverUrl}\nfireNotifications: ${fireNotifications}\nyourLocations count: ${yourLocations
-      .length}\nunread notif: ${fireNotificationsUnread}\nyourLocations: ${yourLocations}\nfireMapState: $fireMapState}';
+      firesApiKey,
+      8)}\napiUrl: ${firesApiUrl}\nserverUrl: ${serverUrl}\nfireMapState: $fireMapState\nyourLocations count: ${yourLocations
+      .length}\nunread notif: ${fireNotificationsUnread}\nfireNotifications: ${fireNotifications}\nyourLocations: ${yourLocations}}';
   }
 }
 
