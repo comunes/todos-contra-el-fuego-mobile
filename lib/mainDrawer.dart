@@ -59,6 +59,7 @@ Widget mainDrawer(BuildContext context) {
         return new _ViewModel(unreadCount: store.state.fireNotificationsUnread);
       },
       builder: (context, view) {
+        final bottomTextStyle = new TextStyle(fontSize: 12.0, color: Colors.grey);
         return new ListView(
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
@@ -155,13 +156,14 @@ Widget mainDrawer(BuildContext context) {
                   applicationName: S.of(context).appName,
                   applicationVersion: globals.appVersion,
                   applicationIcon: globals.appMediumIcon,
-                  applicationLegalese:
-                      S.of(context).appLicense(DateTime.now().year.toString()),
+                  applicationLegalese: S.of(context).appLicense(DateTime.now().year.toString()),
                   aboutBoxChildren: <Widget>[
-                    // new Text('What?')
-                  ]
-                  // FIXME
-                  )
+                    new SizedBox(height: 10.0),
+                    new Text(S.of(context).appMoto), // , style: new TextStyle(fontStyle: FontStyle.italic)),
+                    new SizedBox(height: 10.0),
+                    new Text(S.of(context).NASAAck, style: bottomTextStyle),
+                    // More ?
+                  ])
             ]));
       });
 }

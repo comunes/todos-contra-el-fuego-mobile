@@ -64,5 +64,7 @@
   "DELETE": "BORRAR",
   "SHOW": "MOSTRAR",
   "CLOSE": "CERRAR",
-  "noConnectivity": "Esta aplicación necesita conexión a Internet"
+  "noConnectivity": "Esta aplicación necesita conexión a Internet",
+  "NASAAck": "Reconocemos el uso de datos e imágenes de LANCE FIRMS operadas por NASA/GSFC/Earth Science Data and Information System (ESDIS) con fondos proporcionados por NASA/HQ.",
+  "appMoto": "Fortaleciendo vecindarios contra incendios forestales"
 }

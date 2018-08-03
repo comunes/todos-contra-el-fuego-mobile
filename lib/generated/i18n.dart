@@ -25,6 +25,7 @@ class S implements WidgetsLocalizations {
   String get CANCEL => "CANCEL";
   String get CLOSE => "CLOSE";
   String get DELETE => "DELETE";
+  String get NASAAck => "We acknowledge the use of data and imagery from LANCE FIRMS operated by the NASA/GSFC/Earth Science Data and Information System (ESDIS) with funding provided by NASA/HQ.";
   String get SAVE => "SAVE";
   String get SHOW => "SHOW";
   String get UNDO => "UNDO";
@@ -39,6 +40,7 @@ class S implements WidgetsLocalizations {
   String get addedThisLocation => "You have already added this location";
   String get alertWhenThereIsAFire => "Alert when there is a fire";
   String get anHour => "an hour";
+  String get appMoto => "Strengthening neighborhoods against wildfires";
   String get appName => "All Against The Fire!";
   String get areYouSureTitle => "Are you sure?";
   String get callEmergencyServicesDescription => "You should call 112 if you have not already done so to notify the emergency services.";
@@ -164,6 +166,8 @@ class es extends S {
   @override
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override
+  String get NASAAck => "Reconocemos el uso de datos e imágenes de LANCE FIRMS operadas por NASA/GSFC/Earth Science Data and Information System (ESDIS) con fondos proporcionados por NASA/HQ.";
+  @override
   String get isYourUbicationEnabled => "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?";
   @override
   String get fireNotificationsTitleShort => "Notificaciones";
@@ -199,6 +203,8 @@ class es extends S {
   String get getAlertsOfFiresinThatArea => "Recibe alertas de fuegos en esa zona";
   @override
   String get warningThisIsAVeryLargeArea => "Cuidado: esta zona es muy grande";
+  @override
+  String get appMoto => "Fortaleciendo vecindarios contra incendios forestales";
   @override
   String get chooseAWatchRadio => "Elige un radio de vigilancia";
   @override
