@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        drawer: new MainDrawer(context),
+        drawer: MainDrawer.getDrawer(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton:
             Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[

@@ -203,7 +203,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
           return Scaffold(
             key: _scaffoldKey,
             // FIXME new?
-            drawer: new MainDrawer(context),
+            drawer: MainDrawer.getDrawer(context),
             appBar: new AppBar(
               title: Text(title),
               leading: IconButton(

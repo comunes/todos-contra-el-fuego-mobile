@@ -2,6 +2,7 @@ import 'package:badge/badge.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 import 'activeFires.dart';
 import 'colors.dart';
@@ -37,6 +38,18 @@ class _ViewModel {
 class MainDrawer extends Drawer {
   MainDrawer(BuildContext context, {key})
       : super(key: key, child: mainDrawer(context));
+
+  static getDrawer(BuildContext context) {
+    Injector inj = Injector.getInjector();
+    MainDrawer d;
+    try {
+      d = inj.get<MainDrawer>();
+    } catch (e) {
+      inj.map<MainDrawer>((i) => new MainDrawer(context), isSingleton: true);
+      d = inj.get<MainDrawer>();
+    }
+    return d;
+  }
 }
 
 Widget mainDrawer(BuildContext context) {
@@ -97,7 +110,7 @@ Widget mainDrawer(BuildContext context) {
                 leading: const Icon(Icons.notifications),
                 title: view.unreadCount > 0
                     ? Badge.after(
-                  spacing: 5.0,
+                        spacing: 5.0,
                         borderColor: Colors.red,
                         child: Text(S.of(context).fireNotificationsTitleShort),
                         value: ' ${view.unreadCount.toString()} ')
