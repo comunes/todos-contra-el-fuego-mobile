@@ -5,7 +5,7 @@ import 'package:fires_flutter/models/fireNotification.dart';
 
 final fireNotificationReducer = combineReducers<List<FireNotification>>([
   new TypedReducer<List<FireNotification>, AddedFireNotificationAction>(
-      _receivedFireNotification),
+      _addedFireNotification),
   new TypedReducer<List<FireNotification>, DeletedFireNotificationAction>(
     _deletedFireNotification),
   new TypedReducer<List<FireNotification>, DeletedAllFireNotificationAction>(
@@ -14,7 +14,7 @@ final fireNotificationReducer = combineReducers<List<FireNotification>>([
     _readedFireNotification)
 ]);
 
-List<FireNotification> _receivedFireNotification(
+List<FireNotification> _addedFireNotification(
     List<FireNotification> notifications, AddedFireNotificationAction action) {
   return new List.from(notifications)..insert(0, action.notif);
 }
