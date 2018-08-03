@@ -17,5 +17,9 @@ AppState appReducer(AppState state, action) {
     return state.copyWith(
       fireNotificationsUnread: state.fireNotificationsUnread - 1);
 
+  if (action is DeleteAllFireNotificationAction)
+    return state.copyWith(
+      fireNotificationsUnread: 0);
+
   return state;
 }
