@@ -33,6 +33,7 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
 
     injector.map<String>((i) => store.state.firesApiUrl, key: "firesApiUrl");
     injector.map<String>((i) => store.state.firesApiKey, key: "firesApiKey");
+    injector.map<String>((i) => store.state.serverUrl, key: "serverUrl");
     injector.map<String>((i) => store.state.gmapKey, key: "gmapKey");
 
     VoidCallback mainFn = () {
