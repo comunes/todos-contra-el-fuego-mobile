@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_logging/redux_logging.dart';
 
@@ -5,6 +7,26 @@ import 'globals.dart' as globals;
 import 'mainCommon.dart';
 
 enum LogLevel { none, actions, full }
+
+LoggingMiddleware customLogPrinter<State>({
+  Logger logger,
+  Level level = Level.INFO,
+  MessageFormatter<State> formatter = LoggingMiddleware.singleLineFormatter,
+}) {
+  final middleware = new LoggingMiddleware<State>(
+    logger: logger,
+    level: level,
+    formatter: formatter,
+  );
+
+  middleware.logger.onRecord
+      .where((record) => record.loggerName == middleware.logger.name)
+      .listen((Object object) {
+    debugPrint("$object");
+  });
+
+  return middleware;
+}
 
 void main() {
   globals.isDevelopment = true;
@@ -21,10 +43,12 @@ void main() {
 
   List<Middleware> devMiddlewares = logRedux == LogLevel.none
       ? []
-      : [LoggingMiddleware.printer(
-          formatter: logRedux == LogLevel.full
-              ? LoggingMiddleware.multiLineFormatter
-              : onlyLogActionFormatter)];
+      : [
+          customLogPrinter(
+              formatter: logRedux == LogLevel.full
+                  ? LoggingMiddleware.multiLineFormatter
+                  : onlyLogActionFormatter)
+        ];
 
   mainCommon(devMiddlewares);
 }
