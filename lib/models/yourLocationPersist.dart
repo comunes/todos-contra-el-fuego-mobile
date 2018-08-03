@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:fires_flutter/models/yourLocation.dart';
-
+import 'package:comunes_flutter/comunes_flutter.dart';
 import '../globals.dart' as globals;
 
 final String locationKey = 'yourlocations';
@@ -16,10 +16,12 @@ Future<List<YourLocation>> loadYourLocations() async {
       // first run, init with empty list
       persistYourLocations(persistedList);
     }
-    yourLocations.forEach((locationString) {
-      Map locationMap = json.decode(locationString);
-      persistedList.add(YourLocation.fromJson(locationMap));
-    });
+    if (yourLocations is List) {
+      yourLocations.forEach((locationString) {
+        Map locationMap = json.decode(locationString);
+        persistedList.add(YourLocation.fromJson(locationMap));
+      });
+    }
     return persistedList;
   });
 }
@@ -28,7 +30,7 @@ persistYourLocations(List<YourLocation> yl) {
   print('Persisting $yl');
   globals.prefs.then((prefs) {
     List<String> ylAsString = [];
-    yl.forEach((location) {
+    yl.where(notNull).toList().forEach((location) {
       ylAsString.add(json.encode(location.toJson()));
     });
     prefs.setStringList(locationKey, ylAsString);

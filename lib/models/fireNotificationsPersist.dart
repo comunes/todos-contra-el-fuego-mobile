@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:fires_flutter/models/fireNotification.dart';
-
+import 'package:comunes_flutter/comunes_flutter.dart';
 import '../globals.dart' as globals;
 
 final String fireNotificationKey = 'fireNotifications';
@@ -16,10 +16,12 @@ Future<List<FireNotification>> loadFireNotifications() async {
       // first run, init with empty list
       persistFireNotifications(persistedList);
     }
-    FireNotifications.forEach((notificationString) {
-      Map notificationMap = json.decode(notificationString);
-      persistedList.add(FireNotification.fromJson(notificationMap));
-    });
+    if (FireNotifications is List) {
+      FireNotifications.forEach((notificationString) {
+        Map notificationMap = json.decode(notificationString);
+        persistedList.add(FireNotification.fromJson(notificationMap));
+      });
+    }
     return persistedList;
   });
 }
@@ -28,7 +30,7 @@ persistFireNotifications(List<FireNotification> notif) {
   print('Persisting $notif');
   globals.prefs.then((prefs) {
     List<String> notifAsString = [];
-    notif.forEach((notification) {
+    notif.where(notNull).toList().forEach((notification) {
       notifAsString.add(json.encode(notification.toJson()));
     });
     prefs.setStringList(fireNotificationKey, notifAsString);
