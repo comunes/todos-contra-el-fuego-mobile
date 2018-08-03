@@ -27,7 +27,7 @@ Future<List<FireNotification>> loadFireNotifications() async {
 }
 
 persistFireNotifications(List<FireNotification> notif) {
-  print('Persisting $notif');
+  // print('Persisting $notif');
   globals.prefs.then((prefs) {
     List<String> notifAsString = [];
     notif.where(notNull).toList().forEach((notification) {
