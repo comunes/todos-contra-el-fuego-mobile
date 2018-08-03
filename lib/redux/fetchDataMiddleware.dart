@@ -142,16 +142,19 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
       // Our reducer will then update the State using these YourLocations.
       // print('Subscribed to: ${subscribedLocations.length}');
       loadYourLocations().then((localLocations) {
-        // unsubscribe all locally to sync the subs state
-        localLocations.forEach((location) => location.subscribed = false);
-        // print('Local persisted: ${localLocations.length}');
-        subscribedLocations.forEach((subsLoc) {
-          localLocations.firstWhere(
-              (localLocation) => localLocation.id == subsLoc.id, orElse: () {
-            localLocations.add(subsLoc);
-          }).subscribed = true;
-        });
-
+        if (subscribedLocations is List) {
+          // unsubscribe all locally to sync the subs state
+          localLocations.forEach((location) => location.subscribed = false);
+          // print('Local persisted: ${localLocations.length}');
+          subscribedLocations.forEach((subsLoc) {
+            localLocations
+              .firstWhere(
+                (localLocation) => localLocation.id == subsLoc.id, orElse: () {
+              localLocations.add(subsLoc);
+            })
+              .subscribed = true;
+          });
+        }
         localLocations.forEach((yl)  {
           api.getYourLocationFireStats(store.state, yl).then((value) {
             yl.currentNumFires = value.numFires;
