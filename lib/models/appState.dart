@@ -6,7 +6,7 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
+import 'package:connectivity/connectivity.dart';
 import 'fireMapState.dart';
 import 'user.dart';
 
@@ -39,6 +39,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
   final int fireNotificationsUnread;
   @JsonKey(ignore: true)
   final FireMapState fireMapState;
+  @JsonKey(ignore: true)
+  final ConnectivityResult connectivity;
 
   @JsonKey(ignore: true)
   factory AppState.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +58,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
       this.firesApiKey,
       this.firesApiUrl,
       this.serverUrl,
+        this.connectivity,
       this.fireMapState: const FireMapState.initial()});
 
   AppState copyWith(
@@ -70,7 +73,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
       List<YourLocation> yourLocations,
       List<FireNotification> fireNotifications,
       int fireNotificationsUnread,
-      FireMapState fireMapState}) {
+      FireMapState fireMapState,
+      ConnectivityResult connectivity}) {
     return new AppState(
         isLoading: isLoading ?? this.isLoading,
         isLoaded: isLoaded ?? this.isLoaded,
@@ -84,12 +88,13 @@ class AppState extends Object with _$AppStateSerializerMixin {
         fireNotifications: fireNotifications ?? this.fireNotifications,
         fireNotificationsUnread:
             fireNotificationsUnread ?? this.fireNotificationsUnread,
-        fireMapState: fireMapState ?? this.fireMapState);
+        fireMapState: fireMapState ?? this.fireMapState,
+    connectivity: connectivity ?? this.connectivity);
   }
 
   @override
   String toString() {
-    return 'AppState{\nuser: ${user}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
+    return 'AppState{\nuser: ${user}\nconnectivity: ${connectivity.toString()}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
       firesApiKey,
       8)}\napiUrl: ${firesApiUrl}\nserverUrl: ${serverUrl}\nfireMapState: $fireMapState\nyourLocations count: ${yourLocations
       .length}\nunread notif: ${fireNotificationsUnread}\nfireNotifications: ${fireNotifications}\nyourLocations: ${yourLocations}}';

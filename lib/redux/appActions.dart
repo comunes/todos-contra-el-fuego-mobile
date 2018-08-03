@@ -1,7 +1,7 @@
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
 import 'dart:async';
-
+import 'package:connectivity/connectivity.dart';
 abstract class AppActions {}
 
 class FetchYourLocationsAction extends AppActions {
@@ -51,4 +51,8 @@ class FetchFireNotificationsSucceededAction extends AppActions {
   FetchFireNotificationsSucceededAction(this.fetchedFireNotifications, this.unreadCount);
 }
 
-// OnConnect
+class OnConnectivityChanged extends AppActions {
+  final ConnectivityResult connectivityResult;
+
+  OnConnectivityChanged(this.connectivityResult);
+}
