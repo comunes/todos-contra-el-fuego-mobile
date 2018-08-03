@@ -95,7 +95,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
             }),
-        title: new Text(loc.description),
+        title: new Text(loc.description, style: new TextStyle(fontSize: 16.0)),
         subtitle: loc.currentNumFires == YourLocation.withoutStats
             ? null
             : loc.currentNumFires == 0
