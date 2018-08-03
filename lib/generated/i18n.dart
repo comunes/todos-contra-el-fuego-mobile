@@ -59,7 +59,7 @@ class S implements WidgetsLocalizations {
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
-  String get noConnectivity => "This app require an Internet connection";
+  String get noConnectivity => "This application needs an Internet connection to work";
   String get noFiresAround => "There is no fires";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
@@ -128,7 +128,7 @@ class es extends S {
   @override
   String get tweetAboutAFireDescription => "Adicionalmente si usas twitter puedes compartir información adicional con los servicios de emergencia, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).";
   @override
-  String get noConnectivity => "Esta aplicación necesita conexión a Internet";
+  String get noConnectivity => "Esta aplicación necesita una conexión a Internet para funcionar";
   @override
   String get AvoidThisStringsIfisNotPlural => "Zero One Two Few Many Other";
   @override

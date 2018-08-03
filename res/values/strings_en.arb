@@ -64,7 +64,7 @@
   "DELETE": "DELETE",
   "SHOW": "SHOW",
   "CLOSE": "CLOSE",
-  "noConnectivity": "This app require an Internet connection",
+  "noConnectivity": "This application needs an Internet connection to work",
   "NASAAck": "We acknowledge the use of data and imagery from LANCE FIRMS operated by the NASA/GSFC/Earth Science Data and Information System (ESDIS) with funding provided by NASA/HQ.",
   "appMoto": "Strengthening neighborhoods against wildfires"
 }
