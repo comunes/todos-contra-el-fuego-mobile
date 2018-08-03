@@ -107,7 +107,7 @@ class _genericMapState extends State<genericMap> {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
                 store.dispatch(new EditConfirmYourLocationAction(loc));
               },
-              serverUrl: store.state.firesApiUrl,
+              serverUrl: store.state.serverUrl,
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
@@ -205,7 +205,7 @@ class _genericMapState extends State<genericMap> {
                             new TextEditingValue(
                                 text: _location.description,
                                 selection: new TextSelection.collapsed(
-                                    offset: _location.description.length ))),
+                                    offset: _location.description.length))),
                         onChanged: (newDesc) {
                           debugPrint("OnChanged");
                           _location = _location.copyWith(description: newDesc);
@@ -261,10 +261,11 @@ class _genericMapState extends State<genericMap> {
                       Stack(fit: StackFit.expand, children: <Widget>[
                         // Material(color: Colors.yellowAccent),
                         new Opacity(
-                            opacity: status == FireMapStatus.subscriptionConfirm ||
-                          status == FireMapStatus.edit
-                                ? 0.5
-                                : 1.0,
+                            opacity:
+                                status == FireMapStatus.subscriptionConfirm ||
+                                        status == FireMapStatus.edit
+                                    ? 0.5
+                                    : 1.0,
                             child: map),
                         Positioned(
                           top: constraints.maxHeight - 200,
@@ -314,7 +315,7 @@ class _genericMapState extends State<genericMap> {
               onPressed: () {
                 Share.share(
                     '${view.mapState.fireNotification.description}. ${view
-                .serverUrl}fire/${view.mapState.fireNotification.sealed}');
+                  .serverUrl}fire/${view.mapState.fireNotification.sealed}');
               })
         ];
       default:
