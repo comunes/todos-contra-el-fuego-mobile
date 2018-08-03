@@ -31,6 +31,7 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
         middleware: List.from(otherMiddleware)
           ..add(fetchDataMiddleware));
 
+    injector.map<Store<AppState>>((i) => store);
     injector.map<String>((i) => store.state.firesApiUrl, key: "firesApiUrl");
     injector.map<String>((i) => store.state.firesApiKey, key: "firesApiKey");
     injector.map<String>((i) => store.state.serverUrl, key: "serverUrl");

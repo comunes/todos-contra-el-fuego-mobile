@@ -63,5 +63,6 @@
   "deleteAllFireNotificationsAlertDescription": "This will remove all your fire notifications",
   "DELETE": "DELETE",
   "SHOW": "SHOW",
-  "CLOSE": "CLOSE"
+  "CLOSE": "CLOSE",
+  "noConnectivity": "This app require an Internet connection"
 }

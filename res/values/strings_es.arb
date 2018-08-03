@@ -63,5 +63,6 @@
   "deleteAllFireNotificationsAlertDescription": "Esto borrará todas las notificaciones de fuegos",
   "DELETE": "BORRAR",
   "SHOW": "MOSTRAR",
-  "CLOSE": "CERRAR"
+  "CLOSE": "CERRAR",
+  "noConnectivity": "Esta aplicación necesita conexión a Internet"
 }

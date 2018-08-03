@@ -2,11 +2,7 @@ import 'package:bson_objectid/bson_objectid.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:redux/src/store.dart';
-
-import '../genericMap.dart';
 import '../objectIdUtils.dart';
-import '../redux/actions.dart';
 
 part 'fireNotification.g.dart';
 
@@ -84,6 +80,7 @@ class FireNotification extends Object with _$FireNotificationSerializerMixin {
 
   static final Map<String, Route<Null>> routes = <String, Route<Null>>{};
 
+  /*
   Route<Null> getRoute(Store store) {
     final String routeName = '/fire/${id}';
     return routes.putIfAbsent(
@@ -99,5 +96,5 @@ class FireNotification extends Object with _$FireNotificationSerializerMixin {
             },
           ),
     );
-  }
+  } */
 }
