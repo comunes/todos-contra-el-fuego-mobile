@@ -80,6 +80,7 @@ class S implements WidgetsLocalizations {
   String get typeTheNameOfAPlace => "Type the name of a place, region, etc";
   String get unsubscribe => "Unsubscribe";
   String get warningThisIsAVeryLargeArea => "Warning: this is a very large area";
+  String get youDeletedThisNotification => "You deleted this notification";
   String get youDeletedThisPlace => "You deleted this place";
   String activeFiresWorldWide(String activeFires) => "$activeFires active fires worldwide";
   String appLicense(String thisYear) => "(c) 2017-$thisYear Comunes Association under the GNU Affero GPL v3";
@@ -141,6 +142,8 @@ class es extends S {
   String get unsubscribe => "Desuscríbete";
   @override
   String get supportThisInitiative => "Apoya esta iniciativa";
+  @override
+  String get youDeletedThisNotification => "Has borrado esta alerta";
   @override
   String get toFiresNotifications => "Suscríbete a alertas de fuegos";
   @override

@@ -151,7 +151,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
               onDelete: (notif) {
                 store.dispatch(new DeleteFireNotificationAction(notif));
                 _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                    content: new Text(S.of(context).youDeletedThisPlace),
+                    content: new Text(S.of(context).youDeletedThisNotification),
                     action: new SnackBarAction(
                         label: S.of(context).UNDO,
                         onPressed: () {
