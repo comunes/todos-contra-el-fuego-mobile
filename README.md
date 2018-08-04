@@ -22,8 +22,10 @@ also you can run with `watch` instead of `build` to build with any code change.
 
 Generate apk with:
 ```
-flutter build apk -t lib/mainProd.dart
+flutter build apk -t lib/mainProd.dart --flavor production
 ```
+also you can run with `-t lib/mainDev.dart --flavor development`. More info about flavors [here](https://medium.com/@salvatoregiordanoo/flavoring-flutter-392aaa875f36).
+
 ## Testing
 
 Run `flutter test` for doing unit testing.
