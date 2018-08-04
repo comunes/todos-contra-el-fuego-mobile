@@ -16,10 +16,14 @@ You also needs a:
 
 Some json related code is generated via
 ```
-flutter packages pub run build_runner build
+flutter packages pub run build_runner build --delete-conflicting-outputs
 ```
 also you can run with `watch` instead of `build` to build with any code change.
 
+Generate apk with:
+```
+flutter build apk -t lib/mainProd.dart
+```
 ## Testing
 
 Run `flutter test` for doing unit testing.
@@ -35,5 +39,3 @@ GNU APLv3. See our [LICENSE](https://github.com/comunes/todos-contra-el-fuego-we
 ## Thanks & other acknowlegments
 
 (...)
-
-flutter packages pub run build_runner build --delete-conflicting-outputs
