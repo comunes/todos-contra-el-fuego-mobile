@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +10,6 @@ import 'customMoment.dart';
 import 'generated/i18n.dart';
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
-import 'package:comunes_flutter/comunes_flutter.dart';
 
 typedef void OnSave();
 typedef void OnCancel();
@@ -20,7 +22,10 @@ class GenericMapBottom extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   GenericMapBottom(
-      {@required this.onSave, @required this.onCancel, @required this.state, @required this.scaffoldKey});
+      {@required this.onSave,
+      @required this.onCancel,
+      @required this.state,
+      @required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +39,8 @@ class GenericMapBottom extends StatelessWidget {
         actions: buildActionList(loc, context, kmAround, scaffoldKey));
   }
 
-  List<Widget> buildActionList(
-      YourLocation loc, BuildContext context, int kmAround, GlobalKey<ScaffoldState> scaffoldState) {
+  List<Widget> buildActionList(YourLocation loc, BuildContext context,
+      int kmAround, GlobalKey<ScaffoldState> scaffoldState) {
     List<Widget> actionList = new List<Widget>();
     switch (state.status) {
       case FireMapStatus.edit:
@@ -70,25 +75,32 @@ class GenericMapBottom extends StatelessWidget {
                               .from(context, state.fireNotification.when)),
                         ],
                       ),
-                      state.industries.length >= 0 || state.falsePos.length > 0 ? new Text(S.of(context).itSeemsNotAtForesFire, style: new TextStyle(color: fires600)): null,
+                      state.industries.length >= 0 || state.falsePos.length > 0
+                          ? new Text(S.of(context).itSeemsNotAtForesFire,
+                              style: new TextStyle(color: fires600))
+                          : null,
                       new DropdownButton<String>(
-                        style: new TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        hint: new Text(S.of(context).notAWildfire),
-                        items: <String>[S.of(context).itSeemsAIndustry, S.of(context).itSeemsAControlledBurning, S.of(context).itSeemsAFalseAlarm].map((String value) {
-                          return new DropdownMenuItem <String>(
-                            value: value,
-                            child: new Text(value)
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          // FIXME api call
-                              scaffoldKey.currentState.showSnackBar(new SnackBar(
-                                content: new Text(S.of(context).thanksForParticipating),
-                              ));
-                        }),
+                          style: new TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.0,
+                          ),
+                          hint: new Text(S.of(context).notAWildfire),
+                          items: <String>[
+                            S.of(context).itSeemsAIndustry,
+                            S.of(context).itSeemsAControlledBurning,
+                            S.of(context).itSeemsAFalseAlarm
+                          ].map((String value) {
+                            return new DropdownMenuItem<String>(
+                                value: value, child: new Text(value));
+                          }).toList(),
+                          onChanged: (value) async {
+                            // FIXME api call
+                            await new Future.delayed(new Duration(milliseconds: 500));
+                            scaffoldKey.currentState.showSnackBar(new SnackBar(
+                              content: new Text(
+                                  S.of(context).thanksForParticipating),
+                            ));
+                          }),
                     ])))));
         break;
       case FireMapStatus.unsubscribe:
