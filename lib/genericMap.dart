@@ -213,7 +213,7 @@ class _genericMapState extends State<genericMap> {
                     mapState.fires,
                     mapState.industries,
                     mapState.falsePos,
-                    mapState.fireNotification != null),
+                    mapState.status == FireMapStatus.viewFireNotification),
               ),
               // new AttributionPluginOptions(text: "© OpenStreetMap contributors"),
               new LayerSelectorMapPluginOptions(),
