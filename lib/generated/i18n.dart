@@ -59,13 +59,19 @@ class S implements WidgetsLocalizations {
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
+  String get itSeemsAControlledBurning => "It's a controlled burning";
+  String get itSeemsAFalseAlarm => "It seems a false alarm";
+  String get itSeemsAIndustry => "It's an industry";
+  String get itSeemsNotAtForesFire => "It seems that this is not a forest fire.";
   String get noConnectivity => "This application needs an Internet connection to work";
   String get noFiresAround => "There is no fires";
+  String get notAWildfire => "Isn't that a forest fire?";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
   String get privacyPolicy => "Privacy Policy";
   String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, suggesting other public data sources of fires to use, etc.";
   String get supportThisInitiative => "Support this initiative";
+  String get thanksForParticipating => "Thanks for participating";
   String get toDeleteThisNotification => "Slide horizontally to delete this notification";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
   String get toFiresNotifications => "Subscribe to fires notifications";
@@ -142,6 +148,10 @@ class es extends S {
   @override
   String get fireNotificationTitle => "Notificación de fuego";
   @override
+  String get itSeemsAControlledBurning => "Es una quema controlada";
+  @override
+  String get itSeemsAIndustry => "Es una industria";
+  @override
   String get youDeletedThisPlace => "Has borrado este lugar";
   @override
   String get callEmergencyServicesTitle => "Llama al 112";
@@ -153,6 +163,8 @@ class es extends S {
   String get firesNearPlace => "Fuegos cercanos a ti";
   @override
   String get aYear => "un año";
+  @override
+  String get itSeemsNotAtForesFire => "Parece que este fuego no es un fuego forestal.";
   @override
   String get UNDO => "DESHACER";
   @override
@@ -170,6 +182,8 @@ class es extends S {
   @override
   String get isYourUbicationEnabled => "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?";
   @override
+  String get thanksForParticipating => "Gracias por Participar";
+  @override
   String get fireNotificationsTitleShort => "Notificaciones";
   @override
   String get DELETE => "BORRAR";
@@ -179,6 +193,8 @@ class es extends S {
   String get SAVE => "GUARDAR";
   @override
   String get SHOW => "MOSTRAR";
+  @override
+  String get itSeemsAFalseAlarm => "Parece una falsa alarma";
   @override
   String get addedThisLocation => "Ya has añadido este lugar antes";
   @override
@@ -209,6 +225,8 @@ class es extends S {
   String get chooseAWatchRadio => "Elige un radio de vigilancia";
   @override
   String get CANCEL => "CANCELAR";
+  @override
+  String get notAWildfire => "¿No es un fuego forestal?";
   @override
   String inMonths(String value) => "$value meses";
   @override

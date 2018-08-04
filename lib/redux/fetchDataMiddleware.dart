@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:bson_objectid/bson_objectid.dart';
-import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:just_debounce_it/just_debounce_it.dart';
 import 'package:redux/redux.dart';
-import 'dart:async';
 
 import '../models/appState.dart';
 import '../models/fireNotificationsPersist.dart';
@@ -87,15 +88,34 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
 
   if (action is ShowYourLocationMapAction) {
     api
-        .getYourLocationFireStats(store.state, action.loc)
+        .getFiresInLocation(
+            state: store.state,
+            lat: action.loc.lat,
+            lon: action.loc.lon,
+            distance: action.loc.distance)
         .then((result) => store.dispatch(result));
   }
+
+  if (action is ShowFireNotificationMapAction) {
+    api
+        .getFiresInLocation(
+            state: store.state,
+            lat: action.notif.lat,
+            lon: action.notif.lon,
+            distance: 1) // FalsePositive/server/publications.js
+        .then((result) => store.dispatch(result));
+  }
+
   if (action is UpdateYourLocationAction) {
     if (action.loc.subscribed)
       Debounce.seconds(
           2,
           () => api
-              .getYourLocationFireStats(store.state, action.loc)
+              .getFiresInLocation(
+                  state: store.state,
+                  lat: action.loc.lat,
+                  lon: action.loc.lon,
+                  distance: action.loc.distance)
               .then((result) => store.dispatch(result)));
     else {
       // FIXME do something?
@@ -147,18 +167,22 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
           localLocations.forEach((location) => location.subscribed = false);
           // print('Local persisted: ${localLocations.length}');
           subscribedLocations.forEach((subsLoc) {
-            localLocations
-              .firstWhere(
+            localLocations.firstWhere(
                 (localLocation) => localLocation.id == subsLoc.id, orElse: () {
               localLocations.add(subsLoc);
-            })
-              .subscribed = true;
+            }).subscribed = true;
           });
         }
-        localLocations.forEach((yl)  {
-          api.getYourLocationFireStats(store.state, yl).then((value) {
+        localLocations.forEach((yl) {
+          api
+              .getFiresInLocation(
+                  state: store.state,
+                  lat: yl.lat,
+                  lon: yl.lon,
+                  distance: yl.distance)
+              .then((value) {
             yl.currentNumFires = value.numFires;
-          store.dispatch(new UpdateYourLocationAction(yl));
+            store.dispatch(new UpdateYourLocationAction(yl));
           });
         });
 
@@ -180,7 +204,9 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
     loadFireNotifications().then((fireNotifications) {
       int unread = 0;
       for (FireNotification notif in fireNotifications) {
-        if (!notif.read) { unread++; }
+        if (!notif.read) {
+          unread++;
+        }
       }
       store.dispatch(
           new FetchFireNotificationsSucceededAction(fireNotifications, unread));

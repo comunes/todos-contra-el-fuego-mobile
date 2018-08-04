@@ -66,5 +66,11 @@
   "CLOSE": "CERRAR",
   "noConnectivity": "Esta aplicación necesita una conexión a Internet para funcionar",
   "NASAAck": "Reconocemos el uso de datos e imágenes de LANCE FIRMS operadas por NASA/GSFC/Earth Science Data and Information System (ESDIS) con fondos proporcionados por NASA/HQ.",
-  "appMoto": "Fortaleciendo vecindarios contra incendios forestales"
+  "appMoto": "Fortaleciendo vecindarios contra incendios forestales",
+  "itSeemsNotAtForesFire": "Parece que este fuego no es un fuego forestal.",
+  "notAWildfire": "¿No es un fuego forestal?",
+  "itSeemsAIndustry": "Es una industria",
+  "itSeemsAControlledBurning": "Es una quema controlada",
+  "itSeemsAFalseAlarm": "Parece una falsa alarma",
+  "thanksForParticipating": "Gracias por Participar"
 }

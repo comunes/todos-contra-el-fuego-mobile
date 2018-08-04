@@ -113,16 +113,15 @@ class FiresApi {
     });
   }
 
-  Future<UpdateYourLocationMapStatsAction> getYourLocationFireStats(
-      AppState state, YourLocation location) async {
+  Future<UpdateYourLocationMapStatsAction> getFiresInLocation(
+    {AppState state, double lat, double lon, int distance}) async {
     assert(state.firesApiUrl != null);
     assert(state.firesApiKey != null);
     var url = '${state.firesApiUrl}fires-in-full/${state
-      .firesApiKey}/${location.lat}/${location.lon}/${location.distance}';
+      .firesApiKey}/${lat}/${lon}/${distance}';
     return await resty.get(url).go().then((response) {
       if (response.statusCode == 200) {
         var resultDecoded = json.decode(response.body);
-        // print(resultDecoded);
         int numFires = resultDecoded['real'];
         List fires = resultDecoded['fires'];
         List falsePos = resultDecoded['falsePos'];
@@ -140,7 +139,7 @@ class FiresApi {
             fires: fires,
             falsePos: falsePos,
             industries: industries);
-      } else throw Exception('Wrong response trying to get stats');
+      } else throw Exception('Wrong response trying to get fire data');
     });
   }
 }

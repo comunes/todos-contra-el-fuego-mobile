@@ -292,7 +292,9 @@ class _genericMapState extends State<genericMap> {
               bottomNavigationBar: new GenericMapBottom(
                   onSave: () => view.onEditConfirm(_location),
                   onCancel: () => view.onEditCancel(_initialLocation),
-                  state: view.mapState),
+                  state: view.mapState,
+                scaffoldKey: _scaffoldKey,
+              ),
               body: LayoutBuilder(
                   builder: (context, constraints) =>
                       Stack(fit: StackFit.expand, children: <Widget>[

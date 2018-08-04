@@ -7,17 +7,20 @@ import 'customMoment.dart';
 import 'generated/i18n.dart';
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
+import 'package:comunes_flutter/comunes_flutter.dart';
 
 typedef void OnSave();
 typedef void OnCancel();
+typedef void OnFalsePositive();
 
 class GenericMapBottom extends StatelessWidget {
   final OnSave onSave;
   final OnCancel onCancel;
   final FireMapState state;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   GenericMapBottom(
-      {@required this.onSave, @required this.onCancel, @required this.state});
+      {@required this.onSave, @required this.onCancel, @required this.state, @required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +31,11 @@ class GenericMapBottom extends StatelessWidget {
         showNotch: false,
         color: fires100,
         mainAxisAlignment: MainAxisAlignment.center,
-        actions: buildActionList(loc, context, kmAround));
+        actions: buildActionList(loc, context, kmAround, scaffoldKey));
   }
 
   List<Widget> buildActionList(
-      YourLocation loc, BuildContext context, int kmAround) {
+      YourLocation loc, BuildContext context, int kmAround, GlobalKey<ScaffoldState> scaffoldState) {
     List<Widget> actionList = new List<Widget>();
     switch (state.status) {
       case FireMapStatus.edit:
@@ -54,8 +57,9 @@ class GenericMapBottom extends StatelessWidget {
                 child: new Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
+                    children: listWithoutNulls(<Widget>[
                       new Text(state.fireNotification.description),
+                      // TODO fire type (neighbout, NASA, etc)
                       new SizedBox(height: 5.0),
                       new Row(
                         children: <Widget>[
@@ -63,10 +67,29 @@ class GenericMapBottom extends StatelessWidget {
                           new SizedBox(width: 5.0),
                           new Text(Moment
                               .now()
-                              .from(context, state.fireNotification.when))
+                              .from(context, state.fireNotification.when)),
                         ],
-                      )
-                    ]))));
+                      ),
+                      state.industries.length >= 0 || state.falsePos.length > 0 ? new Text(S.of(context).itSeemsNotAtForesFire, style: new TextStyle(color: fires600)): null,
+                      new DropdownButton<String>(
+                        style: new TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                        ),
+                        hint: new Text(S.of(context).notAWildfire),
+                        items: <String>[S.of(context).itSeemsAIndustry, S.of(context).itSeemsAControlledBurning, S.of(context).itSeemsAFalseAlarm].map((String value) {
+                          return new DropdownMenuItem <String>(
+                            value: value,
+                            child: new Text(value)
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          // FIXME api call
+                              scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                content: new Text(S.of(context).thanksForParticipating),
+                              ));
+                        }),
+                    ])))));
         break;
       case FireMapStatus.unsubscribe:
       case FireMapStatus.view:
