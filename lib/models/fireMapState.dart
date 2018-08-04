@@ -3,10 +3,12 @@ import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:meta/meta.dart';
 
 enum FireMapStatus { view, subscriptionConfirm, unsubscribe, edit, viewFireNotification }
+enum FireMapLayer { osmcGrey, esriSatellite, osmc, esri, esriTerrain }
 
 @immutable
 class FireMapState {
   final FireMapStatus status;
+  final FireMapLayer layer;
   final int numFires;
   final FireNotification fireNotification;
   final List<dynamic> fires;
@@ -16,6 +18,7 @@ class FireMapState {
 
   const FireMapState.initial()
       : this.status = FireMapStatus.view,
+      this.layer = FireMapLayer.osmcGrey,
         this.yourLocation = null,
   this.fireNotification = null,
         this.numFires = 0,
@@ -25,6 +28,7 @@ class FireMapState {
 
   FireMapState(
       {this.status: FireMapStatus.view,
+        this.layer: FireMapLayer.osmcGrey,
       this.yourLocation,
       this.numFires,
         this.fires,
@@ -34,6 +38,7 @@ class FireMapState {
 
   FireMapState copyWith({
     FireMapStatus status,
+    FireMapLayer layer,
     YourLocation yourLocation,
     FireNotification fireNotication,
     int numFires,
@@ -48,6 +53,7 @@ class FireMapState {
         fires: fires ?? this.fires,
         falsePos: falsePos ?? this.falsePos,
         industries: industries ?? this.industries,
+        layer: layer ?? this.layer,
         status: status ?? this.status);
   }
 
@@ -57,6 +63,7 @@ class FireMapState {
       other is FireMapState &&
           runtimeType == other.runtimeType &&
           status == other.status &&
+        layer == other.layer &&
           numFires == other.numFires &&
         fireNotification == other.fireNotification &&
           fires == other.fires &&
@@ -67,6 +74,7 @@ class FireMapState {
   @override
   int get hashCode =>
       status.hashCode ^
+      layer.hashCode ^
       numFires.hashCode ^
       fireNotification.hashCode ^
       fires.hashCode ^
@@ -76,7 +84,7 @@ class FireMapState {
 
   @override
   String toString() {
-    return 'FireMapState{status: $status, numFires: $numFires, fires: ${fires
+    return 'FireMapState{status: $status, layer: $layer, numFires: $numFires, fires: ${fires
       .length}, falsePos: ${falsePos.length}, industries: ${industries
       .length}, yourLocation: $yourLocation, fireNotification: $fireNotification}';
   }

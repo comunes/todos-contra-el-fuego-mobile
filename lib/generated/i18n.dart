@@ -64,7 +64,7 @@ class S implements WidgetsLocalizations {
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
   String get privacyPolicy => "Privacy Policy";
-  String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, etc.";
+  String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, suggesting other public data sources of fires to use, etc.";
   String get supportThisInitiative => "Support this initiative";
   String get toDeleteThisNotification => "Slide horizontally to delete this notification";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
@@ -158,7 +158,7 @@ class es extends S {
   @override
   String get tweetAboutAFireTitle => "Twittea";
   @override
-  String get supportPageDescription => "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, etc.";
+  String get supportPageDescription => "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, sugeriendo otras fuentes de datos públicas de fuegos para usar, etc.";
   @override
   String get aMinute => "un minuto";
   @override

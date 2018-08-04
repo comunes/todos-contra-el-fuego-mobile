@@ -53,3 +53,5 @@ class EditCancelYourLocationAction extends FiresMapActions {
   YourLocation loc;
   EditCancelYourLocationAction(this.loc);
 }
+
+class ToggleMapLayerAction extends FiresMapActions {}

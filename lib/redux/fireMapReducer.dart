@@ -20,6 +20,8 @@ final fireMapReducer = combineReducers<FireMapState>([
       _editConfirmYourLocationMap),
   new TypedReducer<FireMapState, EditCancelYourLocationAction>(
       _editCancelYourLocationMap),
+  new TypedReducer<FireMapState, ToggleMapLayerAction>(
+    _toggleMapLayer),
   new TypedReducer<FireMapState, UpdateYourLocationMapAction>(
       _updateYourLocationMap)
 ]);
@@ -89,3 +91,13 @@ FireMapState _editCancelYourLocationMap(
 
 FireMapStatus restoreStatusAfterSave(loc) =>
     loc.subscribed ? FireMapStatus.unsubscribe : FireMapStatus.view;
+
+FireMapState _toggleMapLayer(
+  FireMapState state, ToggleMapLayerAction action) {
+  FireMapLayer currentLayer = state.layer;
+  List<FireMapLayer> list = FireMapLayer.values;
+  int currentPos = list.indexOf(currentLayer);
+  currentPos++;
+  FireMapLayer next = list.elementAt(currentPos >= list.length ? 0: currentPos);
+  return state.copyWith(layer: next);
+}

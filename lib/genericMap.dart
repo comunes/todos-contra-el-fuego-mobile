@@ -10,6 +10,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:latlong/latlong.dart';
 import 'package:share/share.dart';
 
+import 'attributionMapPlugin.dart';
 import 'colors.dart';
 import 'dummyMapPlugin.dart';
 import 'fireMarkType.dart';
@@ -22,7 +23,7 @@ import 'models/fireMapState.dart';
 import 'redux/actions.dart';
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
-
+import 'layerSelectorMapPlugin.dart';
 @immutable
 class _ViewModel {
   final String serverUrl;
@@ -118,18 +119,21 @@ class _genericMapState extends State<genericMap> {
           assert(_location != null);
           FireMapState mapState = view.mapState;
           FireMapStatus status = mapState.status;
-          print('Build map with status: $status');
+          FireMapLayer layer = mapState.layer;
+          print('Build map with status: $status and layer $layer');
+
+          double maxZoom = 18.0; // works?
 
           MapOptions mapOptions = new MapOptions(
               center: new LatLng(_location.lat, _location.lon),
               plugins: globals.isDevelopment
-                  ? [new ZoomMapPlugin()]
-                  : [new DummyMapPlugin()],
+                  ? [new ZoomMapPlugin(), new AttributionPlugin(), new LayerSelectorMapPlugin()]
+                  : [new DummyMapPlugin(), new AttributionPlugin(), new LayerSelectorMapPlugin()],
               // this works ?
               interactive: false,
               zoom: 13.0,
               // THIS does not works as expected
-              // maxZoom: 6.0,
+              maxZoom: maxZoom,
               onTap: (callback) {
                 if (status == FireMapStatus.edit) {
                   _location = _location.copyWith(
@@ -155,19 +159,49 @@ class _genericMapState extends State<genericMap> {
               : status == FireMapStatus.subscriptionConfirm
                   ? Icons.check
                   : Icons.notifications_off;
+
+          String baseLayer;
+          List<String> subdomains = [];
+          String attribution;
+          switch (layer) {
+            case FireMapLayer.osmc:
+            case FireMapLayer.osmcGrey:
+            attribution = '© OpenStreetMap contributors';
+            break;
+            case FireMapLayer.esri:
+            case FireMapLayer.esriSatellite:
+            case FireMapLayer.esriTerrain:
+              attribution = '© ESRI';
+          }
+          /* tiles from: https://github.com/dceejay/RedMap/blob/1914ed3b9ce4e8a496049849a93282730b4fff02/worldmap/index.html */
+          switch (layer) {
+            case FireMapLayer.osmc:
+              subdomains = ['a', 'b', 'c'];
+                baseLayer = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+              break;
+            case FireMapLayer.osmcGrey:
+              subdomains = ['a', 'b', 'c'];
+                baseLayer = 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
+              break;
+            case FireMapLayer.esri:
+              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+              break;
+            case FireMapLayer.esriSatellite:
+              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+              break;
+            case FireMapLayer.esriTerrain:
+              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
+          }
           FlutterMap map = new FlutterMap(
             options: mapOptions,
             mapController: mapController,
             layers: [
               new TileLayerOptions(
-                maxZoom: 6.0,
-                subdomains: ['a', 'b', 'c'],
-                urlTemplate:
-                    'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                maxZoom: maxZoom,
+                urlTemplate: baseLayer,
+                subdomains: subdomains,
                 additionalOptions: {
                   // 'opacity': '0.1',
-                  'attribution':
-                      '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
                 },
               ),
               globals.isDevelopment
@@ -181,6 +215,9 @@ class _genericMapState extends State<genericMap> {
                     mapState.falsePos,
                     mapState.fireNotification != null),
               ),
+              // new AttributionPluginOptions(text: "© OpenStreetMap contributors"),
+              new LayerSelectorMapPluginOptions(),
+              new AttributionPluginOptions(text: attribution),
             ],
           );
           // mapController.
