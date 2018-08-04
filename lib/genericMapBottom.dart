@@ -75,9 +75,12 @@ class GenericMapBottom extends StatelessWidget {
                               .from(context, state.fireNotification.when)),
                         ],
                       ),
-                      state.industries.length >= 0 || state.falsePos.length > 0
-                          ? new Text(S.of(context).itSeemsNotAtForesFire,
-                              style: new TextStyle(color: fires600))
+                      state.industries.length > 0 || state.falsePos.length > 0
+                          ? new Padding(
+                              padding: new EdgeInsets.only(top: 10.0),
+                              child: new Text(
+                                  S.of(context).itSeemsNotAtForesFire,
+                                  style: new TextStyle(color: fires600)))
                           : null,
                       new DropdownButton<String>(
                           style: new TextStyle(
@@ -95,7 +98,8 @@ class GenericMapBottom extends StatelessWidget {
                           }).toList(),
                           onChanged: (value) async {
                             // FIXME api call
-                            await new Future.delayed(new Duration(milliseconds: 500));
+                            await new Future.delayed(
+                                new Duration(milliseconds: 500));
                             scaffoldKey.currentState.showSnackBar(new SnackBar(
                               content: new Text(
                                   S.of(context).thanksForParticipating),
