@@ -27,5 +27,7 @@ android/app/src/main/AndroidManifest.xml
 android/app/src/main/gen/
 
 android/app/google-services.json
+android/app/key.jks
+android/key.properties
 
 assets/private-settings.json
