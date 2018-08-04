@@ -85,7 +85,7 @@ class GenericMapBottom extends StatelessWidget {
                       new DropdownButton<String>(
                           style: new TextStyle(
                             color: Colors.black,
-                            fontSize: 18.0,
+                            // fontSize: 18.0,
                           ),
                           hint: new Text(S.of(context).notAWildfire),
                           items: <String>[
