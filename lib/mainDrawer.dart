@@ -10,10 +10,10 @@ import 'fireNotificationList.dart';
 import 'generated/i18n.dart';
 import 'globals.dart' as globals;
 import 'models/appState.dart';
+import 'monitoredAreas.dart';
 import 'privacyPage.dart';
 import 'sandbox.dart';
 import 'supportPage.dart';
-import 'monitoredAreas.dart';
 
 @immutable
 class _ViewModel {
@@ -106,21 +106,20 @@ Widget mainDrawer(BuildContext context, String currentRoute) {
                         value: ' ${view.unreadCount.toString()} ')
                     : Text(S.of(context).fireNotificationsTitleShort),
                 onTap: () {
-                  Navigator.popAndPushNamed(context, FireNotificationList.routeName);
+                  Navigator.popAndPushNamed(
+                      context, FireNotificationList.routeName);
                 },
               ),
-              globals.isDevelopment
-                  ? new ListTile(
-                      leading: const Icon(Icons.map),
-                      selected: currentRoute == MonitoredAreasPage.routeName,
-                      title: new Text(S.of(context).monitoredAreasTitle),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.popAndPushNamed(
-                            context, MonitoredAreasPage.routeName);
-                      },
-                    )
-                  : null,
+              new ListTile(
+                leading: const Icon(Icons.map),
+                selected: currentRoute == MonitoredAreasPage.routeName,
+                title: new Text(S.of(context).monitoredAreasTitle),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.popAndPushNamed(
+                      context, MonitoredAreasPage.routeName);
+                },
+              ),
               new Divider(),
               new ListTile(
                 leading: const Icon(Icons.favorite),
