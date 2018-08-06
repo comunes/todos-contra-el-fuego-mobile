@@ -12,7 +12,7 @@ This app is developed with [flutter](https://flutter.io/). So if you want to con
 
 You also needs a:
 - `assets/private-settings.json` see `assets/private-settings-sample.json`.
-- `google-services.json` provided by firebase console.
+- `google-services.json` provided by firebase console (see also the sample).
 
 Some json related code is generated via
 ```

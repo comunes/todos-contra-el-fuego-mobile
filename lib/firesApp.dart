@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:redux/src/store.dart';
 
+import 'monitoredAreas.dart';
 import 'activeFires.dart';
 import 'fireAlert.dart';
 import 'fireNotificationList.dart';
@@ -44,6 +45,7 @@ class _FiresAppState extends State<FiresApp> {
     SupportPage.routeName: (BuildContext context) => new SupportPage(),
     FireNotificationList.routeName: (BuildContext context) =>
         new FireNotificationList(),
+    MonitoredAreasPage.routeName: (BuildContext context) => new MonitoredAreasPage()
   };
 
   final Store<AppState> store;

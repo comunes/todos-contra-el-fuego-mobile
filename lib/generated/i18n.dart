@@ -58,11 +58,14 @@ class S implements WidgetsLocalizations {
   String get firesInYourPlaces => "Active fires in your places";
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
+  String get inGreenMonitoredAreas => "In green, the areas monitored by our users currently";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
   String get itSeemsAControlledBurning => "It's a controlled burning";
   String get itSeemsAFalseAlarm => "It seems a false alarm";
   String get itSeemsAIndustry => "It's an industry";
   String get itSeemsNotAtForesFire => "It seems that this is not a forest fire.";
+  String get mapPrivacy => "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative.";
+  String get monitoredAreasTitle => "Monitored areas";
   String get noConnectivity => "This application needs an Internet connection to work";
   String get noFiresAround => "There is no fires";
   String get notAWildfire => "Isn't that a forest fire?";
@@ -163,6 +166,8 @@ class es extends S {
   @override
   String get chooseAPlace => "Elige un lugar";
   @override
+  String get mapPrivacy => "Para preservar la privacidad de nuestros usuarios/as, los datos reflejados están aleatoriamente alterados y son solo orientativos.";
+  @override
   String get firesNearPlace => "Fuegos cercanos a ti";
   @override
   String get aYear => "un año";
@@ -219,7 +224,11 @@ class es extends S {
   @override
   String get confirm => "Confirmar";
   @override
+  String get inGreenMonitoredAreas => "En verde, las zonas vigiladas por nuestros usuari@s actualmente";
+  @override
   String get getAlertsOfFiresinThatArea => "Recibe alertas de fuegos en esa zona";
+  @override
+  String get monitoredAreasTitle => "Zonas vigiladas";
   @override
   String get warningThisIsAVeryLargeArea => "Cuidado: esta zona es muy grande";
   @override

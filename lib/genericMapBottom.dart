@@ -9,6 +9,7 @@ import 'customBottomAppBar.dart';
 import 'customMoment.dart';
 import 'generated/i18n.dart';
 import 'models/appState.dart';
+import 'models/falsePositiveTypes.dart';
 import 'models/fireMapState.dart';
 
 typedef void OnSave();
@@ -82,19 +83,28 @@ class GenericMapBottom extends StatelessWidget {
                                   S.of(context).itSeemsNotAtForesFire,
                                   style: new TextStyle(color: fires600)))
                           : null,
-                      new DropdownButton<String>(
+                      new DropdownButton<FalsePositiveType>(
                           style: new TextStyle(
                             color: Colors.black,
                             // fontSize: 18.0,
                           ),
                           hint: new Text(S.of(context).notAWildfire),
-                          items: <String>[
-                            S.of(context).itSeemsAIndustry,
-                            S.of(context).itSeemsAControlledBurning,
-                            S.of(context).itSeemsAFalseAlarm
-                          ].map((String value) {
-                            return new DropdownMenuItem<String>(
-                                value: value, child: new Text(value));
+                          items: FalsePositiveType.values
+                              .map((FalsePositiveType value) {
+                            String menuText;
+                            switch (value) {
+                              case FalsePositiveType.industry:
+                                menuText = S.of(context).itSeemsAIndustry;
+                                break;
+                              case FalsePositiveType.controled:
+                                menuText =
+                                    S.of(context).itSeemsAControlledBurning;
+                                break;
+                              case FalsePositiveType.falsealarm:
+                                menuText = S.of(context).itSeemsAFalseAlarm;
+                            }
+                            return new DropdownMenuItem<FalsePositiveType>(
+                                value: value, child: new Text(menuText));
                           }).toList(),
                           onChanged: (value) async {
                             // FIXME api call

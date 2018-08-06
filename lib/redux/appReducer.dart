@@ -9,6 +9,9 @@ AppState appReducer(AppState state, action) {
     return state.copyWith(fireNotifications: action.fetchedFireNotifications,
       fireNotificationsUnread: action.unreadCount);
   }
+  if (action is FetchMonitoredAreasSucceededAction) {
+    return state.copyWith(monitoredAreas: action.monitoredAreas);
+  }
   if (action is AddedFireNotificationAction)
     return state.copyWith(
       fireNotificationsUnread: state.fireNotificationsUnread + 1);

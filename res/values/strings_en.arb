@@ -73,5 +73,8 @@
   "itSeemsAIndustry": "It's an industry",
   "itSeemsAControlledBurning": "It's a controlled burning",
   "itSeemsAFalseAlarm": "It seems a false alarm",
-  "thanksForParticipating": "Thanks for participating"
+  "thanksForParticipating": "Thanks for participating",
+  "inGreenMonitoredAreas": "In green, the areas monitored by our users currently",
+  "monitoredAreasTitle": "Monitored areas",
+  "mapPrivacy": "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative."
 }

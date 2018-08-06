@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter/material.dart';
 
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:http/http.dart' as ht;
 import 'package:jaguar_resty/jaguar_resty.dart' as resty;
+import 'package:latlong/latlong.dart';
 
 import '../globals.dart' as globals;
 import '../redux/actions.dart';
@@ -114,7 +117,7 @@ class FiresApi {
   }
 
   Future<UpdateYourLocationMapStatsAction> getFiresInLocation(
-    {AppState state, double lat, double lon, int distance}) async {
+      {AppState state, double lat, double lon, int distance}) async {
     assert(state.firesApiUrl != null);
     assert(state.firesApiKey != null);
     var url = '${state.firesApiUrl}fires-in-full/${state
@@ -139,7 +142,37 @@ class FiresApi {
             fires: fires,
             falsePos: falsePos,
             industries: industries);
-      } else throw Exception('Wrong response trying to get fire data');
+      } else
+        throw Exception('Wrong response trying to get fire data');
+    });
+  }
+
+  Future<List<Polyline>> getMonitoredAreas({AppState state}) async {
+    assert(state.firesApiUrl != null);
+    assert(state.firesApiKey != null);
+    var url = '${state.firesApiUrl}status/subs-public-union/${state
+      .firesApiKey}';
+    var color = const Color(0xFF145A32);
+    return await resty.get(url).go().then((response) {
+      if (response.statusCode == 200) {
+        var resultDecoded = json.decode(response.body);
+        // print(resultDecoded['data']['union']);
+        List<Polyline> union = [];
+        final multipolygon =
+            json.decode(resultDecoded['data']['union']['value'])['geometry']
+                ['coordinates'];
+        for (List<dynamic> polygon in multipolygon) {
+          for (List<dynamic> hole in polygon) {
+            List<LatLng> points = [];
+            for (List<dynamic> point in hole) {
+              points.add(new LatLng(point[1].toDouble(), point[0].toDouble()));
+            }
+            union.add(new Polyline(points: points, color: color, strokeWidth: 3.0));
+          }
+        }
+        return union;
+      } else
+        throw Exception('Wrong response trying to get fire data');
     });
   }
 }

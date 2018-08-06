@@ -2,6 +2,8 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter_map/flutter_map.dart';
+
 abstract class AppActions {}
 
 class FetchYourLocationsAction extends AppActions {
@@ -19,6 +21,8 @@ class FetchYourLocationsSucceededAction extends AppActions {
 }
 
 class FetchFireNotificationsAction extends AppActions {}
+
+class FetchMonitoredAreasAction extends AppActions {}
 
 class FetchYourLocationsFailedAction extends AppActions {
   final Exception error;
@@ -55,4 +59,10 @@ class OnConnectivityChanged extends AppActions {
   final ConnectivityResult connectivityResult;
 
   OnConnectivityChanged(this.connectivityResult);
+}
+
+class FetchMonitoredAreasSucceededAction extends AppActions {
+  final List<Polyline> monitoredAreas;
+
+  FetchMonitoredAreasSucceededAction(this.monitoredAreas);
 }

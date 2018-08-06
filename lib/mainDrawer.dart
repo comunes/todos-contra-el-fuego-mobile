@@ -14,6 +14,7 @@ import 'models/appState.dart';
 import 'privacyPage.dart';
 import 'sandbox.dart';
 import 'supportPage.dart';
+import 'monitoredAreas.dart';
 
 @immutable
 class _ViewModel {
@@ -122,6 +123,16 @@ Widget mainDrawer(BuildContext context) {
                   Navigator.pushNamed(context, FireNotificationList.routeName);
                 },
               ),
+              globals.isDevelopment
+                ? new ListTile(
+                leading: const Icon(Icons.map),
+                title: new Text(S.of(context).monitoredAreasTitle),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, MonitoredAreasPage.routeName);
+                },
+              )
+                : null,
               new Divider(),
               new ListTile(
                 leading: const Icon(Icons.favorite),

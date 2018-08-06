@@ -1,16 +1,18 @@
 import 'dart:async';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:connectivity/connectivity.dart';
+
 import 'fireMapState.dart';
 import 'user.dart';
 
 export 'fireMapState.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 part 'appState.g.dart';
 
@@ -36,6 +38,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
   final List<YourLocation> yourLocations;
   final List<FireNotification> fireNotifications;
   @JsonKey(ignore: true)
+  final List<Polyline> monitoredAreas;
+  @JsonKey(ignore: true)
   final int fireNotificationsUnread;
   @JsonKey(ignore: true)
   final FireMapState fireMapState;
@@ -58,7 +62,8 @@ class AppState extends Object with _$AppStateSerializerMixin {
       this.firesApiKey,
       this.firesApiUrl,
       this.serverUrl,
-        this.connectivity,
+      this.connectivity,
+      this.monitoredAreas,
       this.fireMapState: const FireMapState.initial()});
 
   AppState copyWith(
@@ -74,6 +79,7 @@ class AppState extends Object with _$AppStateSerializerMixin {
       List<FireNotification> fireNotifications,
       int fireNotificationsUnread,
       FireMapState fireMapState,
+      List<Polyline> monitoredAreas,
       ConnectivityResult connectivity}) {
     return new AppState(
         isLoading: isLoading ?? this.isLoading,
@@ -88,13 +94,15 @@ class AppState extends Object with _$AppStateSerializerMixin {
         fireNotifications: fireNotifications ?? this.fireNotifications,
         fireNotificationsUnread:
             fireNotificationsUnread ?? this.fireNotificationsUnread,
+        monitoredAreas: monitoredAreas ?? this.monitoredAreas,
         fireMapState: fireMapState ?? this.fireMapState,
-    connectivity: connectivity ?? this.connectivity);
+        connectivity: connectivity ?? this.connectivity);
   }
 
   @override
   String toString() {
-    return 'AppState{\nuser: ${user}\nconnectivity: ${connectivity.toString()}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
+    return 'AppState{\nuser: ${user}\nconnectivity: ${connectivity
+      .toString()}\nisLoading: $isLoading\nisLoaded: $isLoaded\napiKey: ${ellipse(
       firesApiKey,
       8)}\napiUrl: ${firesApiUrl}\nserverUrl: ${serverUrl}\nfireMapState: $fireMapState\nyourLocations count: ${yourLocations
       .length}\nunread notif: ${fireNotificationsUnread}\nfireNotifications: ${fireNotifications}\nyourLocations: ${yourLocations}}';

@@ -214,6 +214,13 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
     });
   }
 
+  if (action is FetchMonitoredAreasAction) {
+    api.getMonitoredAreas(state: store.state).then((result) { // store.dispatch()
+      store.dispatch(
+        new FetchMonitoredAreasSucceededAction(result));
+       });
+  }
+
   // Make sure our actions continue on to the reducer.
   next(action);
 }
@@ -243,5 +250,6 @@ void createUser(store, lang, token) {
     store.dispatch(new OnUserCreatedAction(userId));
     store.dispatch(new FetchYourLocationsAction());
     store.dispatch(new FetchFireNotificationsAction());
+    store.dispatch(new FetchMonitoredAreasAction());
   });
 }

@@ -21,6 +21,7 @@ AppState appStateReducer(AppState prevState, action) {
       isLoaded: loadedReducer(state.isLoaded, action),
       error: errorReducer(state.error, action),
       fireMapState: fireMapReducer(state.fireMapState, action),
+      monitoredAreas: state.monitoredAreas,
       firesApiKey: state.firesApiKey,
       firesApiUrl: state.firesApiUrl,
       serverUrl: state.serverUrl,
