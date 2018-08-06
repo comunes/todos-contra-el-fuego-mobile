@@ -178,7 +178,8 @@ class _FireNotificationListState extends State<FireNotificationList> {
 
           return Scaffold(
               key: _scaffoldKey,
-              drawer: MainDrawer.getDrawer(context),
+            drawer: new MainDrawer(context, FireNotificationList.routeName),
+
               appBar: new AppBar(
                   title: Text(title),
                   leading: IconButton(

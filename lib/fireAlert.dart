@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'customStepper.dart';
+import 'mainDrawer.dart';
 
 import 'generated/i18n.dart';
 import 'placesAutocompleteUtils.dart';
@@ -83,6 +84,7 @@ class _FireAlertState extends State<FireAlert> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(title: new Text(S.of(context).notifyAFire)),
+        drawer: new MainDrawer(context, FireAlert.routeName),
         body: new CustomStepper(
             currentCustomStep: _currentStep,
             // type: StepperType.horizontal,

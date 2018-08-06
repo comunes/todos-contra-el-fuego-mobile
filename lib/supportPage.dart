@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'generated/i18n.dart';
+import 'mainDrawer.dart';
 
 class SupportPage extends StatefulWidget {
   static const String routeName = '/support';
@@ -33,12 +34,16 @@ class _SupportPageState extends State<SupportPage> {
         key: _scaffoldKey,
         appBar:
             new AppBar(title: new Text(S.of(context).supportThisInitiative)),
+        drawer: new MainDrawer(context, SupportPage.routeName),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: new CenteredColumn(children: <Widget>[
             new Flexible(
                 child: new CenteredColumn(children: <Widget>[
-              new Text(S.of(context).supportPageDescription, textAlign: TextAlign.center,),
+              new Text(
+                S.of(context).supportPageDescription,
+                textAlign: TextAlign.center,
+              ),
               new SizedBox(height: 20.0),
               buildSupportButton()
             ]))

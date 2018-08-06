@@ -10,6 +10,7 @@ class PrivacyPage extends MarkdownPage {
   PrivacyPage(context)
       : super(
             title: S.of(context).privacyPolicy,
+            route: routeName,
             file: getFileNameOfLang(
                 dir: 'assets/pages',
                 fileName: 'privacy',

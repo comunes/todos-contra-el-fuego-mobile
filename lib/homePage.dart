@@ -16,6 +16,7 @@ import 'models/appState.dart';
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'fireNotificationList.dart';
+
 class HomePage extends StatefulWidget {
   static const String routeName = '/home';
 
@@ -52,9 +53,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       store.dispatch(new OnConnectivityChanged(connectionStatus));
       if (connectionStatus == ConnectivityResult.none) {
-        _showDialog(S
-          .of(context)
-          .noConnectivity);
+        _showDialog(S.of(context).noConnectivity);
       }
     });
   }
@@ -73,9 +72,9 @@ class _HomePageState extends State<HomePage> {
       _navigateToItemDetail(message);
     });
     _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true));
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
     _firebaseMessaging.onIosSettingsRegistered
-      .listen((IosNotificationSettings settings) {
+        .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
     _firebaseMessaging.getToken().then((String token) {
@@ -85,15 +84,15 @@ class _HomePageState extends State<HomePage> {
     });
     initConnectivity();
     // StreamSubscription<ConnectivityResult> _connectivitySubscription =
-      _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          store.dispatch(new OnConnectivityChanged(result));
-       //   _showDialog(result.toString());
-        });
+    _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        store.dispatch(new OnConnectivityChanged(result));
+        //   _showDialog(result.toString());
       });
+    });
   }
 
   final _homeFont = const TextStyle(
@@ -101,25 +100,24 @@ class _HomePageState extends State<HomePage> {
     fontWeight: FontWeight.w600,
     // color: Colors.white,
   );
-    final _btnFont = const TextStyle(
+  final _btnFont = const TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.w600,
     // color: Colors.white,
   );
 
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        drawer: MainDrawer.getDrawer(context),
+        drawer: new MainDrawer(context, HomePage.routeName),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton:
             Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
           FloatingActionButton.extended(
             elevation: 0.0,
             onPressed: () {
-               Navigator.pushNamed(context, ActiveFiresPage.routeName);
+              Navigator.pushNamed(context, ActiveFiresPage.routeName);
             },
             label: Text(S.of(context).activeFires, style: _btnFont),
             backgroundColor: fires600,
@@ -172,7 +170,6 @@ class _HomePageState extends State<HomePage> {
                               child: new Text(S.of(context).appName,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
-
                                   style: _homeFont),
                               fit: BoxFit.scaleDown,
                             )),
@@ -182,22 +179,20 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-
-
   void _showDialog(String message) {
     showDialog<bool>(
-      context: _scaffoldKey.currentContext,
-      builder: (_) => new AlertDialog(
-        content: new Text(message),
-        actions: <Widget>[
-          new FlatButton(
-            child: Text(S.of(_scaffoldKey.currentContext).CLOSE),
-            onPressed: () {
-              Navigator.pop(_scaffoldKey.currentContext);
-            },
-          ),
-        ],
-      ));
+        context: _scaffoldKey.currentContext,
+        builder: (_) => new AlertDialog(
+              content: new Text(message),
+              actions: <Widget>[
+                new FlatButton(
+                  child: Text(S.of(_scaffoldKey.currentContext).CLOSE),
+                  onPressed: () {
+                    Navigator.pop(_scaffoldKey.currentContext);
+                  },
+                ),
+              ],
+            ));
   }
 
   void _showItemDialog(Map<String, dynamic> message) {
@@ -240,7 +235,8 @@ class _HomePageState extends State<HomePage> {
     /* if (!notif.getRoute(store).isCurrent) {
       // Navigator.push(_scaffoldKey.currentContext, notif.getRoute(store));
     } */
-    Navigator.pushNamed(_scaffoldKey.currentContext, FireNotificationList.routeName);
+    Navigator.pushNamed(
+        _scaffoldKey.currentContext, FireNotificationList.routeName);
   }
 
   // https://pub.dartlang.org/packages/firebase_messaging#-example-tab-
@@ -250,14 +246,14 @@ class _HomePageState extends State<HomePage> {
     FireNotification notif;
     try {
       notif = new FireNotification(
-        id: new ObjectId.fromHexString(message['id']),
-        subsId: new ObjectId.fromHexString(message['subsId']),
-        lat: double.parse(message['lat']),
-        lon: double.parse(message['lon']),
-        description: message['description'],
-        read: false,
-        when: DateTime.parse(message['when']),
-        sealed: message['sealed']);
+          id: new ObjectId.fromHexString(message['id']),
+          subsId: new ObjectId.fromHexString(message['subsId']),
+          lat: double.parse(message['lat']),
+          lon: double.parse(message['lon']),
+          description: message['description'],
+          read: false,
+          when: DateTime.parse(message['when']),
+          sealed: message['sealed']);
       debugPrint(notif.toString());
     } catch (e) {
       debugPrint(e.toString());
@@ -265,5 +261,4 @@ class _HomePageState extends State<HomePage> {
     if (notif != null) store.dispatch(new AddFireNotificationAction(notif));
     return notif;
   }
-
 }
