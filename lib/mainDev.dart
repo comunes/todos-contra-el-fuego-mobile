@@ -6,7 +6,7 @@ import 'package:redux_logging/redux_logging.dart';
 import 'globals.dart' as globals;
 import 'mainCommon.dart';
 
-enum LogLevel { none, actions, full }
+enum LogLevel { none, actions, all }
 
 LoggingMiddleware customLogPrinter<State>({
   Logger logger,
@@ -45,7 +45,7 @@ void main() {
       ? []
       : [
           customLogPrinter(
-              formatter: logRedux == LogLevel.full
+              formatter: logRedux == LogLevel.all
                   ? LoggingMiddleware.multiLineFormatter
                   : onlyLogActionFormatter)
         ];
