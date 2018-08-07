@@ -1,21 +1,23 @@
+import 'dart:async';
+
+import 'package:bson_objectid/bson_objectid.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:flutter/material.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
-import 'redux/actions.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:redux/redux.dart';
+
 import 'activeFires.dart';
-import 'fireAlert.dart';
 import 'colors.dart';
+import 'fireAlert.dart';
+import 'fireNotificationList.dart';
 import 'generated/i18n.dart';
 import 'mainDrawer.dart';
-import 'package:connectivity/connectivity.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:redux/redux.dart';
 import 'models/appState.dart';
-import 'package:bson_objectid/bson_objectid.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'fireNotificationList.dart';
+import 'redux/actions.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -63,12 +65,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       debugPrint("onMessage in fireApp: $message");
-      _showItemDialog(message);
+      _showItemDialog(message, _notifForMessage(message));
     }, onLaunch: (Map<String, dynamic> message) {
       debugPrint("onLaunch: $message");
+      _notifForMessage(message);
       _navigateToItemDetail(message);
     }, onResume: (Map<String, dynamic> message) {
       debugPrint("onResume: $message");
+      _notifForMessage(message);
       _navigateToItemDetail(message);
     });
     _firebaseMessaging.requestNotificationPermissions(
@@ -79,6 +83,7 @@ class _HomePageState extends State<HomePage> {
     });
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
+      // print(token);
       store.dispatch(new OnUserTokenAction(token));
       setState(() {});
     });
@@ -195,8 +200,7 @@ class _HomePageState extends State<HomePage> {
             ));
   }
 
-  void _showItemDialog(Map<String, dynamic> message) {
-    final notif = _notifForMessage(message);
+  void _showItemDialog(Map<String, dynamic> message, FireNotification notif) {
     showDialog<bool>(
       context: _scaffoldKey.currentContext,
       builder: (_) => _buildDialog(_scaffoldKey.currentContext, notif),
@@ -228,7 +232,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToItemDetail(Map<String, dynamic> message) {
-    _notifForMessage(message);
     // Clear away dialogs
     Navigator.popUntil(_scaffoldKey.currentContext,
         (Route<dynamic> route) => route is PageRoute);
