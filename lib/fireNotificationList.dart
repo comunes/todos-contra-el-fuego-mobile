@@ -62,6 +62,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
     String prefix = "";
 
     if (notif.subsId != null) {
+      // FIXME (this can fails if you don't have a location for this notif, for instance during tests)
       YourLocation yl =
           yourLocations.singleWhere((yl) => yl.id == notif.subsId);
       prefix = '${yl.description}. ';
@@ -143,7 +144,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
     return new StoreConnector<AppState, _ViewModel>(
         distinct: true,
         converter: (store) {
-          print('New ViewModel of Fires Notifications');
+          print('New ViewModel of Fires Notifications (unread: ${store.state.fireNotificationsUnread})');
           return new _ViewModel(
               onDeleteAll: () {
                 store.dispatch(new DeleteAllFireNotificationAction());
