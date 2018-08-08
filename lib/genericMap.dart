@@ -385,9 +385,6 @@ class _genericMapState extends State<genericMap> {
     List<Marker> markers = [];
     print('building markers: fires: ${fires.length} falsePos: ${falsePosList.length} industries: ${industries.length}, isNotif: ${isNotif} ');
     const calibrate = false; // useful when we change the fire icons size
-    markers.add(FireMarker(
-        pos, isNotif ? FireMarkType.fire : FireMarkType.position));
-    if (calibrate) markers.add(FireMarker(pos, FireMarkType.pixel));
     falsePosList.forEach((falsePos) {
       var coords = falsePos['geo']['coordinates'];
       print('false pos: ${coords}');
@@ -408,6 +405,9 @@ class _genericMapState extends State<genericMap> {
           FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
       markers.add(FireMarker(loc, FireMarkType.pixel));
     });
+    markers.add(FireMarker(
+      pos, isNotif ? FireMarkType.fire : FireMarkType.position));
+    if (calibrate) markers.add(FireMarker(pos, FireMarkType.pixel));
     return markers;
   }
 }
