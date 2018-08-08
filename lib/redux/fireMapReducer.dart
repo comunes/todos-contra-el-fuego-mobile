@@ -8,7 +8,7 @@ final fireMapReducer = combineReducers<FireMapState>([
       _showYourLocationMap),
   new TypedReducer<FireMapState, ShowFireNotificationMapAction>(
     _showFireNotificationMap),
-  new TypedReducer<FireMapState, UpdateYourLocationMapStatsAction>(
+  new TypedReducer<FireMapState, UpdateFireMapStatsAction>(
       _updateYourLocationMapStats),
   new TypedReducer<FireMapState, SubscribeAction>(_subscribeYourLocationMap),
   new TypedReducer<FireMapState, SubscribeConfirmAction>(
@@ -27,7 +27,7 @@ final fireMapReducer = combineReducers<FireMapState>([
 ]);
 
 FireMapState _updateYourLocationMapStats(
-    FireMapState state, UpdateYourLocationMapStatsAction action) {
+    FireMapState state, UpdateFireMapStatsAction action) {
   return state.copyWith(
       numFires: action.numFires,
       fires: action.fires,

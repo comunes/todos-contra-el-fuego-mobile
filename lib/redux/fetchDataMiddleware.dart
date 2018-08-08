@@ -97,13 +97,7 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
   }
 
   if (action is ShowFireNotificationMapAction) {
-    api
-        .getFiresInLocation(
-            state: store.state,
-            lat: action.notif.lat,
-            lon: action.notif.lon,
-            distance: 1) // FalsePositive/server/publications.js
-        .then((result) => store.dispatch(result));
+    getFiresStatsInFire(store, action.notif);
   }
 
   if (action is UpdateYourLocationAction) {
@@ -221,8 +215,28 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
        });
   }
 
+  if (action is MarkFireAsFalsePositiveAction) {
+    api.markFalsePositive(store.state, store.state.user.token, action.notif.sealed, action.type).then((result) {
+      if (result) {
+        // Not necessary
+        // store.dispatch(new UpdatedFireNotificationAction(action.notif));
+        getFiresStatsInFire(store, action.notif);
+      }
+    });
+  }
+
   // Make sure our actions continue on to the reducer.
   next(action);
+}
+
+void getFiresStatsInFire(Store<AppState> store, FireNotification notif) {
+  api
+      .getFiresInLocation(
+          state: store.state,
+          lat: notif.lat,
+          lon: notif.lon,
+          distance: 1) // FalsePositive/server/publications.js
+      .then((result) => store.dispatch(result));
 }
 
 void unsubsViaApi(Store<AppState> store, ObjectId id, onUnsubs) {

@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:fires_flutter/models/basicLocation.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -18,12 +17,13 @@ import 'fireMarker.dart';
 import 'generated/i18n.dart';
 import 'genericMapBottom.dart';
 import 'globals.dart' as globals;
+import 'layerSelectorMapPlugin.dart';
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
 import 'redux/actions.dart';
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
-import 'layerSelectorMapPlugin.dart';
+
 @immutable
 class _ViewModel {
   final String serverUrl;
@@ -36,6 +36,7 @@ class _ViewModel {
   final OnLocationEditConfirm onEditConfirm;
   final OnLocationEditCancel onEditCancel;
   final OnLocationEditing onEditing;
+  final OnFalsePositive onFalsePositive;
 
   _ViewModel(
       {@required this.mapState,
@@ -47,6 +48,7 @@ class _ViewModel {
       @required this.onEdit,
       @required this.onEditing,
       @required this.onEditConfirm,
+      @required this.onFalsePositive,
       @required this.onEditCancel});
 
   @override
@@ -108,6 +110,8 @@ class _genericMapState extends State<genericMap> {
                 store.dispatch(new UpdateYourLocationMapAction(loc));
                 store.dispatch(new EditConfirmYourLocationAction(loc));
               },
+              onFalsePositive: (notif, type) => store
+                  .dispatch(new MarkFireAsFalsePositiveAction(notif, type)),
               serverUrl: store.state.serverUrl,
               mapState: store.state.fireMapState);
         },
@@ -127,8 +131,16 @@ class _genericMapState extends State<genericMap> {
           MapOptions mapOptions = new MapOptions(
               center: new LatLng(_location.lat, _location.lon),
               plugins: globals.isDevelopment
-                  ? [new ZoomMapPlugin(), new AttributionPlugin(), new LayerSelectorMapPlugin()]
-                  : [new DummyMapPlugin(), new AttributionPlugin(), new LayerSelectorMapPlugin()],
+                  ? [
+                      new ZoomMapPlugin(),
+                      new AttributionPlugin(),
+                      new LayerSelectorMapPlugin()
+                    ]
+                  : [
+                      new DummyMapPlugin(),
+                      new AttributionPlugin(),
+                      new LayerSelectorMapPlugin()
+                    ],
               // this works ?
               interactive: false,
               zoom: 13.0,
@@ -166,8 +178,8 @@ class _genericMapState extends State<genericMap> {
           switch (layer) {
             case FireMapLayer.osmc:
             case FireMapLayer.osmcGrey:
-            attribution = '© OpenStreetMap contributors';
-            break;
+              attribution = '© OpenStreetMap contributors';
+              break;
             case FireMapLayer.esri:
             case FireMapLayer.esriSatellite:
             case FireMapLayer.esriTerrain:
@@ -177,20 +189,24 @@ class _genericMapState extends State<genericMap> {
           switch (layer) {
             case FireMapLayer.osmc:
               subdomains = ['a', 'b', 'c'];
-                baseLayer = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+              baseLayer =
+                  'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
               break;
             case FireMapLayer.osmcGrey:
               subdomains = ['a', 'b', 'c'];
-                baseLayer = 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
+              baseLayer = 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
               break;
             case FireMapLayer.esri:
-              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+              baseLayer =
+                  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
               break;
             case FireMapLayer.esriSatellite:
-              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+              baseLayer =
+                  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
               break;
             case FireMapLayer.esriTerrain:
-              baseLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
+              baseLayer =
+                  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
           }
           FlutterMap map = new FlutterMap(
             options: mapOptions,
@@ -209,7 +225,7 @@ class _genericMapState extends State<genericMap> {
                   : new DummyMapPluginOptions(),
               new MarkerLayerOptions(
                 markers: buildMarkers(
-                    _location,
+                  mapState.status == FireMapStatus.viewFireNotification ? new LatLng(mapState.fireNotification.lat, mapState.fireNotification.lon): new LatLng(_location.lat, _location.lon),
                     mapState.fires,
                     mapState.industries,
                     mapState.falsePos,
@@ -290,9 +306,11 @@ class _genericMapState extends State<genericMap> {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
               bottomNavigationBar: new GenericMapBottom(
-                  onSave: () => view.onEditConfirm(_location),
-                  onCancel: () => view.onEditCancel(_initialLocation),
-                  state: view.mapState,
+                onSave: () => view.onEditConfirm(_location),
+                onCancel: () => view.onEditCancel(_initialLocation),
+                onFalsePositive: (sealed, type) =>
+                    view.onFalsePositive(sealed, type),
+                state: view.mapState,
                 scaffoldKey: _scaffoldKey,
               ),
               body: LayoutBuilder(
@@ -362,28 +380,30 @@ class _genericMapState extends State<genericMap> {
     }
   }
 
-  List<Marker> buildMarkers(YourLocation yourLocation, List<dynamic> fires,
-      List<dynamic> falsePos, List<dynamic> industries, bool isNotif) {
+  List<Marker> buildMarkers(LatLng pos, List<dynamic> fires,
+      List<dynamic> falsePosList, List<dynamic> industries, bool isNotif) {
     List<Marker> markers = [];
+    print('building markers: fires: ${fires.length} falsePos: ${falsePosList.length} industries: ${industries.length}, isNotif: ${isNotif} ');
     const calibrate = false; // useful when we change the fire icons size
     markers.add(FireMarker(
-        yourLocation, isNotif ? FireMarkType.fire : FireMarkType.position));
-    if (calibrate) markers.add(FireMarker(yourLocation, FireMarkType.pixel));
-    falsePos.forEach((fire) {
-      var coords = fire['geo']['coordinates'];
-      var loc = BasicLocation(lon: coords[0], lat: coords[1]);
+        pos, isNotif ? FireMarkType.fire : FireMarkType.position));
+    if (calibrate) markers.add(FireMarker(pos, FireMarkType.pixel));
+    falsePosList.forEach((falsePos) {
+      var coords = falsePos['geo']['coordinates'];
+      print('false pos: ${coords}');
+      var loc = LatLng(coords[1], coords[0]);
       markers.add(FireMarker(loc, FireMarkType.falsePos));
       if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
-    industries.forEach((fire) {
+    industries.forEach((industry) {
       // print(fire['geo']['coordinates']);
-      var coords = fire['geo']['coordinates'];
-      var loc = BasicLocation(lon: coords[0], lat: coords[1]);
+      var coords = industry['geo']['coordinates'];
+      var loc = LatLng(coords[1], coords[0]);
       markers.add(FireMarker(loc, FireMarkType.industry));
       if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     fires.forEach((fire) {
-      var loc = new BasicLocation(lat: fire['lat'], lon: fire['lon']);
+      var loc = new LatLng(fire['lat'], fire['lon']);
       markers.add(
           FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
       markers.add(FireMarker(loc, FireMarkType.pixel));

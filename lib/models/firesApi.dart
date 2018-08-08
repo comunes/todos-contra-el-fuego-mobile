@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
+import 'falsePositiveTypes.dart';
 
 import 'package:bson_objectid/bson_objectid.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
@@ -18,8 +19,8 @@ class FiresApi {
     resty.globalClient = new ht.IOClient();
   }
 
-  Future<String> createUser(
-      AppState state, String mobileToken, String lang) async {
+  Future<String> createUser(AppState state, String mobileToken,
+    String lang) async {
     assert(state.firesApiUrl != null);
     assert(state.firesApiKey != null);
     assert(mobileToken != null);
@@ -50,18 +51,18 @@ class FiresApi {
       if (response.statusCode == 200) {
         // print(response.body);
         final dataSubscriptions =
-            json.decode(response.body)['data']['subscriptions'];
+        json.decode(response.body)['data']['subscriptions'];
         List<YourLocation> subscribed = [];
         for (int i = 0; i < dataSubscriptions.length; i++) {
           var el = dataSubscriptions[i];
           var lat = el['location']['lat'];
           var lon = el['location']['lon'];
           subscribed.add(new YourLocation(
-              id: ObjectId.fromHexString(el['_id']['_str']),
-              lat: lat,
-              lon: lon,
-              subscribed: true,
-              distance: el['distance']));
+            id: ObjectId.fromHexString(el['_id']['_str']),
+            lat: lat,
+            lon: lon,
+            subscribed: true,
+            distance: el['distance']));
         }
 
         return subscribed;
@@ -116,12 +117,13 @@ class FiresApi {
     });
   }
 
-  Future<UpdateYourLocationMapStatsAction> getFiresInLocation(
-      {AppState state, double lat, double lon, int distance}) async {
+  Future<UpdateFireMapStatsAction> getFiresInLocation(
+    {AppState state, double lat, double lon, int distance}) async {
     assert(state.firesApiUrl != null);
     assert(state.firesApiKey != null);
     var url = '${state.firesApiUrl}fires-in-full/${state
       .firesApiKey}/${lat}/${lon}/${distance}';
+    if (globals.isDevelopment) print(url);
     return await resty.get(url).go().then((response) {
       if (response.statusCode == 200) {
         var resultDecoded = json.decode(response.body);
@@ -135,13 +137,13 @@ class FiresApi {
           var industriesCount = industries.length;
           var falsePosCount = falsePos.length;
           print(
-              'real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
+            '(Pos: $lat, $lon) real: $numFires, fire: $firesCount falsePos: $falsePosCount industries: $industriesCount');
         }
-        return new UpdateYourLocationMapStatsAction(
-            numFires: numFires,
-            fires: fires,
-            falsePos: falsePos,
-            industries: industries);
+        return new UpdateFireMapStatsAction(
+          numFires: numFires,
+          fires: fires,
+          falsePos: falsePos,
+          industries: industries);
       } else
         throw Exception('Wrong response trying to get fire data');
     });
@@ -159,20 +161,49 @@ class FiresApi {
         // print(resultDecoded['data']['union']);
         List<Polyline> union = [];
         final multipolygon =
-            json.decode(resultDecoded['data']['union']['value'])['geometry']
-                ['coordinates'];
+        json.decode(resultDecoded['data']['union']['value'])['geometry']
+        ['coordinates'];
         for (List<dynamic> polygon in multipolygon) {
           for (List<dynamic> hole in polygon) {
             List<LatLng> points = [];
             for (List<dynamic> point in hole) {
               points.add(new LatLng(point[1].toDouble(), point[0].toDouble()));
             }
-            union.add(new Polyline(points: points, color: color, strokeWidth: 3.0));
+            union.add(
+              new Polyline(points: points, color: color, strokeWidth: 3.0));
           }
         }
         return union;
       } else
         throw Exception('Wrong response trying to get fire data');
+    });
+  }
+
+  Future<bool> markFalsePositive(AppState state, String mobileToken,
+    String sealed, FalsePositiveType type) async {
+    assert(state.firesApiUrl != null);
+    assert(state.firesApiKey != null);
+    assert(mobileToken != null);
+    assert(sealed != null);
+    assert(type != null);
+
+    final params = {
+      "token": state.firesApiKey,
+      "mobileToken": mobileToken,
+      "sealed": sealed,
+      "type": type.toString()
+    };
+    final String url = '${state.firesApiUrl}mobile/falsepositive';
+    return await resty.post(url).json(params).go().then((response) {
+      if (response.statusCode == 200) {
+        // print(response.body);
+        if (globals.isDevelopment) print(
+          json.decode(response.body)['data']['upsert']);
+        return true;
+      } else {
+        debugPrint(json.decode(response.body));
+        return false;
+      }
     });
   }
 }

@@ -12,13 +12,13 @@ class UpdateYourLocationMapAction extends FiresMapActions {
   );
 }
 
-class UpdateYourLocationMapStatsAction extends FiresMapActions {
+class UpdateFireMapStatsAction extends FiresMapActions {
   int numFires;
   List<dynamic> fires = [];
   List<dynamic> falsePos = [];
   List<dynamic> industries = [];
 
-  UpdateYourLocationMapStatsAction(
+  UpdateFireMapStatsAction(
       {@required this.numFires,
       @required this.fires,
       @required this.falsePos,

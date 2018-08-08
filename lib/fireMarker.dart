@@ -7,12 +7,12 @@ import 'fireMarkType.dart';
 
 class FireMarker extends Marker {
 
-  FireMarker(location, type,
+  FireMarker(LatLng pos, type,
       [onTap = null, AnchorPos anchor = AnchorPos.center, Anchor anchorOverride])
       : super(
           width: 80.0,
           height: 80.0,
-          point: new LatLng(location.lat, location.lon),
+          point: pos,
           builder: (ctx) => new Container(
                 child: new GestureDetector(
                   child: new FireMarkerIcon(type), onTap: onTap)

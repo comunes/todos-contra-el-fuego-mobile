@@ -1,4 +1,5 @@
 import 'package:fires_flutter/models/fireNotification.dart';
+import '../models/falsePositiveTypes.dart';
 
 abstract class FireNotificationActions {}
 
@@ -44,4 +45,17 @@ class ReadedFireNotificationAction extends FireNotificationActions {
   final FireNotification notif;
 
   ReadedFireNotificationAction(this.notif);
+}
+
+class MarkFireAsFalsePositiveAction extends FireNotificationActions {
+  final FireNotification notif;
+  final FalsePositiveType type;
+
+  MarkFireAsFalsePositiveAction(this.notif, this.type);
+}
+
+class UpdatedFireNotificationAction extends FireNotificationActions {
+  final FireNotification notif;
+
+  UpdatedFireNotificationAction(this.notif);
 }

@@ -1,8 +1,14 @@
-import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:fires_flutter/models/fireNotification.dart';
+import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:meta/meta.dart';
 
-enum FireMapStatus { view, subscriptionConfirm, unsubscribe, edit, viewFireNotification }
+enum FireMapStatus {
+  view,
+  subscriptionConfirm,
+  unsubscribe,
+  edit,
+  viewFireNotification
+}
 enum FireMapLayer { osmcGrey, esriSatellite, osmc, esri, esriTerrain }
 
 @immutable
@@ -18,9 +24,9 @@ class FireMapState {
 
   const FireMapState.initial()
       : this.status = FireMapStatus.view,
-      this.layer = FireMapLayer.osmcGrey,
+        this.layer = FireMapLayer.osmcGrey,
         this.yourLocation = null,
-  this.fireNotification = null,
+        this.fireNotification = null,
         this.numFires = 0,
         this.fires = const [],
         this.falsePos = const [],
@@ -28,11 +34,11 @@ class FireMapState {
 
   FireMapState(
       {this.status: FireMapStatus.view,
-        this.layer: FireMapLayer.osmcGrey,
+      this.layer: FireMapLayer.osmcGrey,
       this.yourLocation,
       this.numFires,
-        this.fires,
-        this.fireNotification,
+      this.fires,
+      this.fireNotification,
       this.falsePos,
       this.industries});
 
@@ -63,9 +69,9 @@ class FireMapState {
       other is FireMapState &&
           runtimeType == other.runtimeType &&
           status == other.status &&
-        layer == other.layer &&
+          layer == other.layer &&
           numFires == other.numFires &&
-        fireNotification == other.fireNotification &&
+          fireNotification == other.fireNotification &&
           fires == other.fires &&
           falsePos == other.falsePos &&
           industries == other.industries &&

@@ -1,17 +1,19 @@
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
-import 'package:fires_flutter/models/fireNotification.dart';
 
 final fireNotificationReducer = combineReducers<List<FireNotification>>([
   new TypedReducer<List<FireNotification>, AddedFireNotificationAction>(
       _addedFireNotification),
   new TypedReducer<List<FireNotification>, DeletedFireNotificationAction>(
-    _deletedFireNotification),
+      _deletedFireNotification),
+  new TypedReducer<List<FireNotification>, UpdatedFireNotificationAction>(
+      _updatedFireNotification),
   new TypedReducer<List<FireNotification>, DeletedAllFireNotificationAction>(
-    _deletedAllFireNotifications),
+      _deletedAllFireNotifications),
   new TypedReducer<List<FireNotification>, ReadedFireNotificationAction>(
-    _readedFireNotification)
+      _readedFireNotification)
 ]);
 
 List<FireNotification> _addedFireNotification(
@@ -20,8 +22,16 @@ List<FireNotification> _addedFireNotification(
 }
 
 List<FireNotification> _deletedFireNotification(
-  List<FireNotification> notifications, DeletedFireNotificationAction action) {
+    List<FireNotification> notifications,
+    DeletedFireNotificationAction action) {
   return new List.from(notifications)..remove(action.notif);
+}
+
+List<FireNotification> _updatedFireNotification(
+    List<FireNotification> notifications, UpdatedFireNotificationAction action) {
+  return notifications
+      .map((notif) => notif.id == action.notif.id ? action.notif : notif)
+      .toList();
 }
 
 List<FireNotification> _readedFireNotification(
@@ -33,6 +43,7 @@ List<FireNotification> _readedFireNotification(
 }
 
 List<FireNotification> _deletedAllFireNotifications(
-  List<FireNotification> notifications, DeletedAllFireNotificationAction action) {
+    List<FireNotification> notifications,
+    DeletedAllFireNotificationAction action) {
   return new List<FireNotification>();
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
+import 'package:fires_flutter/models/fireNotification.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
@@ -14,17 +15,19 @@ import 'models/fireMapState.dart';
 
 typedef void OnSave();
 typedef void OnCancel();
-typedef void OnFalsePositive();
+typedef void OnFalsePositive(FireNotification notif, FalsePositiveType type);
 
 class GenericMapBottom extends StatelessWidget {
   final OnSave onSave;
   final OnCancel onCancel;
+  final OnFalsePositive onFalsePositive;
   final FireMapState state;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   GenericMapBottom(
       {@required this.onSave,
       @required this.onCancel,
+        @required this.onFalsePositive,
       @required this.state,
       @required this.scaffoldKey});
 
@@ -107,7 +110,7 @@ class GenericMapBottom extends StatelessWidget {
                                 value: value, child: new Text(menuText));
                           }).toList(),
                           onChanged: (value) async {
-                            // FIXME api call
+                            onFalsePositive(state.fireNotification, value);
                             await new Future.delayed(
                                 new Duration(milliseconds: 500));
                             scaffoldKey.currentState.showSnackBar(new SnackBar(
