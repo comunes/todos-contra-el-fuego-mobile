@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:latlong/latlong.dart';
 
 import 'colors.dart';
@@ -9,6 +8,7 @@ import 'customBottomAppBar.dart';
 import 'generated/i18n.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
+import 'firesSpinner.dart';
 
 class _ViewModel {
   List<Polyline> monitoredAreas;
@@ -61,7 +61,7 @@ class MonitoredAreasPage extends StatelessWidget {
                               ])))
                 ]),
             body: !(view.monitoredAreas is List)
-                ? new SpinKitPulse(color: fires600)
+                ? new FiresSpinner()
                 : new Padding(
                     padding: new EdgeInsets.all(10.0),
                     child: new Column(

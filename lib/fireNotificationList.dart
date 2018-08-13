@@ -13,9 +13,11 @@ import 'genericMap.dart';
 import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'redux/actions.dart';
+import 'firesSpinner.dart';
 
 @immutable
 class _ViewModel {
+  final bool isLoaded;
   final List<FireNotification> fireNotifications;
   final int fireNotificationsUnread;
   final List<YourLocation> yourLocations;
@@ -24,7 +26,8 @@ class _ViewModel {
   final DeleteAllFireNotificationFunction onDeleteAll;
 
   _ViewModel(
-      {@required this.onTap,
+      {@required this.isLoaded,
+      @required this.onTap,
       @required this.onDelete,
       @required this.onDeleteAll,
       @required this.fireNotifications,
@@ -36,12 +39,14 @@ class _ViewModel {
       identical(this, other) ||
       other is _ViewModel &&
           runtimeType == other.runtimeType &&
+          isLoaded == other.isLoaded &&
           fireNotifications == other.fireNotifications &&
           fireNotificationsUnread == other.fireNotificationsUnread &&
           yourLocations == other.yourLocations;
 
   @override
   int get hashCode =>
+      isLoaded.hashCode ^
       fireNotifications.hashCode ^
       fireNotificationsUnread.hashCode ^
       yourLocations.hashCode;
@@ -144,8 +149,10 @@ class _FireNotificationListState extends State<FireNotificationList> {
     return new StoreConnector<AppState, _ViewModel>(
         distinct: true,
         converter: (store) {
-          print('New ViewModel of Fires Notifications (unread: ${store.state.fireNotificationsUnread})');
+          print('New ViewModel of Fires Notifications (unread: ${store.state
+          .fireNotificationsUnread})');
           return new _ViewModel(
+              isLoaded: store.state.isLoaded,
               onDeleteAll: () {
                 store.dispatch(new DeleteAllFireNotificationAction());
               },
@@ -179,8 +186,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
 
           return Scaffold(
               key: _scaffoldKey,
-            drawer: new MainDrawer(context, FireNotificationList.routeName),
-
+              drawer: new MainDrawer(context, FireNotificationList.routeName),
               appBar: new AppBar(
                   title: Text(title),
                   leading: IconButton(
@@ -196,7 +202,7 @@ class _FireNotificationListState extends State<FireNotificationList> {
                             onPressed: () => _showConfirmDialog(view))
                         : null
                   ])),
-              body: !hasFireNotifications
+              body: !view.isLoaded ? new FiresSpinner() : !hasFireNotifications
                   ? Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: new Card(

@@ -17,6 +17,7 @@ import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
+import 'firesSpinner.dart';
 
 @immutable
 class _ViewModel {
@@ -217,7 +218,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
                 FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: new GlobalFiresBottomStats(),
             body: view.isLoading
-                ? new SpinKitPulse(color: fires600)
+                ? new FiresSpinner()
                 : hasLocations
                     ? new Stack(children: <Widget>[
                         new RefreshIndicator(
