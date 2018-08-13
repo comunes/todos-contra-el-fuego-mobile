@@ -387,7 +387,7 @@ class _genericMapState extends State<genericMap> {
     const calibrate = false; // useful when we change the fire icons size
     falsePosList.forEach((falsePos) {
       var coords = falsePos['geo']['coordinates'];
-      print('false pos: ${coords}');
+      // print('false pos: ${coords}');
       var loc = LatLng(coords[1], coords[0]);
       markers.add(FireMarker(loc, FireMarkType.falsePos));
       if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
