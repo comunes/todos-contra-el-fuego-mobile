@@ -103,12 +103,10 @@ class _HomePageState extends State<HomePage> {
   final _homeFont = const TextStyle(
     fontSize: 50.0,
     fontWeight: FontWeight.w600,
-    // color: Colors.white,
   );
   final _btnFont = const TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.w600,
-    // color: Colors.white,
   );
 
   @override
