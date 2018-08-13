@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:redux/src/store.dart';
 
+import 'globals.dart';
 import 'monitoredAreas.dart';
 import 'activeFires.dart';
 import 'fireAlert.dart';
@@ -19,6 +20,7 @@ import 'redux/actions.dart';
 import 'sandbox.dart';
 import 'supportPage.dart';
 import 'theme.dart';
+import 'themeDev.dart';
 
 class FiresApp extends StatefulWidget {
   FiresApp(this.store);
@@ -80,7 +82,7 @@ class _FiresAppState extends State<FiresApp> {
               }
               return S.of(context).appName;
             },
-            theme: firesTheme,
+            theme: isDevelopment? devFiresTheme: firesTheme,
             routes: routes));
   }
 }
