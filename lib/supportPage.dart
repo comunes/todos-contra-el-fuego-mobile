@@ -2,6 +2,7 @@ import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 import 'generated/i18n.dart';
 import 'mainDrawer.dart';
@@ -36,8 +37,7 @@ class _SupportPageState extends State<SupportPage> {
         icon: const Icon(Icons.share),
         label: new Text(S.of(context).shareAppBtn),
         onPressed: () {
-          launch(
-              "https://play.google.com/store/apps/details?id=org.comunes.fires");
+          Share.share('https://play.google.com/store/apps/details?id=org.comunes.fires');
         },
       ),
     );
