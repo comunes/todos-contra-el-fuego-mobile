@@ -76,5 +76,8 @@
   "thanksForParticipating": "Gracias por Participar",
   "inGreenMonitoredAreas": "En verde, las zonas vigiladas por nuestros usuari@s actualmente",
   "monitoredAreasTitle": "Zonas vigiladas",
-  "mapPrivacy": "Para preservar la privacidad de nuestros usuarios/as, los datos reflejados están aleatoriamente alterados y son solo orientativos."
+  "mapPrivacy": "Para preservar la privacidad de nuestros usuarios/as, los datos reflejados están aleatoriamente alterados y son solo orientativos.",
+  "comunesSupportBtn": "Conoce y apoya nuestro trabajo",
+  "shareAppBtn": "Comparte nuestra app",
+  "starAppBtn": "Puntúa nuestra app"
 }

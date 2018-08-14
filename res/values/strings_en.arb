@@ -76,5 +76,8 @@
   "thanksForParticipating": "Thanks for participating",
   "inGreenMonitoredAreas": "In green, the areas monitored by our users currently",
   "monitoredAreasTitle": "Monitored areas",
-  "mapPrivacy": "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative."
+  "mapPrivacy": "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative.",
+  "comunesSupportBtn": "Know and support our work",
+  "shareAppBtn": "Share our app",
+  "starAppBtn": "Rate our app"
 }

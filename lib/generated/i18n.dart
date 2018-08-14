@@ -47,6 +47,7 @@ class S implements WidgetsLocalizations {
   String get callEmergencyServicesTitle => "Call 112";
   String get chooseAPlace => "Choose a place";
   String get chooseAWatchRadio => "Choose a watch radio";
+  String get comunesSupportBtn => "Know and support our work";
   String get confirm => "Confirm";
   String get deleteAllFireNotificationsAlertDescription => "This will remove all your fire notifications";
   String get errorFirePlaceDialog => "We couldn't get the location of the fire";
@@ -72,6 +73,8 @@ class S implements WidgetsLocalizations {
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
   String get privacyPolicy => "Privacy Policy";
+  String get shareAppBtn => "Share our app";
+  String get starAppBtn => "Rate our app";
   String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, suggesting other public data sources of fires to use, etc.";
   String get supportThisInitiative => "Support this initiative";
   String get thanksForParticipating => "Thanks for participating";
@@ -156,6 +159,8 @@ class es extends S {
   @override
   String get itSeemsAControlledBurning => "Es una quema controlada";
   @override
+  String get comunesSupportBtn => "Conoce y apoya nuestro trabajo";
+  @override
   String get itSeemsAIndustry => "Es una industria";
   @override
   String get youDeletedThisPlace => "Has borrado este lugar";
@@ -192,6 +197,8 @@ class es extends S {
   @override
   String get thanksForParticipating => "Gracias por Participar";
   @override
+  String get starAppBtn => "Puntúa nuestra app";
+  @override
   String get fireNotificationsTitleShort => "Notificaciones";
   @override
   String get DELETE => "BORRAR";
@@ -201,6 +208,8 @@ class es extends S {
   String get SAVE => "GUARDAR";
   @override
   String get SHOW => "MOSTRAR";
+  @override
+  String get shareAppBtn => "Comparte nuestra app";
   @override
   String get itSeemsAFalseAlarm => "Parece una falsa alarma";
   @override
