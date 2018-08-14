@@ -55,7 +55,6 @@ Widget mainDrawer(BuildContext context, String currentRoute) {
             children: listWithoutNulls(<Widget>[
               new GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
                   Navigator.popAndPushNamed(context, '/');
                 },
                 child: new DrawerHeader(
@@ -115,7 +114,6 @@ Widget mainDrawer(BuildContext context, String currentRoute) {
                 selected: currentRoute == MonitoredAreasPage.routeName,
                 title: new Text(S.of(context).monitoredAreasTitle),
                 onTap: () {
-                  Navigator.pop(context);
                   Navigator.popAndPushNamed(
                       context, MonitoredAreasPage.routeName);
                 },
