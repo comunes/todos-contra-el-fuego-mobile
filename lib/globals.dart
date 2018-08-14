@@ -1,10 +1,11 @@
 library fires.globals;
 
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-final String appVersion = '1.6';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String appVersion;
 
 final Widget appMediumIcon =
     Image.asset('images/logo-200.png', width: 60.0, height: 60.0);
