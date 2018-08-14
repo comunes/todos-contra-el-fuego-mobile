@@ -35,13 +35,6 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
     injector.map<String>((i) => store.state.serverUrl, key: "serverUrl");
     injector.map<String>((i) => store.state.gmapKey, key: "gmapKey");
 
-/*    VoidCallback mainFn = () {
-      loadYourLocations().then((yl) {
-        // Run baby run!
-
-      });
-    }; */
-
     var useSentry = !globals.isDevelopment;
 
     SentryClient _sentry;
@@ -73,7 +66,8 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
   });
 }
 
-Future<Null> _reportError(bool useSentry, SentryClient sentry, dynamic error, dynamic stackTrace) async {
+Future<Null> _reportError(bool useSentry, SentryClient sentry, dynamic error,
+    dynamic stackTrace) async {
   // Print the exception to the console
   print('Caught error: $error');
   if (!useSentry) {
@@ -88,4 +82,3 @@ Future<Null> _reportError(bool useSentry, SentryClient sentry, dynamic error, dy
     );
   }
 }
-

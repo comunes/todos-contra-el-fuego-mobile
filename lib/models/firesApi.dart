@@ -47,9 +47,10 @@ class FiresApi {
     final mobileToken = state.user.token;
     final String url = '${state
       .firesApiUrl}mobile/subscriptions/all/$apiKey/$mobileToken';
+    // if (globals.isDevelopment) print('$url');
     return await resty.get(url).go().then((response) {
       if (response.statusCode == 200) {
-        // print(response.body);
+        // if (globals.isDevelopment) print(response.body);
         final dataSubscriptions =
         json.decode(response.body)['data']['subscriptions'];
         List<YourLocation> subscribed = [];

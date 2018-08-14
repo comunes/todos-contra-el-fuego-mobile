@@ -149,13 +149,13 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
 
   if (action is FetchYourLocationsAction) {
     // Use the api to fetch the YourLocations
+    loadYourLocations().then((localLocations) {
     api
         .fetchYourLocations(store.state)
         .then((List<YourLocation> subscribedLocations) {
       // If it succeeds, dispatch a success action with the YourLocations.
       // Our reducer will then update the State using these YourLocations.
       // print('Subscribed to: ${subscribedLocations.length}');
-      loadYourLocations().then((localLocations) {
         if (subscribedLocations is List) {
           // unsubscribe all locally to sync the subs state
           localLocations.forEach((location) => location.subscribed = false);
@@ -167,30 +167,32 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
             }).subscribed = true;
           });
         }
+
+        store.dispatch(new FetchYourLocationsSucceededAction(localLocations));
+        persistYourLocations(localLocations);
+
         localLocations.forEach((yl) {
           api
-              .getFiresInLocation(
-                  state: store.state,
-                  lat: yl.lat,
-                  lon: yl.lon,
-                  distance: yl.distance)
-              .then((value) {
+            .getFiresInLocation(
+            state: store.state,
+            lat: yl.lat,
+            lon: yl.lon,
+            distance: yl.distance)
+            .then((value) {
             yl.currentNumFires = value.numFires;
             store.dispatch(new UpdateYourLocationAction(yl));
           });
         });
 
-        store.dispatch(new FetchYourLocationsSucceededAction(localLocations));
-        persistYourLocations(localLocations);
         Completer<Null> completer = action.refreshCallback;
         if (completer != null) {
           completer.complete(null);
         }
       });
-    }).catchError((Exception error) {
+    }).catchError((onError) {
       // If it fails, dispatch a failure action. The reducer will
       // update the state with the error.
-      store.dispatch(new FetchYourLocationsFailedAction(error));
+      store.dispatch(new FetchYourLocationsFailedAction(onError));
     });
   }
 
