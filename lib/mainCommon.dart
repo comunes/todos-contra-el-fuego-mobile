@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:comunes_flutter/comunes_flutter.dart';
-import 'package:fires_flutter/models/yourLocationPersist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:redux/redux.dart';
@@ -26,10 +25,9 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
         initialState: new AppState(
             gmapKey: secrets['gmapKey'],
             firesApiKey: secrets['firesApiKey'],
-          serverUrl: secrets['firesApiUrl'],
+            serverUrl: secrets['firesApiUrl'],
             firesApiUrl: secrets['firesApiUrl'] + "api/v1/"),
-        middleware: List.from(otherMiddleware)
-          ..add(fetchDataMiddleware));
+        middleware: List.from(otherMiddleware)..add(fetchDataMiddleware));
 
     injector.map<Store<AppState>>((i) => store);
     injector.map<String>((i) => store.state.firesApiUrl, key: "firesApiUrl");
@@ -37,33 +35,57 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
     injector.map<String>((i) => store.state.serverUrl, key: "serverUrl");
     injector.map<String>((i) => store.state.gmapKey, key: "gmapKey");
 
-    VoidCallback mainFn = () {
+/*    VoidCallback mainFn = () {
       loadYourLocations().then((yl) {
         // Run baby run!
-        runApp(new FiresApp(store));
-      });
-    };
 
-    if (!globals.isDevelopment)
-      // Run in production with sentry catch
-      main(mainFn, secrets['sentryDSN']);
-    else
-      mainFn();
+      });
+    }; */
+
+    var useSentry = !globals.isDevelopment;
+
+    SentryClient _sentry;
+    if (useSentry) _sentry = SentryClient(dsn: secrets['sentryDSN']);
+
+    // https://flutter.io/cookbook/maintenance/error-reporting/
+    runZoned<Future<Null>>(() async {
+      runApp(new FiresApp(store));
+    }, onError: (error, stackTrace) {
+      // Whenever an error occurs, call the `_reportError` function. This will send
+      // Dart errors to our dev console or Sentry depending on the environment.
+      _reportError(useSentry, _sentry, error, stackTrace);
+    });
 
     // Listen to store changes, and re-render when the state is updated
     store.onChange.listen((state) {
       // print('Store onChange');
     });
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (!useSentry) {
+        // In development mode simply print to console.
+        FlutterError.dumpErrorToConsole(details);
+      } else {
+        // In production mode report to the application zone to report to
+        // Sentry.
+        Zone.current.handleUncaughtError(details.exception, details.stack);
+      }
+    };
   });
 }
 
-main(mainFn, key) async {
-  SentryClient sentry = new SentryClient(dsn: key);
-  mainFn();
-  try {} catch (error, stackTrace) {
-    await sentry.captureException(
+Future<Null> _reportError(bool useSentry, SentryClient sentry, dynamic error, dynamic stackTrace) async {
+  // Print the exception to the console
+  print('Caught error: $error');
+  if (!useSentry) {
+    // Print the full stacktrace in debug mode
+    print(stackTrace);
+    return;
+  } else {
+    // Send the Exception and Stacktrace to Sentry in Production mode
+    sentry.captureException(
       exception: error,
       stackTrace: stackTrace,
     );
   }
 }
+
