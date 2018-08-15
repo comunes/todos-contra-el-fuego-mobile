@@ -59,6 +59,7 @@ class S implements WidgetsLocalizations {
   String get firesInYourPlaces => "Active fires in your places";
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
+  String get inDevelopment => "In development";
   String get inGreenMonitoredAreas => "In green, the areas monitored by our users currently";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
   String get itSeemsAControlledBurning => "It's a controlled burning";
@@ -72,6 +73,8 @@ class S implements WidgetsLocalizations {
   String get notAWildfire => "Isn't that a forest fire?";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
+  String get notifyNeighbours => "Notify other users";
+  String get notifyNeighboursDescription => "Alert other users of the area about the fire";
   String get privacyPolicy => "Privacy Policy";
   String get shareAppBtn => "Share our app";
   String get starAppBtn => "Rate our app";
@@ -103,6 +106,7 @@ class S implements WidgetsLocalizations {
   String noFiresAroundThisArea(String kmAround) => "There is no fires at $kmAround км around this area";
   String somethingAgo(String something) => "$something ago";
   String subscribeToValueAroundThisArea(String sliderValue) => "Subscribe to $sliderValue км around this area";
+  String tweetAboutSelf(String location, String hash) => "Fire in $location $hash";
   String updatedLastCheck(String lastCheck) => "Updated $lastCheck";
 }
 
@@ -185,6 +189,10 @@ class es extends S {
   @override
   String get UNDO => "DESHACER";
   @override
+  String get notifyNeighbours => "Notifica a otros usuarios/as";
+  @override
+  String get inDevelopment => "En desarrollo";
+  @override
   String get tweetAboutAFireTitle => "Twittea";
   @override
   String get supportPageDescription => "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, sugeriendo otras fuentes de datos públicas de fuegos para usar, etc.";
@@ -235,6 +243,8 @@ class es extends S {
   @override
   String get firesInTheWorld => "Fuegos en el mundo";
   @override
+  String get notifyNeighboursDescription => "Alerta a otros usuarios de la zona sobre el fuego";
+  @override
   String get addSomePlace => "Añade otro lugar";
   @override
   String get confirm => "Confirmar";
@@ -266,6 +276,8 @@ class es extends S {
   String appLicense(String thisYear) => "(c) 2017-$thisYear Asociación Comunes bajo licencia GNU Affero GPL v3";
   @override
   String somethingAgo(String something) => "hace $something";
+  @override
+  String tweetAboutSelf(String location, String hash) => "Fuego en $location $hash";
   @override
   String subscribeToValueAroundThisArea(String sliderValue) => "Suscríbete a $sliderValue км a la redonda";
   @override

@@ -33,6 +33,22 @@ class _FireAlertState extends State<FireAlert> {
     );
   }
 
+  Widget buildNotifyNeighboursButton() {
+    return new Align(
+      alignment: const Alignment(0.0, -0.2),
+      child: new FloatingActionButton(
+        heroTag: 'neighAction',
+        child: const Icon(CommunityMaterialIcons.bullhorn),
+        onPressed: () {
+          _scaffoldKey.currentState.showSnackBar(new SnackBar(
+            content: new Text(S.of(context).inDevelopment),
+          ));
+        },
+      ),
+    );
+  }
+
+
   Widget buildTweetButton() {
     return new Align(
       alignment: const Alignment(0.0, -0.2),
@@ -46,7 +62,7 @@ class _FireAlertState extends State<FireAlert> {
             String where =
                 yourLocation.description.replaceAll(' ', '').split(',')[0];
             print(where);
-            Share.share('#IF${where} FIXME');
+            Share.share(S.of(context).tweetAboutSelf(yourLocation.description, '#IF${where}'));
           }).catchError((onError) {
             _scaffoldKey.currentState.showSnackBar(new SnackBar(
                 content: new Text(
@@ -65,12 +81,19 @@ class _FireAlertState extends State<FireAlert> {
     List<CustomStep> fireSteps = listWithoutNulls(<CustomStep>[
       new CustomStep(
           title: new Text(S.of(context).callEmergencyServicesTitle),
-          // subtitle:
           content: new Column(children: <Widget>[
             new Text(S.of(context).callEmergencyServicesDescription),
             new SizedBox(height: 20.0),
             buildCallButton()
           ])),
+      new CustomStep(
+        title: new Text(S.of(context).notifyNeighbours),
+        // state: CustomStepState.disabled,
+        content: new Column(children: <Widget>[
+          new Text(S.of(context).notifyNeighboursDescription),
+          new SizedBox(height: 20.0),
+          buildNotifyNeighboursButton()
+        ])),
       // TODO conditional: this only in Spain
       new CustomStep(
           title: new Text(S.of(context).tweetAboutAFireTitle),
