@@ -8,6 +8,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/src/store.dart';
 
 import 'colors.dart';
+import 'firesSpinner.dart';
 import 'generated/i18n.dart';
 import 'genericMap.dart';
 import 'globalFiresBottomStats.dart';
@@ -16,7 +17,6 @@ import 'mainDrawer.dart';
 import 'models/appState.dart';
 import 'placesAutocompleteUtils.dart';
 import 'redux/actions.dart';
-import 'firesSpinner.dart';
 
 @immutable
 class _ViewModel {
@@ -95,7 +95,9 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
               setState(() {});
-              showSnackMsg(loc.subscribed?  S.of(context).subscribedToFires: S.of(context).unsubscribedToFires);
+              showSnackMsg(loc.subscribed
+                  ? S.of(context).subscribedToFires
+                  : S.of(context).unsubscribedToFires);
             }),
         title: new Text(loc.description, style: new TextStyle(fontSize: 16.0)),
         subtitle: loc.currentNumFires == YourLocation.withoutStats
@@ -103,12 +105,16 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             : loc.currentNumFires == 0
                 ? new Text(S.of(context).noFiresAround)
                 : loc.currentNumFires == 1
-                    ? new Text(S
-                        .of(context)
-                        .fireAroundThisArea(loc.distance.toString()), style: fireStatsStyle)
-                    : new Text(S.of(context).firesAroundThisArea(
-                        loc.currentNumFires.toString(),
-                        loc.distance.toString()), style: fireStatsStyle),
+                    ? new Text(
+                        S
+                            .of(context)
+                            .fireAroundThisArea(loc.distance.toString()),
+                        style: fireStatsStyle)
+                    : new Text(
+                        S.of(context).firesAroundThisArea(
+                            loc.currentNumFires.toString(),
+                            loc.distance.toString()),
+                        style: fireStatsStyle),
         onLongPress: () {
           showSnackMsg(S.of(context).toDeleteThisPlace);
         },
