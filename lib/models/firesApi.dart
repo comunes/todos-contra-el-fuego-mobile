@@ -192,7 +192,7 @@ class FiresApi {
       "token": state.firesApiKey,
       "mobileToken": mobileToken,
       "sealed": sealed,
-      "type": type.toString()
+      "type": type.toString().split('.')[1]
     };
     final String url = '${state.firesApiUrl}mobile/falsepositive';
     return await resty.post(url).json(params).go().then((response) {
