@@ -79,5 +79,7 @@
   "mapPrivacy": "Para preservar la privacidad de nuestros usuarios/as, los datos reflejados están aleatoriamente alterados y son solo orientativos.",
   "comunesSupportBtn": "Conoce y apoya nuestro trabajo",
   "shareAppBtn": "Comparte nuestra app",
-  "starAppBtn": "Puntúa nuestra app"
+  "starAppBtn": "Puntúa nuestra app",
+  "unsubscribedToFires": "Desuscrito a notificaciones de fuegos",
+  "subscribedToFires": "Suscrito a notificaciones de fuegos"
 }

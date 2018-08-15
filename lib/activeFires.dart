@@ -5,7 +5,6 @@ import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:redux/src/store.dart';
 
 import 'colors.dart';
@@ -95,6 +94,8 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             onPressed: () {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
+              setState(() {});
+              showSnackMsg(loc.subscribed?  S.of(context).subscribedToFires: S.of(context).unsubscribedToFires);
             }),
         title: new Text(loc.description, style: new TextStyle(fontSize: 16.0)),
         subtitle: loc.currentNumFires == YourLocation.withoutStats

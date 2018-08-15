@@ -79,5 +79,7 @@
   "mapPrivacy": "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative.",
   "comunesSupportBtn": "Know and support our work",
   "shareAppBtn": "Share our app",
-  "starAppBtn": "Rate our app"
+  "starAppBtn": "Rate our app",
+  "unsubscribedToFires": "Unsubscribed to fires notifications",
+  "subscribedToFires": "Subscribed to fires notifications"
 }
