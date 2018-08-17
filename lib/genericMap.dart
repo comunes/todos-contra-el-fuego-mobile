@@ -388,19 +388,19 @@ class _genericMapState extends State<genericMap> {
     falsePosList.forEach((falsePos) {
       var coords = falsePos['geo']['coordinates'];
       // print('false pos: ${coords}');
-      var loc = LatLng(double.parse(coords[1]), double.parse(coords[0]));
+      var loc = LatLng(coords[1], coords[0]);
       markers.add(FireMarker(loc, FireMarkType.falsePos));
       if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     industries.forEach((industry) {
       // print(fire['geo']['coordinates']);
       var coords = industry['geo']['coordinates'];
-      var loc = LatLng(double.parse(coords[1]), double.parse(coords[0]));
+      var loc = LatLng(coords[1], coords[0]);
       markers.add(FireMarker(loc, FireMarkType.industry));
       if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
     });
     fires.forEach((fire) {
-      var loc = new LatLng(double.parse(fire['lat']), double.parse(fire['lon']));
+      var loc = new LatLng(fire['lat'], fire['lon']);
       markers.add(
           FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
       markers.add(FireMarker(loc, FireMarkType.pixel));
