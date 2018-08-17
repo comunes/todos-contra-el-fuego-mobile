@@ -21,6 +21,7 @@ import 'layerSelectorMapPlugin.dart';
 import 'models/appState.dart';
 import 'models/fireMapState.dart';
 import 'redux/actions.dart';
+import 'sentryReport.dart';
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
 
@@ -37,6 +38,7 @@ class _ViewModel {
   final OnLocationEditCancel onEditCancel;
   final OnLocationEditing onEditing;
   final OnFalsePositive onFalsePositive;
+  final OnFirePressedInMap onFirePressed;
 
   _ViewModel(
       {@required this.mapState,
@@ -49,6 +51,7 @@ class _ViewModel {
       @required this.onEditing,
       @required this.onEditConfirm,
       @required this.onFalsePositive,
+      @required this.onFirePressed,
       @required this.onEditCancel});
 
   @override
@@ -112,6 +115,9 @@ class _genericMapState extends State<genericMap> {
               },
               onFalsePositive: (notif, type) => store
                   .dispatch(new MarkFireAsFalsePositiveAction(notif, type)),
+              onFirePressed: (LatLng latLng, DateTime when) {
+                // _showFireDialog(latLng, when);
+              },
               serverUrl: store.state.serverUrl,
               mapState: store.state.fireMapState);
         },
@@ -225,11 +231,15 @@ class _genericMapState extends State<genericMap> {
                   : new DummyMapPluginOptions(),
               new MarkerLayerOptions(
                 markers: buildMarkers(
-                  mapState.status == FireMapStatus.viewFireNotification ? new LatLng(mapState.fireNotification.lat, mapState.fireNotification.lon): new LatLng(_location.lat, _location.lon),
+                    mapState.status == FireMapStatus.viewFireNotification
+                        ? new LatLng(mapState.fireNotification.lat,
+                            mapState.fireNotification.lon)
+                        : new LatLng(_location.lat, _location.lon),
                     mapState.fires,
                     mapState.industries,
                     mapState.falsePos,
-                    mapState.status == FireMapStatus.viewFireNotification),
+                    mapState.status == FireMapStatus.viewFireNotification,
+                    view.onFirePressed),
               ),
               // new AttributionPluginOptions(text: "© OpenStreetMap contributors"),
               new LayerSelectorMapPluginOptions(),
@@ -380,34 +390,73 @@ class _genericMapState extends State<genericMap> {
     }
   }
 
-  List<Marker> buildMarkers(LatLng pos, List<dynamic> fires,
-      List<dynamic> falsePosList, List<dynamic> industries, bool isNotif) {
+  List<Marker> buildMarkers(
+      LatLng pos,
+      List<dynamic> fires,
+      List<dynamic> falsePosList,
+      List<dynamic> industries,
+      bool isNotif,
+      OnFirePressedInMap onFirePressed) {
     List<Marker> markers = [];
-    print('building markers: fires: ${fires.length} falsePos: ${falsePosList.length} industries: ${industries.length}, isNotif: ${isNotif} ');
+    print('building markers: fires: ${fires.length} falsePos: ${falsePosList
+      .length} industries: ${industries.length}, isNotif: ${isNotif} ');
     const calibrate = false; // useful when we change the fire icons size
     falsePosList.forEach((falsePos) {
-      var coords = falsePos['geo']['coordinates'];
-      // print('false pos: ${coords}');
-      var loc = LatLng(coords[1], coords[0]);
-      markers.add(FireMarker(loc, FireMarkType.falsePos));
-      if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
+      try {
+        var coords = falsePos['geo']['coordinates'];
+        // print('false pos: ${coords}');
+        var loc = LatLng(coords[1], coords[0]);
+        markers.add(FireMarker(loc, FireMarkType.falsePos));
+        if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
+      } catch (e) {
+        print('Failed to process $falsePos');
+        reportError(e, e.stackTrace);
+      }
     });
     industries.forEach((industry) {
-      // print(fire['geo']['coordinates']);
-      var coords = industry['geo']['coordinates'];
-      var loc = LatLng(coords[1], coords[0]);
-      markers.add(FireMarker(loc, FireMarkType.industry));
-      if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
+      try {
+        // print(fire['geo']['coordinates']);
+        var coords = industry['geo']['coordinates'];
+        var loc = LatLng(coords[1], coords[0]);
+        markers.add(FireMarker(loc, FireMarkType.industry));
+        if (calibrate) markers.add(FireMarker(loc, FireMarkType.pixel));
+      } catch (e) {
+        print('Failed to process $industry');
+        reportError(e, e.stackTrace);
+      }
     });
     fires.forEach((fire) {
-      var loc = new LatLng(fire['lat'], fire['lon']);
-      markers.add(
-          FireMarker(loc, FireMarkType.fire, () => print('marker pressed')));
-      markers.add(FireMarker(loc, FireMarkType.pixel));
+      try {
+        var loc = new LatLng(fire['lat'], fire['lon']);
+        markers.add(FireMarker(loc, FireMarkType.fire, () {
+          onFirePressed(loc, DateTime.parse(fire['when']));
+          print('fire $fire pressed');
+        }));
+        markers.add(FireMarker(loc, FireMarkType.pixel));
+      } catch (e) {
+        print('Failed to process $fire');
+        reportError(e, e.stackTrace);
+      }
     });
-    markers.add(FireMarker(
-      pos, isNotif ? FireMarkType.fire : FireMarkType.position));
+    markers.add(
+        FireMarker(pos, isNotif ? FireMarkType.fire : FireMarkType.position));
     if (calibrate) markers.add(FireMarker(pos, FireMarkType.pixel));
     return markers;
+  }
+
+  void _showFireDialog(LatLng latLng, DateTime when) {
+    showDialog<bool>(
+      context: _scaffoldKey.currentContext,
+      builder: (_) => new AlertDialog(
+        content: new Text('FIXME'),
+        actions: <Widget>[
+          new FlatButton(
+            child: Text(S.of(_scaffoldKey.currentContext).CLOSE),
+            onPressed: () {
+              Navigator.pop(_scaffoldKey.currentContext);
+            },
+          ),
+        ],
+      ));
   }
 }

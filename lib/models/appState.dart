@@ -13,6 +13,7 @@ import 'user.dart';
 
 export 'fireMapState.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 
 part 'appState.g.dart';
 
@@ -123,6 +124,7 @@ typedef void OnLocationEditing(YourLocation loc);
 typedef void OnLocationEditConfirm(YourLocation loc);
 typedef void OnLocationEditCancel(YourLocation loc);
 typedef void TapFireNotificationFunction(FireNotification notif);
+typedef void OnFirePressedInMap(LatLng latLng, DateTime when);
 // typedef void OnReceivedFireNotificationFunction(FireNotification notif);
 typedef void DeleteFireNotificationFunction(FireNotification notif);
 typedef void DeleteAllFireNotificationFunction();

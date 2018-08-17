@@ -13,6 +13,7 @@ import 'models/firesApi.dart';
 import 'redux/fetchDataMiddleware.dart';
 import 'redux/reducers.dart';
 import 'package:package_info/package_info.dart';
+import 'sentryReport.dart';
 
 Future<PackageInfo> loadPackageInfo() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -45,10 +46,10 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
       injector.map<String>((i) => store.state.serverUrl, key: "serverUrl");
       injector.map<String>((i) => store.state.gmapKey, key: "gmapKey");
 
-      var useSentry = !globals.isDevelopment;
-
-      SentryClient _sentry;
-      if (useSentry) _sentry = SentryClient(dsn: secrets['sentryDSN']);
+      if (useSentry) {
+        SentryClient _sentry = SentryClient(dsn: secrets['sentryDSN']);
+        injector.map<SentryClient>((i) => _sentry);
+      }
 
       // https://flutter.io/cookbook/maintenance/error-reporting/
       runZoned<Future<Null>>(() async {
@@ -56,7 +57,7 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
       }, onError: (error, stackTrace) {
         // Whenever an error occurs, call the `_reportError` function. This will send
         // Dart errors to our dev console or Sentry depending on the environment.
-        _reportError(useSentry, _sentry, error, stackTrace);
+        reportError(error, stackTrace);
       });
 
       // Listen to store changes, and re-render when the state is updated
@@ -75,21 +76,4 @@ void mainCommon(List<Middleware<AppState>> otherMiddleware) {
       };
     });
   });
-}
-
-Future<Null> _reportError(bool useSentry, SentryClient sentry, dynamic error,
-    dynamic stackTrace) async {
-  // Print the exception to the console
-  print('Caught error: $error');
-  if (!useSentry) {
-    // Print the full stacktrace in debug mode
-    print(stackTrace);
-    return;
-  } else {
-    // Send the Exception and Stacktrace to Sentry in Production mode
-    sentry.captureException(
-      exception: error,
-      stackTrace: stackTrace,
-    );
-  }
 }
