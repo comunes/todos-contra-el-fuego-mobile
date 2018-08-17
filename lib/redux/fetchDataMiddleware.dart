@@ -58,6 +58,7 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
       store.dispatch(new AddedYourLocationAction(action.loc));
       persistYourLocations(store.state.yourLocations);
     }
+    getFiresStatsInLocation(store, action.loc);
   }
 
   if (action is DeleteYourLocationAction) {
@@ -87,13 +88,7 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
   }
 
   if (action is ShowYourLocationMapAction) {
-    api
-        .getFiresInLocation(
-            state: store.state,
-            lat: action.loc.lat,
-            lon: action.loc.lon,
-            distance: action.loc.distance)
-        .then((result) => store.dispatch(result));
+    getFiresStatsInLocation(store, action.loc);
   }
 
   if (action is ShowFireNotificationMapAction) {
@@ -111,9 +106,6 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
                   lon: action.loc.lon,
                   distance: action.loc.distance)
               .then((result) => store.dispatch(result)));
-    else {
-      // FIXME do something?
-    }
     store.dispatch(new UpdatedYourLocationAction(action.loc));
     persistYourLocations(store.state.yourLocations);
   }
@@ -150,12 +142,12 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
   if (action is FetchYourLocationsAction) {
     // Use the api to fetch the YourLocations
     loadYourLocations().then((localLocations) {
-    api
-        .fetchYourLocations(store.state)
-        .then((List<YourLocation> subscribedLocations) {
-      // If it succeeds, dispatch a success action with the YourLocations.
-      // Our reducer will then update the State using these YourLocations.
-      // print('Subscribed to: ${subscribedLocations.length}');
+      api
+          .fetchYourLocations(store.state)
+          .then((List<YourLocation> subscribedLocations) {
+        // If it succeeds, dispatch a success action with the YourLocations.
+        // Our reducer will then update the State using these YourLocations.
+        // print('Subscribed to: ${subscribedLocations.length}');
         if (subscribedLocations is List) {
           // unsubscribe all locally to sync the subs state
           localLocations.forEach((location) => location.subscribed = false);
@@ -173,12 +165,12 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
 
         localLocations.forEach((yl) {
           api
-            .getFiresInLocation(
-            state: store.state,
-            lat: yl.lat,
-            lon: yl.lon,
-            distance: yl.distance)
-            .then((value) {
+              .getFiresInLocation(
+                  state: store.state,
+                  lat: yl.lat,
+                  lon: yl.lon,
+                  distance: yl.distance)
+              .then((value) {
             yl.currentNumFires = value.numFires;
             store.dispatch(new UpdateYourLocationAction(yl));
           });
@@ -211,24 +203,41 @@ void fetchDataMiddleware(Store<AppState> store, action, NextDispatcher next) {
   }
 
   if (action is FetchMonitoredAreasAction) {
-    api.getMonitoredAreas(state: store.state).then((result) { // store.dispatch()
-      store.dispatch(
-        new FetchMonitoredAreasSucceededAction(result));
-       });
+    api.getMonitoredAreas(state: store.state).then((result) {
+      // store.dispatch()
+      store.dispatch(new FetchMonitoredAreasSucceededAction(result));
+    });
   }
 
   if (action is MarkFireAsFalsePositiveAction) {
-    api.markFalsePositive(store.state, store.state.user.token, action.notif.sealed, action.type).then((result) {
+    api
+        .markFalsePositive(store.state, store.state.user.token,
+            action.notif.sealed, action.type)
+        .then((result) {
       if (result) {
         // Not necessary
-        // store.dispatch(new UpdatedFireNotificationAction(action.notif));
         getFiresStatsInFire(store, action.notif);
+        store.dispatch(new UpdatedFireNotificationAction(action.notif));
       }
     });
   }
 
   // Make sure our actions continue on to the reducer.
   next(action);
+}
+
+void getFiresStatsInLocation(Store<AppState> store, YourLocation loc) {
+  api
+      .getFiresInLocation(
+          state: store.state,
+          lat: loc.lat,
+          lon: loc.lon,
+          distance: loc.distance)
+      .then((result) {
+    store.dispatch(result);
+    loc.currentNumFires = result.numFires;
+    store.dispatch(new UpdateYourLocationAction(loc));
+  });
 }
 
 void getFiresStatsInFire(Store<AppState> store, FireNotification notif) {
