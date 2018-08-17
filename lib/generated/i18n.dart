@@ -59,6 +59,7 @@ class S implements WidgetsLocalizations {
   String get firesInYourPlaces => "Active fires in your places";
   String get firesNearPlace => "Fires near other place";
   String get getAlertsOfFiresinThatArea => "Get alerts of fires in that area";
+  String get inDevelopment => "In development";
   String get inGreenMonitoredAreas => "In green, the areas monitored by our users currently";
   String get isYourUbicationEnabled => "I cannot get your current location. It's your ubication enabled?";
   String get itSeemsAControlledBurning => "It's a controlled burning";
@@ -72,9 +73,12 @@ class S implements WidgetsLocalizations {
   String get notAWildfire => "Isn't that a forest fire?";
   String get notPermsUbication => "We don't have permission to get your location";
   String get notifyAFire => "Notify a fire";
+  String get notifyNeighbours => "Notify other users";
+  String get notifyNeighboursDescription => "Alert other users of the area about the fire";
   String get privacyPolicy => "Privacy Policy";
   String get shareAppBtn => "Share our app";
   String get starAppBtn => "Rate our app";
+  String get subscribedToFires => "Subscribed to fires notifications";
   String get supportPageDescription => "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, suggesting other public data sources of fires to use, etc.";
   String get supportThisInitiative => "Support this initiative";
   String get thanksForParticipating => "Thanks for participating";
@@ -85,6 +89,7 @@ class S implements WidgetsLocalizations {
   String get tweetAboutAFireTitle => "Tweet about";
   String get typeTheNameOfAPlace => "Type the name of a place, region, etc";
   String get unsubscribe => "Unsubscribe";
+  String get unsubscribedToFires => "Unsubscribed to fires notifications";
   String get warningThisIsAVeryLargeArea => "Warning: this is a very large area";
   String get youDeletedThisNotification => "You deleted this notification";
   String get youDeletedThisPlace => "You deleted this place";
@@ -101,6 +106,7 @@ class S implements WidgetsLocalizations {
   String noFiresAroundThisArea(String kmAround) => "There is no fires at $kmAround км around this area";
   String somethingAgo(String something) => "$something ago";
   String subscribeToValueAroundThisArea(String sliderValue) => "Subscribe to $sliderValue км around this area";
+  String tweetAboutSelf(String location, String hash) => "Fire in $location $hash";
   String updatedLastCheck(String lastCheck) => "Updated $lastCheck";
 }
 
@@ -177,9 +183,15 @@ class es extends S {
   @override
   String get aYear => "un año";
   @override
+  String get unsubscribedToFires => "Desuscrito a notificaciones de fuegos";
+  @override
   String get itSeemsNotAtForesFire => "Parece que este fuego no es un fuego forestal.";
   @override
   String get UNDO => "DESHACER";
+  @override
+  String get notifyNeighbours => "Notifica a otros usuarios/as";
+  @override
+  String get inDevelopment => "En desarrollo";
   @override
   String get tweetAboutAFireTitle => "Twittea";
   @override
@@ -192,6 +204,8 @@ class es extends S {
   String get firesInYourPlaces => "Fuegos en tus lugares";
   @override
   String get NASAAck => "Reconocemos el uso de datos e imágenes de LANCE FIRMS operadas por NASA/GSFC/Earth Science Data and Information System (ESDIS) con fondos proporcionados por NASA/HQ.";
+  @override
+  String get subscribedToFires => "Suscrito a notificaciones de fuegos";
   @override
   String get isYourUbicationEnabled => "No podemos saber tu ubicación actual. ¿Están los servicios de ubicación en tu móvil activados?";
   @override
@@ -229,6 +243,8 @@ class es extends S {
   @override
   String get firesInTheWorld => "Fuegos en el mundo";
   @override
+  String get notifyNeighboursDescription => "Alerta a otros usuarios de la zona sobre el fuego";
+  @override
   String get addSomePlace => "Añade otro lugar";
   @override
   String get confirm => "Confirmar";
@@ -260,6 +276,8 @@ class es extends S {
   String appLicense(String thisYear) => "(c) 2017-$thisYear Asociación Comunes bajo licencia GNU Affero GPL v3";
   @override
   String somethingAgo(String something) => "hace $something";
+  @override
+  String tweetAboutSelf(String location, String hash) => "Fuego en $location $hash";
   @override
   String subscribeToValueAroundThisArea(String sliderValue) => "Suscríbete a $sliderValue км a la redonda";
   @override

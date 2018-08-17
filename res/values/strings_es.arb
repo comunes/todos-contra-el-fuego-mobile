@@ -53,8 +53,11 @@
   "errorFirePlaceDialog": "No hemos podido obtener la ubicación del fuego",
   "callEmergencyServicesTitle": "Llama al 112",
   "callEmergencyServicesDescription": "Deberías llamar al 112 si no lo has hecho ya para avisar a los servicios de emergencia.",
+  "notifyNeighbours": "Notifica a otros usuarios/as",
+  "notifyNeighboursDescription": "Alerta a otros usuarios de la zona sobre el fuego",
   "tweetAboutAFireTitle": "Twittea",
   "tweetAboutAFireDescription": "Adicionalmente si usas twitter puedes compartir información adicional con los servicios de emergencia, por ejemplo, adjuntando fotos al tweet si tienes buena visibilidad del fuego, cuando tomaste las fotos, ubicación exacta, etc. Usa #hashtags tipo #IFTerminoMunicipal por ejemplo #IFJumilla (Incendio Forestal en Jumilla).",
+  "tweetAboutSelf": "Fuego en $location $hash",
   "supportPageDescription": "Puedes apoyar esta iniciativa, dando difusión, ayudándonos a desarrollar nuestro software, traduciendo esta aplicación a tu idioma, sugeriendo otras fuentes de datos públicas de fuegos para usar, etc.",
   "fireNotificationsTitle": "Notificaciones de fuegos",
   "fireNotificationTitle": "Notificación de fuego",
@@ -79,5 +82,8 @@
   "mapPrivacy": "Para preservar la privacidad de nuestros usuarios/as, los datos reflejados están aleatoriamente alterados y son solo orientativos.",
   "comunesSupportBtn": "Conoce y apoya nuestro trabajo",
   "shareAppBtn": "Comparte nuestra app",
-  "starAppBtn": "Puntúa nuestra app"
+  "starAppBtn": "Puntúa nuestra app",
+  "unsubscribedToFires": "Desuscrito a notificaciones de fuegos",
+  "subscribedToFires": "Suscrito a notificaciones de fuegos",
+  "inDevelopment": "En desarrollo"
 }

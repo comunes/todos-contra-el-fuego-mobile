@@ -53,8 +53,11 @@
   "errorFirePlaceDialog": "We couldn't get the location of the fire",
   "callEmergencyServicesTitle": "Call 112",
   "callEmergencyServicesDescription": "You should call 112 if you have not already done so to notify the emergency services.",
+  "notifyNeighbours": "Notify other users",
+  "notifyNeighboursDescription": "Alert other users of the area about the fire",
   "tweetAboutAFireTitle": "Tweet about",
   "tweetAboutAFireDescription": "Additionally if you use twitter you can share additional information with the emergency services, for example, attaching photos to the tweet if you have good visibility of the fire, when you took the photos, exact location, etc. Use #hashtags type #IFMinicipalTerminal for example #IFJumilla (Forest Fire in Jumilla).",
+  "tweetAboutSelf": "Fire in $location $hash",
   "supportPageDescription": "You can support this initiative, spreading the word, helping us to develop our software, translating this app to your language, suggesting other public data sources of fires to use, etc.",
   "fireNotificationsTitleShort": "Notifications",
   "fireNotificationsTitle": "Fire Notifications",
@@ -79,5 +82,8 @@
   "mapPrivacy": "In order to preserve the privacy of our users, the reflected data are randomly altered and are only indicative.",
   "comunesSupportBtn": "Know and support our work",
   "shareAppBtn": "Share our app",
-  "starAppBtn": "Rate our app"
+  "starAppBtn": "Rate our app",
+  "unsubscribedToFires": "Unsubscribed to fires notifications",
+  "subscribedToFires": "Subscribed to fires notifications",
+  "inDevelopment": "In development"
 }

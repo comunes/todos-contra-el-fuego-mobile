@@ -84,14 +84,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       debugPrint("onMessage in fireApp (isLoaded: ${store.state.isLoaded}): $message");
-      _showItemDialog(message, _notifForMessage(message));
+      _showItemDialog(message, _notifForMessage(message, store.state.isLoaded));
     }, onLaunch: (Map<String, dynamic> message) {
       debugPrint("onLaunch (isLoaded: ${store.state.isLoaded}): $message");
-      _notifForMessage(message);
+      _notifForMessage(message, store.state.isLoaded);
       _navigateToItemDetail(message);
     }, onResume: (Map<String, dynamic> message) {
       debugPrint("onResume (isLoaded: ${store.state.isLoaded}): $message");
-      _notifForMessage(message);
+      _notifForMessage(message, store.state.isLoaded);
       _navigateToItemDetail(message);
     });
     _firebaseMessaging.requestNotificationPermissions(
@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
   // https://pub.dartlang.org/packages/firebase_messaging#-example-tab-
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-  FireNotification _notifForMessage(Map<String, dynamic> message) {
+  FireNotification _notifForMessage(Map<String, dynamic> message, bool isLoaded) {
     FireNotification notif;
     try {
       notif = new FireNotification(
@@ -299,7 +299,12 @@ class _HomePageState extends State<HomePage> {
       debugPrint(e.toString());
     }
     if (notif != null)
-    newNotifications.add(notif);
+      // if our store is loaded, we just dispatch the notification, if not, we wait til is loaded
+      if (isLoaded) {
+        store.dispatch(new AddFireNotificationAction(notif));
+      } else {
+        newNotifications.add(notif);
+      }
     return notif;
   }
 }
