@@ -56,6 +56,19 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
+  Widget buildTranslateButton() {
+    return new Align(
+      alignment: const Alignment(0.0, -0.2),
+      child: new OutlineButton.icon(
+        icon: const Icon(Icons.translate),
+        label: new Text(S.of(context).translateBtn),
+        onPressed: () {
+          launch("https://translate.comunes.org/projects/todos-contra-el-fuego/");
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +87,8 @@ class _SupportPageState extends State<SupportPage> {
               ),
               new SizedBox(height: 20.0),
               buildSupportButton(),
+              new SizedBox(height: 20.0),
+              buildTranslateButton(),
               new SizedBox(height: 20.0),
               buildStarButton(),
               new SizedBox(height: 20.0),

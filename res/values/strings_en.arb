@@ -85,5 +85,6 @@
   "starAppBtn": "Rate our app",
   "unsubscribedToFires": "Unsubscribed to fires notifications",
   "subscribedToFires": "Subscribed to fires notifications",
-  "inDevelopment": "In development"
+  "inDevelopment": "In development",
+  "translateBtn": "Help with translations"
 }

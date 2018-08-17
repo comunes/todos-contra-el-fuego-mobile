@@ -85,6 +85,7 @@ class S implements WidgetsLocalizations {
   String get toDeleteThisNotification => "Slide horizontally to delete this notification";
   String get toDeleteThisPlace => "Slide horizontally to delete this place";
   String get toFiresNotifications => "Subscribe to fires notifications";
+  String get translateBtn => "Help with translations";
   String get tweetAboutAFireDescription => "Additionally if you use twitter you can share additional information with the emergency services, for example, attaching photos to the tweet if you have good visibility of the fire, when you took the photos, exact location, etc. Use #hashtags type #IFMinicipalTerminal for example #IFJumilla (Forest Fire in Jumilla).";
   String get tweetAboutAFireTitle => "Tweet about";
   String get typeTheNameOfAPlace => "Type the name of a place, region, etc";
@@ -108,6 +109,18 @@ class S implements WidgetsLocalizations {
   String subscribeToValueAroundThisArea(String sliderValue) => "Subscribe to $sliderValue км around this area";
   String tweetAboutSelf(String location, String hash) => "Fire in $location $hash";
   String updatedLastCheck(String lastCheck) => "Updated $lastCheck";
+}
+
+class gl extends S {
+  const gl();
+
+   @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  @override
+  String get AvoidThisStringsIfisNotPlural => "No hace falta traducir esto";
+  @override
+  String get appName => "Tod@s contra o Lume!";
 }
 
 class en extends S {
@@ -225,6 +238,8 @@ class es extends S {
   @override
   String get shareAppBtn => "Comparte nuestra app";
   @override
+  String get translateBtn => "Ayuda con las traducciones";
+  @override
   String get itSeemsAFalseAlarm => "Parece una falsa alarma";
   @override
   String get addedThisLocation => "Ya has añadido este lugar antes";
@@ -303,6 +318,7 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
   List<Locale> get supportedLocales {
     return const <Locale>[
 
+      const Locale("gl", ""),
       const Locale("en", ""),
       const Locale("es", ""),
 
@@ -328,6 +344,8 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
     final String lang = getLang(locale);
     switch (lang) {
 
+      case "gl":
+        return new SynchronousFuture<WidgetsLocalizations>(const gl());
       case "en":
         return new SynchronousFuture<WidgetsLocalizations>(const en());
       case "es":
