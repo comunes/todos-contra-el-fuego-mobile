@@ -21,7 +21,11 @@ Future<PackageInfo> loadPackageInfo() async {
 }
 
 Future<Map<String, dynamic>> loadSecrets() async {
-  return await SecretLoader(secretPath: 'assets/private-settings.json').load();
+  return await SecretLoader(
+    secretPath: globals.isDevelopment?
+    'assets/private-settings-dev.json' :
+    'assets/private-settings.json'
+  ).load();
 }
 
 void mainCommon(List<Middleware<AppState>> otherMiddleware) {

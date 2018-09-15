@@ -31,3 +31,4 @@ android/app/key.jks
 android/key.properties
 
 assets/private-settings.json
+assets/private-settings-dev.json
