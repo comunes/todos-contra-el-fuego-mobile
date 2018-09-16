@@ -86,5 +86,8 @@
   "unsubscribedToFires": "Unsubscribed to fires notifications",
   "subscribedToFires": "Subscribed to fires notifications",
   "inDevelopment": "In development",
-  "translateBtn": "Help with translations"
+  "translateBtn": "Help with translations",
+  "additionalInfoAboutFire": "Fire detected in $where $when $by",
+  "byNASAsatellites": "by NASA satellites",
+  "byOurUsers": "by one of our users"
 }

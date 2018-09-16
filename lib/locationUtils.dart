@@ -15,21 +15,21 @@ Future<YourLocation> getUserLocation(
     Map<String, double> location = await _location.getLocation;
 
     // It seems that the lib fails with lat/lon values
-    var yourLocation = new YourLocation(
+    var yl = new YourLocation(
         lat: location['latitude'], lon: location['longitude']);
     var address;
     try {
-      address = await getReverseLocation(yourLocation);
-      yourLocation.description = address;
+      address = await getReverseLocation(lat: yl.lat, lon: yl.lon);
+      yl.description = address;
     } catch (e) {
       try {
-        address = await getReverseLocation(yourLocation, true);
-        yourLocation.description = address;
+        address = await getReverseLocation(lat: yl.lat, lon: yl.lon, external: true);
+        yl.description = address;
       } catch (e) {
         print('We cannot reverse geolocate');
       }
     }
-    return yourLocation;
+    return yl;
   } on PlatformException catch (e) {
     if (e.code == 'PERMISSION_DENIED') {
       scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -44,9 +44,9 @@ Future<YourLocation> getUserLocation(
   }
 }
 
-Future<String> getReverseLocation(YourLocation loc,
-    [bool external = false]) async {
-  final coordinates = new Coordinates(loc.lat, loc.lon);
+Future<String> getReverseLocation({@required lat, @required lon,
+    bool external = false}) async {
+  final coordinates = new Coordinates(lat, lon);
   var geoCoder = external ? Geocoder.google(Injector.getInjector().get<String>(key: "gmapKey")) : Geocoder.local;
   var addresses = await geoCoder.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;

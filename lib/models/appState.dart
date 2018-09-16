@@ -124,7 +124,7 @@ typedef void OnLocationEditing(YourLocation loc);
 typedef void OnLocationEditConfirm(YourLocation loc);
 typedef void OnLocationEditCancel(YourLocation loc);
 typedef void TapFireNotificationFunction(FireNotification notif);
-typedef void OnFirePressedInMap(LatLng latLng, DateTime when);
+typedef void OnFirePressedInMap(LatLng latLng, DateTime when, String source);
 // typedef void OnReceivedFireNotificationFunction(FireNotification notif);
 typedef void DeleteFireNotificationFunction(FireNotification notif);
 typedef void DeleteAllFireNotificationFunction();

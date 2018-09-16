@@ -43,6 +43,8 @@ class S implements WidgetsLocalizations {
   String get appMoto => "Strengthening neighborhoods against wildfires";
   String get appName => "All Against The Fire!";
   String get areYouSureTitle => "Are you sure?";
+  String get byNASAsatellites => "by NASA satellites";
+  String get byOurUsers => "by one of our users";
   String get callEmergencyServicesDescription => "You should call 112 if you have not already done so to notify the emergency services.";
   String get callEmergencyServicesTitle => "Call 112";
   String get chooseAPlace => "Choose a place";
@@ -95,6 +97,7 @@ class S implements WidgetsLocalizations {
   String get youDeletedThisNotification => "You deleted this notification";
   String get youDeletedThisPlace => "You deleted this place";
   String activeFiresWorldWide(String activeFires) => "$activeFires active fires worldwide";
+  String additionalInfoAboutFire(String where, String when, String by) => "Fire detected in $where $when $by";
   String appLicense(String thisYear) => "(c) 2017-$thisYear Comunes Association under the GNU Affero GPL v3";
   String fireAroundThisArea(String kmAround) => "A fire at $kmAround км around this area";
   String firesAroundThisArea(String numFires, String kmAround) => "$numFires fires at $kmAround км around this area";
@@ -141,6 +144,8 @@ class es extends S {
   String get alertWhenThereIsAFire => "Alerta cuando hay un fuego";
   @override
   String get fireNotificationsDescription => "Aquí recibirás las notificaciones de fuegos en los lugares a los que te subscribas";
+  @override
+  String get byOurUsers => "por uno de nuestros usuarios/as";
   @override
   String get anHour => "una hora";
   @override
@@ -274,6 +279,8 @@ class es extends S {
   @override
   String get appMoto => "Fortaleciendo vecindarios contra incendios forestales";
   @override
+  String get byNASAsatellites => "por satélites de la NASA";
+  @override
   String get chooseAWatchRadio => "Elige un radio de vigilancia";
   @override
   String get CANCEL => "CANCELAR";
@@ -291,6 +298,8 @@ class es extends S {
   String appLicense(String thisYear) => "(c) 2017-$thisYear Asociación Comunes bajo licencia GNU Affero GPL v3";
   @override
   String somethingAgo(String something) => "hace $something";
+  @override
+  String additionalInfoAboutFire(String where, String when, String by) => "Información adicional sobre fuego detectado en $where $when $by";
   @override
   String tweetAboutSelf(String location, String hash) => "Fuego en $location $hash";
   @override

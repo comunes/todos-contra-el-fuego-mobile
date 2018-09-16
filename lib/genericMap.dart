@@ -1,5 +1,5 @@
 import 'dart:core';
-
+import 'locationUtils.dart';
 import 'package:comunes_flutter/comunes_flutter.dart';
 import 'package:fires_flutter/models/yourLocation.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +24,12 @@ import 'redux/actions.dart';
 import 'sentryReport.dart';
 import 'slider.dart';
 import 'zoomMapPlugin.dart';
+import 'customMoment.dart';
 
 @immutable
 class _ViewModel {
   final String serverUrl;
+  final String lang;
   final FireMapState mapState;
   final OnSubscribeFunction onSubs;
   final OnSubscribeConfirmedFunction onSubsConfirmed;
@@ -43,6 +45,7 @@ class _ViewModel {
   _ViewModel(
       {@required this.mapState,
       @required this.serverUrl,
+      @required this.lang,
       @required this.onSubs,
       @required this.onSubsConfirmed,
       @required this.onUnSubs,
@@ -59,10 +62,12 @@ class _ViewModel {
       identical(this, other) ||
       other is _ViewModel &&
           runtimeType == other.runtimeType &&
+          serverUrl == other.serverUrl &&
+          lang == other.lang &&
           mapState == other.mapState;
 
   @override
-  int get hashCode => mapState.hashCode;
+  int get hashCode => serverUrl.hashCode ^ lang.hashCode ^ mapState.hashCode;
 }
 
 class genericMap extends StatefulWidget {
@@ -115,10 +120,12 @@ class _genericMapState extends State<genericMap> {
               },
               onFalsePositive: (notif, type) => store
                   .dispatch(new MarkFireAsFalsePositiveAction(notif, type)),
-              onFirePressed: (LatLng latLng, DateTime when) {
-                // _showFireDialog(latLng, when);
+              onFirePressed: (LatLng latLng, DateTime when, type) {
+                _showFireDialog(latLng, when, type);
               },
               serverUrl: store.state.serverUrl,
+              // Not used yet, but maybe in the future for date format
+              lang: store.state.user.lang,
               mapState: store.state.fireMapState);
         },
         builder: (context, view) {
@@ -429,7 +436,7 @@ class _genericMapState extends State<genericMap> {
       try {
         var loc = new LatLng(fire['lat'], fire['lon']);
         markers.add(FireMarker(loc, FireMarkType.fire, () {
-          onFirePressed(loc, DateTime.parse(fire['when']));
+          onFirePressed(loc, DateTime.parse(fire['when']), fire['type']);
           print('fire $fire pressed');
         }));
         markers.add(FireMarker(loc, FireMarkType.pixel));
@@ -444,19 +451,28 @@ class _genericMapState extends State<genericMap> {
     return markers;
   }
 
-  void _showFireDialog(LatLng latLng, DateTime when) {
-    showDialog<bool>(
-      context: _scaffoldKey.currentContext,
-      builder: (_) => new AlertDialog(
-        content: new Text('FIXME'),
-        actions: <Widget>[
-          new FlatButton(
-            child: Text(S.of(_scaffoldKey.currentContext).CLOSE),
-            onPressed: () {
-              Navigator.pop(_scaffoldKey.currentContext);
-            },
-          ),
-        ],
-      ));
+  void _showFireDialog(LatLng pos, DateTime date, String type) {
+    var when = Moment.fromDate(date).fromNow(context);
+    getReverseLocation(lat: pos.latitude, lon: pos.longitude)
+        .then((reverseLoc) {
+      String by = type == 'vecinal'
+          ? S.of(context).byOurUsers
+          : S.of(context).byNASAsatellites;
+      String fireDesc =
+          S.of(context).additionalInfoAboutFire(reverseLoc, when, by);
+      showDialog<bool>(
+          context: _scaffoldKey.currentContext,
+          builder: (_) => new AlertDialog(
+                content: new Text(fireDesc),
+                actions: <Widget>[
+                  new FlatButton(
+                    child: Text(S.of(context).CLOSE),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ));
+    });
   }
 }
