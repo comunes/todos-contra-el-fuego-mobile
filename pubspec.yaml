@@ -83,6 +83,7 @@ flutter:
 
   assets:
     - assets/private-settings.json
+    - assets/private-settings-dev.json
     - assets/pages/privacy-en.md
     - assets/pages/privacy-es.md
     - images/logo-200.png

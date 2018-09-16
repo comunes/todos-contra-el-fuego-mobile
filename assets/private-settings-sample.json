@@ -1,6 +1,6 @@
 {
   "gmapKey": "",
   "firesApiKey": "",
-  "firesApiUrl": "",
+  "firesApiUrl": " use http://10.0.2.2:3000/ if you are developing and running meteor in 127.0.0.1:3000",
   "sentryDSN": ""
 }
