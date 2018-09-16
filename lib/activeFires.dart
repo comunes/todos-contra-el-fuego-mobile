@@ -91,6 +91,7 @@ class _ActiveFiresPageState extends State<ActiveFiresPage> {
             icon: new Icon(loc.subscribed
                 ? Icons.notifications_active
                 : Icons.notifications_off),
+            color: loc.subscribed ? fires600: null,
             onPressed: () {
               loc.subscribed = !loc.subscribed;
               onToggle(loc);
